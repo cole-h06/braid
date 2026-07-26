@@ -24,14 +24,10 @@ $$
 d_{ik}
 =
 \alpha_1 p_{ik}
-+
-\alpha_2 l_{ik}
-+
-\alpha_3 o_{ik}
-+
-\alpha_4 t_{ik}
-+
-\alpha_5 g_{ik}
++ \alpha_2 l_{ik}
++ \alpha_3 o_{ik}
++ \alpha_4 t_{ik}
++ \alpha_5 g_{ik}
 $$
 
 where
