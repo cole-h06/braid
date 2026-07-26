@@ -65,10 +65,9 @@ Enterprise knowledge:
 
 # Repository
 
+- `agent_dataset/` — Example multi-agent dataset and demo
 - `benchmark/` — Reproducible benchmark dataset
-- `credibility/` — Credibility inference engine
-- `experiments/` — Experimental algorithms and research prototypes
-- `mcp/` — Experimental MCP server
+- `credibility/` — Credibility inference engine + experimental algorithms/research prototypes
 - `paper/` — Research paper
 - `research/` — Research notes
   
