@@ -67,7 +67,7 @@ Enterprise knowledge:
 
 - `agent_dataset/` — Example multi-agent dataset and demo
 - `benchmark/` — Reproducible benchmark dataset
-- `credibility/` — Credibility inference engine + experimental algorithms/research prototypes
+- `credibility/` — Credibility inference engine + experimental algorithms
 - `paper/` — Research paper
 - `research/` — Research notes
   
