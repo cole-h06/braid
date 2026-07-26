@@ -9,9 +9,8 @@ venv/
 # macOS
 .DS_Store
 
-# IDEs
-.vscode/
-.idea/
+# Cursor
+.cursor/
 
 # Environment variables
 .env
