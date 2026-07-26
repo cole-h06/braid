@@ -70,6 +70,7 @@ Enterprise knowledge:
 - `credibility/` — Credibility inference engine + experimental algorithms
 - `paper/` — Research paper
 - `research/` — Research notes
+- `scripts/` — Utility scripts for development
   
 # Current Status
 
