@@ -20,7 +20,7 @@ def compute_dependency_matrix(graph):
         dependency_matrix[source_a][source_b] = dependency
         dependency_matrix[source_b][source_a] = dependency
 
-    print("Strongest dependencies")
+    print("=== Strongest Dependencies ===")
     print()
 
     for source_id, dependencies in dependency_matrix.items():
@@ -33,12 +33,15 @@ def compute_dependency_matrix(graph):
             reverse=True,
         )[:5]
 
-        for other_id, dependency in top:
+        if top:
+            for other_id, dependency in top:
 
-            print(
-                f"    {graph.source_names[other_id]:<25}"
-                f"{dependency:.3f}"
-            )
+                print(
+                    f"    {graph.source_names[other_id]:<25}"
+                    f"{dependency:.3f}"
+                )
+        else:
+            print("    (no significant dependencies)")
 
         print()
 

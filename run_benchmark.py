@@ -1,5 +1,3 @@
-# run_benchmark.py
-
 import os
 
 from credibility.loader import (

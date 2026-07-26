@@ -1,6 +1,6 @@
-from backend.credibility.loader import load_postgres
-from backend.credibility.source_dependency import compute_dependency_matrix
-from backend.credibility.engine import infer
+from credibility.engine import infer
+from credibility.loader import load_postgres
+from credibility.source_dependency import compute_dependency_matrix
 
 
 print()

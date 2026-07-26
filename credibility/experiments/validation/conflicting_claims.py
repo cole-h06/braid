@@ -1,4 +1,4 @@
-from backend.credibility.engine import infer
+from credibility.engine import infer
 
 
 class Graph:

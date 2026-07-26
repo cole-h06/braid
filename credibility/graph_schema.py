@@ -1,5 +1,3 @@
-# canonical_graph.py
-
 import os
 from normalization import canonicalize
 import sqlite3
@@ -105,8 +103,7 @@ def load_claims():
 
     print()
     print("graph attributes")
-    print("----------------")
-
+    
     for attribute in sorted(
         GRAPH_ATTRIBUTES
     ):
@@ -263,7 +260,6 @@ def source_overlap(
 
     print()
     print("source overlap")
-    print("----------------")
 
     for (
         ratio,
@@ -303,7 +299,6 @@ def print_support(
 
     print()
     print("support distribution")
-    print("--------------------")
 
     for support in sorted(
         distribution
@@ -321,7 +316,6 @@ def print_skipped_claims(
 
     print()
     print("skipped claims")
-    print("--------------")
 
     if not skipped:
 
@@ -350,7 +344,6 @@ def print_skipped_examples(
 
     print()
     print("skipped examples")
-    print("----------------")
 
     for attribute in sorted(
         skipped_examples

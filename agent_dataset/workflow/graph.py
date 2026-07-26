@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from backend.credibility.graph import CredibilityGraph
+from credibility.graph import CredibilityGraph
 
 
 def build_graph(assertions):

@@ -6,8 +6,8 @@ from .agents.api import api_agent
 
 from .workflow.graph import build_graph
 
-from backend.credibility.engine import infer
-from backend.credibility.source_dependency import (compute_dependency_matrix)
+from credibility.engine import infer
+from credibility.source_dependency import compute_dependency_matrix
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
     credibility = result["credibility"]
     claim_support = result["claim_support"]
 
-    print("Source credibility")
+    print("=== Source Credibility ===")
     print()
 
     for source_id, score in sorted(
@@ -41,7 +41,7 @@ def main():
 
     print()
 
-    print("Claim support")
+    print("=== Claim Support ===")
     print()
 
     for claim_id, score in sorted(
@@ -49,7 +49,15 @@ def main():
         key=lambda item: item[1],
         reverse=True,
     ):
-        print(f"{claim_id} {score:.6f}")
+
+        entity, attribute, value = claim_id
+
+        print(
+            f"{entity:<20}"
+            f"{attribute:<20}"
+            f"{value:<12}"
+            f"{score:.6f}"
+        )
 
 
 if __name__ == "__main__":
