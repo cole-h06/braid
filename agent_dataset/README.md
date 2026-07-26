@@ -10,4 +10,4 @@ The benchmark computes:
 - Source credibility
 - Claim support
 
-The agents have been intentionally designed so that some agents agree while others disagree. This allows the inference engine to derive credibility from the graph.
+The agents have been intentionally designed so that some agree while others disagree. This allows the inference engine to derive credibility from the graph.
