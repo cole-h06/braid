@@ -1,0 +1,46 @@
+from collections import defaultdict
+
+from backend.credibility.graph import CredibilityGraph
+
+
+def build_graph(assertions):
+
+    source_to_claims = defaultdict(set)
+
+    claim_to_sources = defaultdict(set)
+
+    source_names = {}
+
+    claim_lookup = {}
+
+    agreement_weights = {}
+
+    for assertion in assertions:
+
+        source_id = assertion.source
+
+        claim_id = (
+            assertion.entity,
+            assertion.attribute,
+            assertion.value,
+        )
+
+        source_names[source_id] = assertion.source
+
+        source_to_claims[source_id].add(claim_id)
+
+        claim_to_sources[claim_id].add(source_id)
+
+        claim_lookup[claim_id] = (
+            assertion.entity,
+            assertion.attribute,
+            assertion.value,
+        )
+
+    return CredibilityGraph(
+        source_to_claims=dict(source_to_claims),
+        claim_to_sources=dict(claim_to_sources),
+        source_names=source_names,
+        agreement_weights=agreement_weights,
+        claim_lookup=claim_lookup,
+    )
