@@ -1,4 +1,4 @@
-
+from collections import defaultdict
 
 # give rare assertions more weight
 def build_rarity(
@@ -46,12 +46,9 @@ def score_pair(
 
         if a_value == b_value:
 
-            product_id, attribute = key
-
             matches.append(
                 (
-                    product_id,
-                    attribute,
+                    key,
                     a_value
                 )
             )
@@ -225,28 +222,39 @@ def find_pairs(
 
 def build_pairwise_rows(graph):
 
-    source_to_assertions = {}
+    assertion_to_sources = defaultdict(set)
 
-    for source_id, claims in graph.source_to_claims.items():
+    for (
+        source_id,
+        assertions
+    ) in graph.source_to_assertions.items():
 
-        assertions = {}
+        for (
+            claim_id,
+            value
+        ) in assertions.items():
 
-        for product_id, attribute, value in claims:
+            product_id, attribute = (
+                graph.claim_lookup[claim_id]
+            )
 
-            assertions[
-                (product_id, attribute)
-            ] = value
+            assertion = (
+                claim_id,
+                value,
+            )
 
-        source_to_assertions[source_id] = assertions
-
-    assertion_to_sources = graph.claim_to_sources
+            assertion_to_sources[
+                assertion
+            ].add(
+                source_id
+            )
 
     rarity = build_rarity(
         assertion_to_sources
     )
 
     return find_pairs(
-        source_to_assertions,
+        graph.source_to_assertions,
         rarity
     )
 

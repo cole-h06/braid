@@ -35,5 +35,6 @@ class CredibilityGraph:
     source_names: dict
     agreement_weights: dict
     claim_lookup: dict = field(default_factory=dict)
+    source_to_assertions: dict = field(default_factory=dict)
 
     dependency_matrix: dict = field(default_factory=dict)

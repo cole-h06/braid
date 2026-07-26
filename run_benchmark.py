@@ -1,4 +1,5 @@
 import os
+import time
 
 from credibility.graph import CredibilityGraph
 from credibility.loader import load_from_csv
@@ -22,12 +23,10 @@ def main():
         claim_to_sources,
         source_names,
         agreement_weights,
+        claim_lookup,
+        source_to_assertions,
     ) = load_from_csv(
         benchmark
-    )
-
-    dependency_matrix = compute_dependency_matrix(
-        source_to_claims
     )
 
     graph = CredibilityGraph(
@@ -35,17 +34,50 @@ def main():
         claim_to_sources=claim_to_sources,
         source_names=source_names,
         agreement_weights=agreement_weights,
-        dependency_matrix=dependency_matrix,
+        claim_lookup=claim_lookup,
+        source_to_assertions=source_to_assertions,
+    )
+
+    graph.dependency_matrix = compute_dependency_matrix(
+        graph
     )
 
     print("running credibility inference...")
     print()
 
+    print("Graph Statistics")
+    print("----------------")
+    print(f"Sources:     {len(source_names)}")
+    print(f"Claims:      {len(claim_to_sources)}")
+    print(
+        f"Assertions:  "
+        f"{sum(len(v) for v in source_to_claims.values())}"
+    )
+    print()
+
+    start = time.perf_counter()
+
     result = infer(
         graph
     )
 
+    elapsed = (
+        time.perf_counter()
+        - start
+    )
+
     credibility = result["credibility"]
+
+    print(
+        f"Converged after "
+        f"{result['iterations']} iterations"
+    )
+
+    print(
+        f"Inference time: "
+        f"{elapsed * 1000:.2f} ms"
+    )
+    print()
 
     for source_id, score in sorted(
         credibility.items(),

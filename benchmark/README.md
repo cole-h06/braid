@@ -10,7 +10,7 @@ With this benchmark, you can experiment with:
 
 ## Running the benchmark
 
-Clone the repository.
+Clone the repository:
 
 ```bash
 git clone https://github.com/cole-h06/Verity.git
@@ -35,7 +35,6 @@ python3 run_benchmark.py
 
 - `sources.csv` - source identifiers
 - `claims.csv` - claim nodes
-- `source_claims.csv` - source-specific values
 - `assertions.csv` - edges connecting sources to claims
 
 The benchmark computes:
