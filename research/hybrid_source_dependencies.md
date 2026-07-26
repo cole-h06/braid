@@ -35,7 +35,7 @@ The coefficients $\alpha_1,\ldots,\alpha_5$ determine the relative contribution 
 The estimated dependency is constrained to the interval
 
 $$
-0 \le d_{ik} \le 1
+0 \le s_{ik} \le 1
 $$
 
 where a value of $0$ represents complete independence and a value of $1$ represents complete dependency.
@@ -43,7 +43,7 @@ where a value of $0$ represents complete independence and a value of $1$ represe
 In correspondence, the estimated independence between sources is defined as
 
 $$
-q_{ik} = 1 - d_{ik}
+q_{ik} = 1 - s_{ik}
 $$
 
 Collectively, the pairwise dependency estimates form the dependency matrix
