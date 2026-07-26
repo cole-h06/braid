@@ -45,5 +45,4 @@ The benchmark computes:
 - Credibility propagation until convergence
 - Final source credibility scores
 
-Product specifications are currently the benchmark being used for development as they provide large amounts of conflicting data published by independent sources. That said, the inference algorithms themselves are not limited by any specific domain and operate only on graph structure.perate only on graph structure.grate source dependency inference)
-ate only on graph structure.
+Product specifications are currently the benchmark being used for development as they provide large amounts of conflicting data published by independent sources. That said, the inference algorithms themselves are not limited by any specific domain and operate only on graph structure.
