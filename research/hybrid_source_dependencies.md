@@ -20,15 +20,7 @@ Complementary information can be provided by combining structural graph signals 
 
 In order to formalize this hybrid approach, let $d_{ik}$ denote the estimated dependency between sources $i$ and $k$. Specifically, let
 
-$$
-d_{ik}
-=
-\alpha_1 p_{ik}
-+ \alpha_2 l_{ik}
-+ \alpha_3 o_{ik}
-+ \alpha_4 t_{ik}
-+ \alpha_5 g_{ik}
-$$
+$$ d_{ik} = \alpha_1 p_{ik} + \alpha_2 l_{ik} + \alpha_3 o_{ik} + \alpha_4 t_{ik} + \alpha_5 g_{ik} $$
 
 where
 
