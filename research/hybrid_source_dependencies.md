@@ -59,14 +59,7 @@ where each entry represents the estimated dependency between a pair of sources. 
 For each source $i$ asserting claim $j$, independence is calculated relative to the other sources asserting the same claim.
 
 $$
-q_{ij}
-=
-1-
-\frac{
-\displaystyle\sum_{\substack{k\in A(j)\\k\neq i}}\delta_{ik}
-}{
-a(j)-1
-}
+q_{ij} = 1 - \frac{\sum_{k \in A(j),\, k \neq i} \delta_{ik}}{a(j)-1}
 $$
 
 where
@@ -86,14 +79,7 @@ $$
 We incorporate the claim-specific independence score into source-to-claim propagation:
 
 $$
-c_j^{(t)}
-=
-\sum_{i\in A(j)}
-\frac{
-s_i^{(t)}w_{ij}q_{ij}
-}{
-d_i
-}
+c_j^{(t)} = \sum_{i \in A(j)} \frac{s_i^{(t)} w_{ij} q_{ij}}{d_i}
 $$
 
 where
