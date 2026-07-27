@@ -18,9 +18,9 @@ Complementary information can be provided by combining structural graph signals 
 
 ## Mathematical Framework
 
-In order to formalize this hybrid approach, let $s_{ik}$ denote the estimated dependency between sources $i$ and $k$. Specifically, let
+In order to formalize this hybrid approach, let $\delta_{ik}$ denote the estimated dependency between sources $i$ and $k$. Specifically, let
 
-$$ s_{ik} = \alpha_1 p_{ik} + \alpha_2 l_{ik} + \alpha_3 o_{ik} + \alpha_4 t_{ik} + \alpha_5 g_{ik} $$
+$$ \delta_{ik} = \alpha_1 p_{ik} + \alpha_2 l_{ik} + \alpha_3 o_{ik} + \alpha_4 t_{ik} + \alpha_5 g_{ik} $$
 
 where
 
@@ -35,7 +35,7 @@ The coefficients $\alpha_1,\ldots,\alpha_5$ determine the relative contribution 
 The estimated dependency is constrained to the interval
 
 $$
-0 \le s_{ik} \le 1
+0 \le \delta_{ik} \le 1
 $$
 
 where a value of $0$ represents complete independence and a value of $1$ represents complete dependency.
@@ -43,7 +43,7 @@ where a value of $0$ represents complete independence and a value of $1$ represe
 In correspondence, the estimated independence between sources is defined as
 
 $$
-q_{ik} = 1 - s_{ik}
+q_{ik} = 1 - \delta_{ik}
 $$
 
 Collectively, the pairwise dependency estimates form the dependency matrix
@@ -53,3 +53,54 @@ D \in [0,1]^{|S| \times |S|}
 $$
 
 where each entry represents the estimated dependency between a pair of sources. This matrix sets the foundation for incorporating dependency information into the credibility inference process. It can allow corroboration to be adjusted according to each contributing source's estimated independence.
+
+## Claim-Specific Independence
+
+For each source $i$ asserting claim $j$, independence is calculated relative to the other sources asserting the same claim.
+
+$$
+q_{ij}
+=
+1-
+\frac{
+\displaystyle\sum_{\substack{k\in A(j)\\k\neq i}}\delta_{ik}
+}{
+a(j)-1
+}
+$$
+
+where
+
+- $A(j)$ is the set of sources asserting claim $j$,
+- $a(j)=|A(j)|$ is the number of sources asserting claim $j$,
+- $\delta_{ik}$ is the estimated dependency between sources $i$ and $k$.
+
+If source $i$ is the only source asserting claim $j$, then
+
+$$
+q_{ij}=1
+$$
+
+### Dependency-Adjusted Claim Support
+
+We incorporate the claim-specific independence score into source-to-claim propagation:
+
+$$
+c_j^{(t)}
+=
+\sum_{i\in A(j)}
+\frac{
+s_i^{(t)}w_{ij}q_{ij}
+}{
+d_i
+}
+$$
+
+where
+
+- $s_i^{(t)}$ is the credibility of source $i$ at iteration $t$,
+- $w_{ij}$ is the agreement weight for source $i$'s assertion of claim $j$,
+- $q_{ij}$ is the independence of source $i$ for claim $j$, and
+- $d_i$ is the number of claims asserted by source $i$.
+
+Dependent sources are discounted through this adjustment and independent corroboration receives greater influence.
