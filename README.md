@@ -32,7 +32,7 @@ Credibility is computed iteratively across the graph. At each iteration step, ea
 
 ## Domain-Agnostic Design
 
-Verity does not interpret a claim's meaning. The current implementation uses product specifications as a development dataset because they provide large-scale conflicting information collected from multiple sources. Clients can construct the same source-claim graph from information in any domain.
+Verity does not interpret a claim's meaning. The current implementation uses product specifications as a development dataset because they provide conflicting information collected from multiple sources. Clients can construct the same source-claim graph from information in any domain.
 
 The core inference engine receives unique source and claim identifiers, as well as the assertion edges that create the relationships between them. Before inference, the input data is prepared and converted into a source-claim graph.
 
