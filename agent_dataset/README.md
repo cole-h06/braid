@@ -1,13 +1,33 @@
-## Agent Dataset Demo
+## Mocked Hybrid Source-Dependency Experiment
 
-This directory shows how Verity integrates into a multi-agent workflow.
+Five deterministic agents produce fifteen assertions and separate evidence records. The fixture exercises explicit lineage, shared provenance, shared ownership, temporal copying, graph overlap, and independent conflicting evidence.
 
-Five specialized agents independently produce structured assertions, which are then combined into a `CredibilityGraph`.
+The experiment:
 
-The benchmark computes:
+1. Validates source metadata, assertions, and evidence.
+2. Builds exact claim nodes and property/value maps.
+3. Derives provenance, lineage, ownership, temporal, and graph signals.
+4. Combines the signals into a symmetric dependency matrix.
+5. Runs dependency-adjusted credibility inference.
 
-- Pairwise source dependencies
-- Source credibility
-- Claim support
+The baseline normalized weights are:
 
-The agents have been intentionally designed so that some agree while others disagree. This allows the inference engine to derive credibility from the graph.
+- Provenance: `0.25`
+- Lineage: `0.30`
+- Ownership: `0.15`
+- Temporal: `0.15`
+- Graph: `0.15`
+
+These weights are an initial hand-selected baseline for the mocked experiment, not calibrated estimates. Alternative finite, non-negative configurations are normalized internally.
+
+From the repository root, run:
+
+```bash
+.venv/bin/python -m agent_dataset.run
+```
+
+Run the experiment tests with:
+
+```bash
+.venv/bin/python -m pytest agent_dataset/tests -v
+```

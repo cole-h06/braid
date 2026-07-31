@@ -224,6 +224,8 @@ def build_pairwise_rows(graph):
 
     assertion_to_sources = defaultdict(set)
 
+    source_to_assertions = defaultdict(dict)
+
     for (
         source_id,
         assertions
@@ -234,14 +236,21 @@ def build_pairwise_rows(graph):
             value
         ) in assertions.items():
 
-            product_id, attribute = (
-                graph.claim_lookup[claim_id]
+            property_key = (
+                graph.claim_lookup.get(
+                    claim_id,
+                    claim_id,
+                )
             )
 
             assertion = (
-                claim_id,
+                property_key,
                 value,
             )
+
+            source_to_assertions[
+                source_id
+            ][property_key] = value
 
             assertion_to_sources[
                 assertion
@@ -254,7 +263,7 @@ def build_pairwise_rows(graph):
     )
 
     return find_pairs(
-        graph.source_to_assertions,
+        source_to_assertions,
         rarity
     )
 

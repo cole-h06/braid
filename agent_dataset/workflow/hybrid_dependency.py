@@ -1,0 +1,346 @@
+import math
+
+from datetime import timedelta
+from itertools import combinations
+
+from credibility.analysis.evidence_independence import build_pairwise_rows
+
+
+SIGNAL_NAMES = (
+    "provenance",
+    "lineage",
+    "ownership",
+    "temporal",
+    "graph",
+)
+
+
+def normalize_weights(weights):
+
+    if set(weights) != set(SIGNAL_NAMES):
+        raise ValueError("weights must contain exactly five signal names")
+
+    if any(
+        not math.isfinite(value) or value < 0.0
+        for value in weights.values()
+    ):
+        raise ValueError("weights must be finite and non-negative")
+
+    total = sum(weights.values())
+
+    if total <= 0.0:
+        raise ValueError("weights must have a positive sum")
+
+    return {
+        name: value / total
+        for name, value in weights.items()
+    }
+
+
+def compute_hybrid_dependency(
+    graph,
+    sources,
+    assertions,
+    evidence,
+    weights,
+    temporal_window=timedelta(hours=2),
+):
+
+    normalized_weights = normalize_weights(weights)
+
+    temporal_seconds = temporal_window.total_seconds()
+
+    if not math.isfinite(temporal_seconds) or temporal_seconds <= 0.0:
+        raise ValueError("temporal window must be finite and positive")
+
+    source_ids = [
+        source.source_id
+        for source in sources
+    ]
+
+    source_lookup = {
+        source.source_id: source
+        for source in sources
+    }
+
+    assertion_lookup = {
+        assertion.assertion_id: assertion
+        for assertion in assertions
+    }
+
+    evidence_lookup = {
+        item.assertion_id: item
+        for item in evidence
+    }
+
+    provenance = build_provenance_sets(
+        source_ids,
+        assertion_lookup,
+        evidence,
+    )
+
+    lineage_directions = build_lineage_directions(
+        source_ids,
+        assertion_lookup,
+        evidence,
+    )
+
+    temporal_directions = build_temporal_directions(
+        source_ids,
+        graph.source_to_assertions,
+        assertions,
+        evidence_lookup,
+        temporal_window,
+    )
+
+    graph_scores = build_graph_scores(
+        graph
+    )
+
+    signals = {
+        name: empty_matrix(source_ids)
+        for name in SIGNAL_NAMES
+    }
+
+    dependency_matrix = empty_matrix(source_ids)
+
+    # compare one source pair
+    for source_a, source_b in combinations(source_ids, 2):
+
+        pair_signals = {
+            "provenance": provenance_score(
+                provenance[source_a],
+                provenance[source_b],
+            ),
+            "lineage": max(
+                lineage_directions[source_a][source_b],
+                lineage_directions[source_b][source_a],
+            ),
+            "ownership": ownership_score(
+                source_lookup[source_a],
+                source_lookup[source_b],
+            ),
+            "temporal": max(
+                temporal_directions[source_a][source_b],
+                temporal_directions[source_b][source_a],
+            ),
+            "graph": graph_score(
+                graph_scores,
+                source_a,
+                source_b,
+            ),
+        }
+
+        dependency = sum(
+            normalized_weights[name] * value
+            for name, value in pair_signals.items()
+        )
+
+        dependency = min(1.0, max(0.0, dependency))
+
+        for name, value in pair_signals.items():
+            signals[name][source_a][source_b] = value
+            signals[name][source_b][source_a] = value
+
+        dependency_matrix[source_a][source_b] = dependency
+        dependency_matrix[source_b][source_a] = dependency
+
+    diagnostics = {
+        "lineage_directions": lineage_directions,
+        "temporal_directions": temporal_directions,
+    }
+
+    return {
+        "weights": normalized_weights,
+        "signals": signals,
+        "dependency_matrix": dependency_matrix,
+        "diagnostics": diagnostics,
+    }
+
+
+def empty_matrix(source_ids):
+
+    return {
+        source_id: {
+            other_id: 0.0
+            for other_id in source_ids
+        }
+        for source_id in source_ids
+    }
+
+
+def build_provenance_sets(
+    source_ids,
+    assertion_lookup,
+    evidence,
+):
+
+    provenance = {
+        source_id: set()
+        for source_id in source_ids
+    }
+
+    for item in evidence:
+
+        source_id = assertion_lookup[item.assertion_id].source_id
+
+        provenance[source_id].update(item.provenance_ids)
+
+    return provenance
+
+
+def provenance_score(
+    provenance_a,
+    provenance_b,
+):
+
+    union = provenance_a | provenance_b
+
+    if not union:
+        return 0.0
+
+    return len(provenance_a & provenance_b) / len(union)
+
+
+def build_lineage_directions(
+    source_ids,
+    assertion_lookup,
+    evidence,
+):
+
+    directions = empty_matrix(source_ids)
+
+    for item in evidence:
+
+        child_source = assertion_lookup[item.assertion_id].source_id
+
+        for parent_source in item.cited_source_ids:
+            directions[child_source][parent_source] = 1.0
+
+        for parent_id in item.parent_assertion_ids:
+
+            parent_source = assertion_lookup[parent_id].source_id
+
+            directions[child_source][parent_source] = 1.0
+
+    return directions
+
+
+def build_temporal_directions(
+    source_ids,
+    source_to_assertions,
+    assertions,
+    evidence_lookup,
+    temporal_window,
+):
+
+    directions = empty_matrix(source_ids)
+
+    observed_at = {}
+
+    for assertion in assertions:
+
+        property_key = (
+            assertion.entity,
+            assertion.attribute,
+        )
+
+        observed_at[assertion.source_id, property_key] = (
+            evidence_lookup[assertion.assertion_id].observed_at
+        )
+
+    for child_source, parent_source in combinations(source_ids, 2):
+
+        directions[child_source][parent_source] = temporal_score(
+            child_source,
+            parent_source,
+            source_to_assertions,
+            observed_at,
+            temporal_window,
+        )
+
+        directions[parent_source][child_source] = temporal_score(
+            parent_source,
+            child_source,
+            source_to_assertions,
+            observed_at,
+            temporal_window,
+        )
+
+    return directions
+
+
+def temporal_score(
+    child_source,
+    parent_source,
+    source_to_assertions,
+    observed_at,
+    temporal_window,
+):
+
+    child_assertions = source_to_assertions[child_source]
+    parent_assertions = source_to_assertions[parent_source]
+
+    matches = [
+        property_key
+        for property_key in child_assertions.keys() & parent_assertions.keys()
+        if child_assertions[property_key] == parent_assertions[property_key]
+    ]
+
+    if not matches:
+        return 0.0
+
+    qualifying = 0
+
+    for property_key in matches:
+
+        difference = (
+            observed_at[child_source, property_key]
+            - observed_at[parent_source, property_key]
+        )
+
+        if timedelta(0) < difference <= temporal_window:
+            qualifying += 1
+
+    return qualifying / len(matches)
+
+
+def ownership_score(
+    source_a,
+    source_b,
+):
+
+    if source_a.owner_id is None or source_b.owner_id is None:
+        return 0.0
+
+    return float(source_a.owner_id == source_b.owner_id)
+
+
+def build_graph_scores(graph):
+
+    rows, _ = build_pairwise_rows(graph)
+
+    scores = {}
+
+    for row in rows:
+
+        redundancy = row[0]
+        source_a = row[7]
+        source_b = row[8]
+
+        scores[source_a, source_b] = redundancy
+        scores[source_b, source_a] = redundancy
+
+    return scores
+
+
+def graph_score(
+    scores,
+    source_a,
+    source_b,
+):
+
+    return scores.get(
+        (source_a, source_b),
+        0.0,
+    )
