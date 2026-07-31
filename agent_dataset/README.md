@@ -38,6 +38,3 @@ Run its tests:
 ```bash
 .venv/bin/python -m pytest agent_dataset/tests -v
 ```
-```bash
-.venv/bin/python -m pytest agent_dataset/tests -v
-```
