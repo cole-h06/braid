@@ -2,22 +2,22 @@
 
 A graph-based credibility inference engine for information networks. Verity models sources and claims as a bipartite graph to infer the credibility of every source and claim.
 
-# Problem
+## Problem
 
 As AI systems, from foundational large language models (LLMs) to fully autonomous agents, reason and execute complex tasks across digital environments using information collected from many sources, evaluating the credibility of this information becomes highly important.
 
-# Research Challenge
+## Research Challenge
 
 Source credibility and claim credibility depend on each other recursively.
 
-A source becomes more credible if it consistently supports true claims.
-A claim becomes more credible if it is supported by credible sources.
+A source gains credibility when it supports claims that receive stronger support across the network.
+A claim gains support when it is asserted by more credible sources.
 
 When an agent scrapes data from 50 different websites, how do we know who to trust?
 
 We typically rely on agreement between sources as evidence of truth. But, if Source A and Source B agree, is it really agreement? Or did Source B just copy its data from Source A?
 
-# Approach
+## Approach
 
 Sources and claims form a bipartite graph. Each edge represents a source asserting a claim. Verity models information as an interconnected network instead of a collection of independent observations.
 <p align="center">
@@ -30,11 +30,11 @@ Sources and claims form a bipartite graph. Each edge represents a source asserti
 
 Credibility is computed iteratively across the graph. At each iteration step, each source distributes its credibility across all claims it asserts, and each claim in turn redistributes the support it has accumulated back to the asserting sources. The iterations repeat until the credibility vector reaches a fixed point. Agreement weighting influences how much support each assertion contributes.
 
-# Domain-Agnostic Design
+## Domain-Agnostic Design
 
 Verity does not interpret a claim's content. The current implementation uses product specifications as a development dataset because they provide large-scale conflicting information from independent sources. In production, clients construct their own credibility graphs from any domain.
 
-Verity operates purely on graph structure. The engine only receives unique identifiers that correspond to sources, claims, and the assertions between them. This means graphs have already been parsed, normalized, deduplicated, canonicalized, and otherwise pre-processed before they are ingested by Verity.
+Credibility inference is performed over the source-claim graph. Current research also uses provenance and related evidence metadata to discount the influence of dependent corroboration. The engine only receives unique identifiers that correspond to sources, claims, and the assertions between them. This means graphs have already been parsed, normalized, deduplicated, canonicalized, and otherwise pre-processed before they are ingested by Verity.
 
 Some examples where a client application could merge equivalent assertions before constructing a credibility graph include:
 
@@ -58,12 +58,7 @@ Enterprise knowledge:
 - Slack Discussion -> Quarterly revenue was $4.2 million
 ```
 
-# Stack
-
-- Python
-- PostgreSQL
-
-# Repository
+## Repository
 
 - `agent_dataset/` — Example multi-agent dataset and demo
 - `benchmark/` — Reproducible benchmark dataset
@@ -78,7 +73,7 @@ Verity is an active research project focused on evaluating source credibility ba
 
 Alongside agreement-weighted credibility propagation, the current engine has integrated additional signals to identify when apparent agreement may come from dependent sources instead of independent support. It has been tested with a controlled multi-agent dataset and a simulated enterprise retrieval workflow.
 
-# Vision
+## Vision
 
 Verity explores how credibility inference can be made accessible and simplified for AI systems.
 
@@ -88,7 +83,7 @@ Verity takes a different approach by modeling information as a bipartite graph o
 
 The mission is to make the Verity credibility inference engine accessible through an open-source [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that allows AI systems to seamlessly incorporate credibility inference directly into their reasoning process.
 
-# Contact
+## Contact
 
 Feel free to connect with me whether you have any ideas, questions, feedback, or if you just want to chat about interesting topics! 
 
