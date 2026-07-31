@@ -1,33 +1,42 @@
 ## Mocked Hybrid Source-Dependency Experiment
 
-Five deterministic agents produce fifteen assertions and separate evidence records. The fixture exercises explicit lineage, shared provenance, shared ownership, temporal copying, graph overlap, and independent conflicting evidence.
+This experiment displays how Verity integrates into a multi-agent workflow.
 
-The experiment:
+Five specialized agents independently return fifteen assertions. In each assertion, you can find a separate evidence record that stores the metadata used to test source dependency.
 
-1. Validates source metadata, assertions, and evidence.
-2. Builds exact claim nodes and property/value maps.
-3. Derives provenance, lineage, ownership, temporal, and graph signals.
-4. Combines the signals into a symmetric dependency matrix.
-5. Runs dependency-adjusted credibility inference.
+The dataset includes examples of:
 
-The baseline normalized weights are:
+- explicit lineage;
+- shared provenance;
+- shared ownership;
+- close publication timing;
+- structural assertion overlap;
+- independent conflicting evidence.
 
-- Provenance: `0.25`
-- Lineage: `0.30`
-- Ownership: `0.15`
-- Temporal: `0.15`
-- Graph: `0.15`
+The credibility inference engine uses the pairwise dependency matrix which is computed by combining these signals.
 
-These weights are an initial hand-selected baseline for the mocked experiment, not calibrated estimates. Alternative finite, non-negative configurations are normalized internally.
+## Baseline Weights
 
-From the repository root, run:
+```text
+provenance    0.25
+lineage       0.30
+ownership     0.15
+temporal      0.15
+structure     0.15
+
+Note that these starting weights have been hand-tuned. They have not been calibrated against real dependency data.
+
+Run the experiment from the repository root:
 
 ```bash
 .venv/bin/python -m agent_dataset.run
 ```
 
-Run the experiment tests with:
+Run its tests:
 
+```bash
+.venv/bin/python -m pytest agent_dataset/tests -v
+```
 ```bash
 .venv/bin/python -m pytest agent_dataset/tests -v
 ```
