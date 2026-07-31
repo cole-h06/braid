@@ -2,7 +2,7 @@
 
 This experiment displays how Verity integrates into a multi-agent workflow.
 
-Five specialized agents independently return fifteen assertions. In each assertion, you can find a separate evidence record that stores the metadata used to test source dependency.
+Five specialized agents return fifteen assertions. Each assertion has a separate evidence record that stores the metadata used to test source dependency.
 
 The dataset includes examples of:
 
