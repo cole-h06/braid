@@ -76,7 +76,7 @@ Enterprise knowledge:
 
 Verity is an active research project focused on evaluating source credibility based on the graph structure of an information network.
 
-Main area of research currently is [modeling source dependencies](research/source_dependencies.md) to ensure that copied information contributes less evidence than independent agreement.
+Alongside agreement-weighted credibility propagation, the current engine has integrated additional signals to identify when apparent agreement may come from dependent sources instead of independent support. It has been tested with a controlled multi-agent dataset and a simulated enterprise retrieval workflow.
 
 # Vision
 
