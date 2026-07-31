@@ -45,12 +45,38 @@ The same five agents are also capable of running through LangGraph. They run in 
 
 There is no LLM or external retrieval involved. It produces the same result as the sequential experiment.
 
+Open Python from the repository root:
+
+```bash
+.venv/bin/python
+```
+
+Then run:
+
 ```python
 from agent_dataset.workflow.pipeline import run_workflow
 
 result = run_workflow(
     debug=True,
 )
+
+print(result)
+```Open Python from the repository root:
+
+```bash
+.venv/bin/python
+```
+
+Then run:
+
+```python
+from agent_dataset.workflow.pipeline import run_workflow
+
+result = run_workflow(
+    debug=True,
+)
+
+print(result)
 ```
 
 ## Enterprise Retrieval
