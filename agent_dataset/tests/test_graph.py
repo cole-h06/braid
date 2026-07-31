@@ -2,7 +2,7 @@ from agent_dataset.dataset import load_dataset
 from agent_dataset.workflow.graph import build_graph
 
 
-def build_test_graph():
+def load_graph():
 
     sources, assertions, _ = load_dataset()
 
@@ -12,26 +12,26 @@ def build_test_graph():
     )
 
 
-def test_graph_shape():
+def test_counts():
 
-    graph = build_test_graph()
+    graph = load_graph()
 
     assert len(graph.source_to_claims) == 5
     assert len(graph.claim_to_sources) == 9
     assert not hasattr(graph, "evidence")
 
 
-def test_source_assertions():
+def test_assertions():
 
-    graph = build_test_graph()
+    graph = load_graph()
 
     for assertions in graph.source_to_assertions.values():
         assert len(assertions) == 3
 
 
-def test_conflicting_claims():
+def test_conflicts():
 
-    graph = build_test_graph()
+    graph = load_graph()
 
     refund_30 = (
         "refund_policy",

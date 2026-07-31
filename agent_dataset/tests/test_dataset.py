@@ -13,7 +13,7 @@ from agent_dataset.dataset import (
 from agent_dataset.extraction.schema import AgentResult, Evidence
 
 
-def test_dataset_shape():
+def test_counts():
 
     sources, assertions, evidence = load_dataset()
 
@@ -23,8 +23,9 @@ def test_dataset_shape():
     assert len(SIMULATED_RELATIONSHIPS) == 5
 
 
-def test_agents_are_deterministic():
+def test_repeatability():
 
+    # make sure the mock agents return the same data every run
     for agent in AGENTS:
 
         result = agent()
@@ -33,10 +34,11 @@ def test_agents_are_deterministic():
         assert result == agent()
 
 
-def test_one_evidence_per_assertion():
+def test_evidence():
 
     sources, assertions, evidence = load_dataset()
 
+    # each assertion should have one evidence record
     with pytest.raises(
         ValueError,
         match="exactly one evidence record",
@@ -48,8 +50,9 @@ def test_one_evidence_per_assertion():
         )
 
 
-def test_evidence_timestamps():
+def test_timestamps():
 
+    # reject evidence without a valid timezone
     with pytest.raises(ValidationError):
         Evidence(
             assertion_id="example",
@@ -66,7 +69,8 @@ def test_evidence_timestamps():
 
     sources, assertions, evidence = load_dataset()
 
-    naive = evidence[0].model_copy(
+    # model_copy bypasses field validation so dataset validation sees bad data
+    bad_time = evidence[0].model_copy(
         update={"observed_at": datetime(2026, 1, 1, 9)}
     )
 
@@ -77,15 +81,15 @@ def test_evidence_timestamps():
         validate_dataset(
             sources,
             assertions,
-            [naive, *evidence[1:]],
+            [bad_time, *evidence[1:]],
         )
 
 
-def test_source_references():
+def test_sources():
 
     sources, assertions, evidence = load_dataset()
 
-    unknown = assertions[0].model_copy(
+    bad_source = assertions[0].model_copy(
         update={"source_id": "unknown"}
     )
 
@@ -95,11 +99,11 @@ def test_source_references():
     ):
         validate_dataset(
             sources,
-            [unknown, *assertions[1:]],
+            [bad_source, *assertions[1:]],
             evidence,
         )
 
-    unknown = evidence[0].model_copy(
+    bad_citation = evidence[0].model_copy(
         update={"cited_source_ids": ("unknown",)}
     )
 
@@ -110,15 +114,15 @@ def test_source_references():
         validate_dataset(
             sources,
             assertions,
-            [unknown, *evidence[1:]],
+            [bad_citation, *evidence[1:]],
         )
 
 
-def test_assertion_references():
+def test_assertions():
 
     sources, assertions, evidence = load_dataset()
 
-    unknown = evidence[0].model_copy(
+    bad_assertion = evidence[0].model_copy(
         update={"assertion_id": "unknown"}
     )
 
@@ -129,10 +133,10 @@ def test_assertion_references():
         validate_dataset(
             sources,
             assertions,
-            [unknown, *evidence[1:]],
+            [bad_assertion, *evidence[1:]],
         )
 
-    unknown = evidence[0].model_copy(
+    bad_parent = evidence[0].model_copy(
         update={"parent_assertion_ids": ("unknown",)}
     )
 
@@ -143,25 +147,30 @@ def test_assertion_references():
         validate_dataset(
             sources,
             assertions,
-            [unknown, *evidence[1:]],
+            [bad_parent, *evidence[1:]],
         )
 
 
-def test_unique_ids():
+def test_ids():
 
     sources, assertions, evidence = load_dataset()
+
+    duplicate_source = [
+        *sources,
+        sources[0],
+    ]
 
     with pytest.raises(
         ValueError,
         match="source IDs",
     ):
         validate_dataset(
-            [*sources, sources[0]],
+            duplicate_source,
             assertions,
             evidence,
         )
 
-    duplicate = assertions[1].model_copy(
+    duplicate_assertion = assertions[1].model_copy(
         update={"assertion_id": assertions[0].assertion_id}
     )
 
@@ -171,16 +180,17 @@ def test_unique_ids():
     ):
         validate_dataset(
             sources,
-            [assertions[0], duplicate, *assertions[2:]],
+            [assertions[0], duplicate_assertion, *assertions[2:]],
             evidence,
         )
 
 
-def test_one_value_per_property():
+def test_values():
 
     sources, assertions, evidence = load_dataset()
 
-    duplicate = assertions[1].model_copy(
+    # conflicts can exist across sources, but not within one source
+    duplicate_value = assertions[1].model_copy(
         update={
             "entity": assertions[0].entity,
             "attribute": assertions[0].attribute,
@@ -193,6 +203,6 @@ def test_one_value_per_property():
     ):
         validate_dataset(
             sources,
-            [assertions[0], duplicate, *assertions[2:]],
+            [assertions[0], duplicate_value, *assertions[2:]],
             evidence,
         )

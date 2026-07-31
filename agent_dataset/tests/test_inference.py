@@ -7,7 +7,7 @@ from credibility.engine import infer
 from agent_dataset.run import run_experiment
 
 
-def test_determinism():
+def test_repeatability():
 
     first = run_experiment(debug=True)
     second = run_experiment(debug=True)
@@ -38,7 +38,7 @@ def test_inference():
     )
 
 
-def test_claim_independence():
+def test_independence():
 
     experiment = run_experiment(debug=True)
     independence = experiment["inference"]["independence"]
@@ -75,7 +75,7 @@ def test_claim_independence():
     )
 
 
-def test_singleton_independence():
+def test_singletons():
 
     experiment = run_experiment(debug=True)
     graph = experiment["graph"]
@@ -90,7 +90,7 @@ def test_singleton_independence():
             assert independence[claim_id][source_id] == 1.0
 
 
-def test_dependency_discount():
+def test_discount():
 
     experiment = run_experiment(debug=True)
     graph = experiment["graph"]

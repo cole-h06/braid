@@ -31,6 +31,7 @@ def normalize_weights(weights):
     if total <= 0.0:
         raise ValueError("weights must have a positive sum")
 
+    # normalize the weights without changing the input
     return {
         name: value / total
         for name, value in weights.items()
@@ -73,19 +74,19 @@ def compute_hybrid_dependency(
         for item in evidence
     }
 
-    provenance = build_provenance_sets(
+    provenance = build_provenance(
         source_ids,
         assertion_lookup,
         evidence,
     )
 
-    lineage_directions = build_lineage_directions(
+    lineage = build_lineage(
         source_ids,
         assertion_lookup,
         evidence,
     )
 
-    temporal_directions = build_temporal_directions(
+    temporal = build_temporal(
         source_ids,
         graph.source_to_assertions,
         assertions,
@@ -93,7 +94,7 @@ def compute_hybrid_dependency(
         temporal_window,
     )
 
-    graph_scores = build_graph_scores(
+    structure = build_structure(
         graph
     )
 
@@ -113,24 +114,25 @@ def compute_hybrid_dependency(
                 provenance[source_b],
             ),
             "lineage": max(
-                lineage_directions[source_a][source_b],
-                lineage_directions[source_b][source_a],
+                lineage[source_a][source_b],
+                lineage[source_b][source_a],
             ),
             "ownership": ownership_score(
                 source_lookup[source_a],
                 source_lookup[source_b],
             ),
             "temporal": max(
-                temporal_directions[source_a][source_b],
-                temporal_directions[source_b][source_a],
+                temporal[source_a][source_b],
+                temporal[source_b][source_a],
             ),
-            "graph": graph_score(
-                graph_scores,
+            "graph": structural_score(
+                structure,
                 source_a,
                 source_b,
             ),
         }
 
+        # combine the five signals using the normalized weights
         dependency = sum(
             normalized_weights[name] * value
             for name, value in pair_signals.items()
@@ -146,8 +148,8 @@ def compute_hybrid_dependency(
         dependency_matrix[source_b][source_a] = dependency
 
     diagnostics = {
-        "lineage_directions": lineage_directions,
-        "temporal_directions": temporal_directions,
+        "lineage_directions": lineage,
+        "temporal_directions": temporal,
     }
 
     return {
@@ -169,7 +171,7 @@ def empty_matrix(source_ids):
     }
 
 
-def build_provenance_sets(
+def build_provenance(
     source_ids,
     assertion_lookup,
     evidence,
@@ -202,7 +204,7 @@ def provenance_score(
     return len(provenance_a & provenance_b) / len(union)
 
 
-def build_lineage_directions(
+def build_lineage(
     source_ids,
     assertion_lookup,
     evidence,
@@ -226,7 +228,7 @@ def build_lineage_directions(
     return directions
 
 
-def build_temporal_directions(
+def build_temporal(
     source_ids,
     source_to_assertions,
     assertions,
@@ -316,7 +318,7 @@ def ownership_score(
     return float(source_a.owner_id == source_b.owner_id)
 
 
-def build_graph_scores(graph):
+def build_structure(graph):
 
     rows, _ = build_pairwise_rows(graph)
 
@@ -334,7 +336,7 @@ def build_graph_scores(graph):
     return scores
 
 
-def graph_score(
+def structural_score(
     scores,
     source_a,
     source_b,

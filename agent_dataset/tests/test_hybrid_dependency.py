@@ -14,7 +14,7 @@ from agent_dataset.workflow.hybrid_dependency import (
 )
 
 
-def build_hybrid():
+def load_hybrid():
 
     sources, assertions, evidence = load_dataset()
 
@@ -36,7 +36,7 @@ def build_hybrid():
 
 def test_signals():
 
-    _, hybrid = build_hybrid()
+    _, hybrid = load_hybrid()
     signals = hybrid["signals"]
 
     assert signals["lineage"]["research_agent"]["search_agent"] == 1.0
@@ -48,9 +48,9 @@ def test_signals():
         assert signals[name]["research_agent"]["api_agent"] == 0.0
 
 
-def test_graph_signals():
+def test_structure():
 
-    _, hybrid = build_hybrid()
+    _, hybrid = load_hybrid()
     graph = hybrid["signals"]["graph"]
 
     expected = {
@@ -75,7 +75,7 @@ def test_graph_signals():
 
 def test_directions():
 
-    _, hybrid = build_hybrid()
+    _, hybrid = load_hybrid()
     diagnostics = hybrid["diagnostics"]
 
     lineage = diagnostics["lineage_directions"]
@@ -89,7 +89,7 @@ def test_directions():
 
 def test_dependencies():
 
-    _, hybrid = build_hybrid()
+    _, hybrid = load_hybrid()
     matrix = hybrid["dependency_matrix"]
 
     selected = [
@@ -112,9 +112,9 @@ def test_dependencies():
     assert selected == sorted(selected, reverse=True)
 
 
-def test_matrix_bounds():
+def test_matrix():
 
-    sources, hybrid = build_hybrid()
+    sources, hybrid = load_hybrid()
 
     matrices = list(hybrid["signals"].values())
     matrices.append(hybrid["dependency_matrix"])
@@ -138,7 +138,7 @@ def test_matrix_bounds():
                 assert value == matrix[other_id][source_id]
 
 
-def test_weight_normalization():
+def test_weights():
 
     weights = {
         name: value * 10
@@ -152,7 +152,7 @@ def test_weight_normalization():
     assert normalized == BASELINE_WEIGHTS
 
 
-def test_invalid_weights():
+def test_bad_weights():
 
     invalid = (
         {},
@@ -169,7 +169,7 @@ def test_invalid_weights():
             normalize_weights(weights)
 
 
-def test_temporal_window():
+def test_window():
 
     sources, assertions, evidence = load_dataset()
 
@@ -194,7 +194,7 @@ def test_temporal_window():
             )
 
 
-def test_alternative_weights():
+def test_alphas():
 
     sources, assertions, evidence = load_dataset()
 
