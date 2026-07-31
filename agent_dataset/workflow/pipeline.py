@@ -111,26 +111,6 @@ def api_node(state):
     }
 
 
-def collect_node(state):
-
-    assertions = []
-    evidence = []
-
-    # keep collection stable after the parallel agent nodes finish
-    for source_id in AGENT_ORDER:
-
-        result = state["results"][source_id]
-
-        assertions.extend(result.assertions)
-        evidence.extend(result.evidence)
-
-    return {
-        "sources": SOURCES,
-        "assertions": assertions,
-        "evidence": evidence,
-    }
-
-
 def validate_node(state):
 
     validate_dataset(
@@ -154,7 +134,13 @@ def graph_node(state):
     }
 
 
-def build_workflow(
+def build_pipeline(
+    agent_nodes,
+    order,
+    sources,
+    roots,
+    collect_from,
+    joins=(),
     weights=None,
     debug=False,
 ):
@@ -194,13 +180,29 @@ def build_workflow(
             "inference": result,
         }
 
+    def collect_node(state):
+
+        assertions = []
+        evidence = []
+
+        # keep collection stable after the parallel agent nodes finish
+        for source_id in order:
+
+            result = state["results"][source_id]
+
+            assertions.extend(result.assertions)
+            evidence.extend(result.evidence)
+
+        return {
+            "sources": sources,
+            "assertions": assertions,
+            "evidence": evidence,
+        }
+
     workflow = StateGraph(WorkflowState)
 
-    workflow.add_node("research", research_node)
-    workflow.add_node("search", search_node)
-    workflow.add_node("sql", sql_node)
-    workflow.add_node("document", document_node)
-    workflow.add_node("api", api_node)
+    for name, node in agent_nodes.items():
+        workflow.add_node(name, node)
 
     workflow.add_node("collect", collect_node)
     workflow.add_node("validate", validate_node)
@@ -208,19 +210,14 @@ def build_workflow(
     workflow.add_node("dependency", dependency_node)
     workflow.add_node("inference", inference_node)
 
-    agents = [
-        "research",
-        "search",
-        "sql",
-        "document",
-        "api",
-    ]
-
-    for agent in agents:
+    for agent in roots:
         workflow.add_edge(START, agent)
 
-    # wait for every agent before collecting their results
-    workflow.add_edge(agents, "collect")
+    for parents, child in joins:
+        workflow.add_edge(parents, child)
+
+    # wait for every terminal agent before collecting their results
+    workflow.add_edge(collect_from, "collect")
 
     workflow.add_edge("collect", "validate")
     workflow.add_edge("validate", "build_graph")
@@ -229,6 +226,30 @@ def build_workflow(
     workflow.add_edge("inference", END)
 
     return workflow.compile()
+
+
+def build_workflow(
+    weights=None,
+    debug=False,
+):
+
+    agents = {
+        "research": research_node,
+        "search": search_node,
+        "sql": sql_node,
+        "document": document_node,
+        "api": api_node,
+    }
+
+    return build_pipeline(
+        agent_nodes=agents,
+        order=AGENT_ORDER,
+        sources=SOURCES,
+        roots=tuple(agents),
+        collect_from=tuple(agents),
+        weights=weights,
+        debug=debug,
+    )
 
 
 def run_workflow(

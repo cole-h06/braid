@@ -1,6 +1,8 @@
 from datetime import datetime
 
-from pydantic import BaseModel, field_validator
+from typing import Literal
+
+from pydantic import BaseModel, Field, field_validator
 
 
 class SourceMetadata(BaseModel):
@@ -25,6 +27,31 @@ class Assertion(BaseModel):
     value: str
 
 
+class Retrieval(BaseModel):
+
+    retrieval_id: str
+
+    kind: Literal["document", "sql", "api", "aggregation"]
+
+    resource_id: str
+
+    retrieved_at: datetime
+
+    fields: dict[str, str] = Field(default_factory=dict)
+
+    @field_validator("retrieved_at")
+    @classmethod
+    def validate_retrieved_at(
+        cls,
+        value,
+    ):
+
+        if value.tzinfo is None or value.utcoffset() is None:
+            raise ValueError("retrieved_at must be timezone-aware")
+
+        return value
+
+
 class Evidence(BaseModel):
 
     assertion_id: str
@@ -36,6 +63,11 @@ class Evidence(BaseModel):
     cited_source_ids: tuple[str, ...] = ()
 
     parent_assertion_ids: tuple[str, ...] = ()
+
+    retrievals: tuple[Retrieval, ...] = Field(
+        default=(),
+        exclude_if=lambda value: not value,
+    )
 
     @field_validator("observed_at")
     @classmethod

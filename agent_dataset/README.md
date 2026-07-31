@@ -52,3 +52,7 @@ result = run_workflow(
     debug=True,
 )
 ```
+
+## Enterprise Retrieval
+
+The separate [enterprise experiment](enterprise/README.md) retrieves synthetic business facts through local documents, SQLite, and a vendor API snapshot before running the same dependency and inference code.
