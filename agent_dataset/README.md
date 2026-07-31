@@ -61,22 +61,6 @@ result = run_workflow(
 )
 
 print(result)
-```Open Python from the repository root:
-
-```bash
-.venv/bin/python
-```
-
-Then run:
-
-```python
-from agent_dataset.workflow.pipeline import run_workflow
-
-result = run_workflow(
-    debug=True,
-)
-
-print(result)
 ```
 
 ## Enterprise Retrieval
