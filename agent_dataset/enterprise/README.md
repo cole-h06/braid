@@ -15,7 +15,13 @@ Two timestamps are kept separate:
 
 When calculating temporal dependency, only `observed_at` is used.
 
-Run the experiment from the repository root:
+Run the experiment from the repository root by opening Python:
+
+```bash
+.venv/bin/python
+```
+
+Then run:
 
 ```python
 from agent_dataset.enterprise import run_enterprise
@@ -23,4 +29,6 @@ from agent_dataset.enterprise import run_enterprise
 result = run_enterprise(
     debug=True,
 )
+
+print(result)
 ```
