@@ -38,3 +38,17 @@ Run its tests:
 ```bash
 .venv/bin/python -m pytest agent_dataset/tests -v
 ```
+
+## LangGraph Workflow
+
+The same five agents are also capable of running through LangGraph. They run in parallel, then their results are collected in a fixed order before validation, graph construction, hybrid dependency estimation, and inference.
+
+There is no LLM or external retrieval involved. It produces the same result as the sequential experiment.
+
+```python
+from agent_dataset.workflow.pipeline import run_workflow
+
+result = run_workflow(
+    debug=True,
+)
+```
