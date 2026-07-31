@@ -23,6 +23,7 @@ lineage       0.30
 ownership     0.15
 temporal      0.15
 structure     0.15
+```text
 
 Note that these starting weights have been hand-tuned. They have not been calibrated against real dependency data.
 
