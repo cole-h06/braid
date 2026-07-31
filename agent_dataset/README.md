@@ -1,4 +1,4 @@
-## Mocked Hybrid Source-Dependency Experiment
+## Mocked Agent Dataset
 
 This experiment displays how Verity integrates into a multi-agent workflow.
 
