@@ -32,18 +32,20 @@ Credibility is computed iteratively across the graph. At each iteration step, ea
 
 ## Domain-Agnostic Design
 
-Verity does not interpret a claim's content. The current implementation uses product specifications as a development dataset because they provide large-scale conflicting information from independent sources. In production, clients construct their own credibility graphs from any domain.
+Verity does not interpret a claim's meaning. The current implementation uses product specifications as a development dataset because they provide large-scale conflicting information from independent sources. Clients can construct the same source-claim graph from information in any domain.
 
-Credibility inference is performed over the source-claim graph. Current research also uses provenance and related evidence metadata to discount the influence of dependent corroboration. The engine only receives unique identifiers that correspond to sources, claims, and the assertions between them. This means graphs have already been parsed, normalized, deduplicated, canonicalized, and otherwise pre-processed before they are ingested by Verity.
+The core inference engine receives unique source and claim identifiers, as well as the assertion edges that create the relationships between them. Before inference, the input data is prepared and converted into a source-claim graph.
 
-Some examples where a client application could merge equivalent assertions before constructing a credibility graph include:
+The current research also uses provenance and evidence metadata before inference to estimate source dependency. This results in a dependency matrix that is used to reduce the influence of evidence that may not be independent.
+
+Some examples of equivalent assertions that could be merged before graph construction:
 
 ```text
 Product specifications:
 
 - Bluetooth 5.3
 - BT 5.3
-- Version 5.3
+- Bluetooth version 5.3
 
 AI coding agents:
 
@@ -60,18 +62,18 @@ Enterprise knowledge:
 
 ## Repository
 
-- `agent_dataset/` — Example multi-agent dataset and demo
+- `agent_dataset/` — Multi-agent and enterprise retrieval experiments
 - `benchmark/` — Reproducible benchmark dataset
-- `credibility/` — Credibility inference engine + experimental algorithms
+- `credibility/` — Credibility inference engine and dependency analysis
 - `paper/` — Research paper
 - `research/` — Research notes
-- `scripts/` — Utility scripts for development
+- `scripts/` — Development utilities
   
 # Current Status
 
 Verity is an active research project focused on evaluating source credibility based on the graph structure of an information network.
 
-Alongside agreement-weighted credibility propagation, the current engine has integrated additional signals to identify when apparent agreement may come from dependent sources instead of independent support. It has been tested with a controlled multi-agent dataset and a simulated enterprise retrieval workflow.
+Alongside agreement-weighted credibility propagation, the current engine has integrated additional signals to identify when apparent agreement may come from dependent sources instead of independent support. It has been tested with a [controlled multi-agent dataset](agent_dataset/README.md) and a [simulated enterprise retrieval workflow](agent_dataset/enterprise/README.md).
 
 ## Vision
 
