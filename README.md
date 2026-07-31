@@ -1,6 +1,6 @@
 # Verity
 
-A graph-based credibility inference engine for information networks. Verity models sources and claims as a bipartite graph to infer the credibility of every source and claim.
+A graph-based credibility inference engine for information networks. Verity models sources and claims as a bipartite graph to infer source credibility and claim support.
 
 ## Problem
 
@@ -69,11 +69,11 @@ Enterprise knowledge:
 - `research/` — Research notes
 - `scripts/` — Development utilities
   
-# Current Status
+## Current Status
 
 Verity is an active research project focused on evaluating source credibility based on the graph structure of an information network.
 
-Alongside agreement-weighted credibility propagation, the current engine has integrated additional signals to identify when apparent agreement may come from dependent sources instead of independent support. It has been tested with a [controlled multi-agent dataset](agent_dataset/README.md) and a [simulated enterprise retrieval workflow](agent_dataset/enterprise/README.md).
+Alongside agreement-weighted credibility propagation, the current engine uses additional signals to identify when apparent agreement may come from dependent sources instead of independent support. It has been tested with a [controlled multi-agent dataset](agent_dataset/README.md) and a [simulated enterprise retrieval workflow](agent_dataset/enterprise/README.md).
 
 ## Vision
 
@@ -81,7 +81,7 @@ Verity explores how credibility inference can be made accessible and simplified 
 
 Modern autonomous agents are capable of retrieving vast amounts of information at scale, but still lack a native mechanism for reasoning about the underlying credibility of information. This becomes problematic as these agents become integrated into everyday decision making and act on information on behalf of users. Current methods for evaluating information primarily analyze what was said. While LLMs are capable of reasoning about semantic text and supporting evidence, their ability to reason about the structure of information itself is limited.
 
-Verity takes a different approach by modeling information as a bipartite graph of source-to-claim assertions. It evaluates the topology of an information network and shifts credibility inference from reasoning about what was said to reasoning about who knows whom.
+Verity takes a different approach by modeling information as a bipartite graph of source-to-claim assertions. It evaluates the topology of an information network and shifts credibility inference from reasoning about what was said to reasoning about how evidence is connected across sources.
 
 The mission is to make the Verity credibility inference engine accessible through an open-source [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that allows AI systems to seamlessly incorporate credibility inference directly into their reasoning process.
 
