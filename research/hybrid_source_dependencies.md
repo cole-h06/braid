@@ -118,9 +118,7 @@ Dependent sources are discounted through this adjustment and independent corrobo
 The dependency matrix can also be used to summarize the structure of the evidence supporting a claim. The supporting-source count comes from the source-claim graph, whereas the estimated independent support count and dependency clusters are derived from the pairwise dependencies among those sources. We calculate dependency confidence separately from the available signals used to estimate those dependencies.
 
 Let
-$$
-n_j = |A(j)|
-$$
+$$ n_j = |A(j)| $$
 
 denote the number of sources supporting claim $j$. This is reported as `supporting_source_count`.
 
@@ -128,12 +126,7 @@ denote the number of sources supporting claim $j$. This is reported as `supporti
 
 The independence of evidence is not immediately obvious based on the number of supporting sources. Therefore, we define the following effective-support heuristic:
 
-$$
-\hat{n}_j
-=
-\frac{n_j^2}
-{n_j + 2\sum_{i<k,\;i,k\in A(j)}\delta_{ik}}
-$$
+$$ \hat{n}_j = \frac{n_j^2}{n_j + 2\sum_{i<k,\;i,k\in A(j)}\delta_{ik}} $$
 
 where the sum includes every unordered source pair supporting claim $j$.
 
@@ -186,24 +179,11 @@ For raw provenance and lineage fields, `None` means that metadata was unavailabl
 The confidence associated with a pairwise dependency estimate is
 
 $$
-\gamma_{ik}
-=
-\frac{
-\sum_{r=1}^{5}\alpha_r m_{ik}^{(r)}
-}{
-\sum_{r=1}^{5}\alpha_r
-}
-$$
+\gamma_{ik} = \frac{\sum_{r=1}^{5}\alpha_r m_{ik}^{(r)}}{\sum_{r=1}^{5}\alpha_r}$$
 
 We then calculate claim-level dependency confidence across the source pairs supporting claim $j$:
 
-$$
-\gamma_j
-=
-\frac{2}{n_j(n_j-1)}
-\sum_{i<k,\;i,k\in A(j)}
-\gamma_{ik}
-$$
+$$\gamma_j=\frac{2}{n_j(n_j-1)}\sum_{i<k,\;i,k\in A(j)}\gamma_{ik}$$
 
 This value is reported as `dependency_confidence`.
 
