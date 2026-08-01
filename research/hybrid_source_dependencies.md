@@ -182,7 +182,7 @@ $$
 
 We then calculate claim-level dependency confidence across the source pairs supporting claim $j$:
 
-$$ \gamma_j = \frac{2}{n_j(n_j-1)} \sum_{i<k,\; i,k\in A(j)} \gamma_{ik} $$
+$$ \gamma_j = \frac{2}{n_j(n_j-1)} \sum_{i<k} \gamma_{ik} $$ where the sum includes every unordered pair of sources $i,k\in A(j)$.
 
 This value is reported as `dependency_confidence`.
 
