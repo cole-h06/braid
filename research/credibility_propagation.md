@@ -125,4 +125,4 @@ Credibility is measured from the distribution of assertions throughout the graph
 
 The final score values are internal graph scores. They do not, however, imply probabilities of truth, nor do they directly analyze a claim's semantic meaning.
 
-We treat each assertion equally using this framework. [Agreement weighting](agreement_weighting.md) expands source-to-claim propagation by accounting for agreement or conflict. [hybrid source dependency estimation](hybrid_source_dependencies.md) discounts evidence based on the dependency relationships between sources.
+We treat each assertion equally using this framework. [Agreement weighting](agreement_weighting.md) expands source-to-claim propagation by accounting for agreement or conflict. [Hybrid source dependency estimation](hybrid_source_dependencies.md) discounts evidence based on the dependency relationships between sources.
