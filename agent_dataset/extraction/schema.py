@@ -58,11 +58,11 @@ class Evidence(BaseModel):
 
     observed_at: datetime
 
-    provenance_ids: tuple[str, ...]
+    provenance_ids: tuple[str, ...] | None
 
-    cited_source_ids: tuple[str, ...] = ()
+    cited_source_ids: tuple[str, ...] | None = None
 
-    parent_assertion_ids: tuple[str, ...] = ()
+    parent_assertion_ids: tuple[str, ...] | None = None
 
     retrievals: tuple[Retrieval, ...] = Field(
         default=(),

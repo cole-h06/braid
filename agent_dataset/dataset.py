@@ -44,15 +44,6 @@ BASELINE_WEIGHTS = {
 }
 
 
-SIMULATED_RELATIONSHIPS = {
-    ("research_agent", "search_agent"): "lineage",
-    ("search_agent", "document_agent"): "provenance",
-    ("sql_agent", "api_agent"): "ownership",
-    ("research_agent", "sql_agent"): "temporal",
-    ("research_agent", "api_agent"): "independent conflict",
-}
-
-
 AGENTS = (
     research_agent,
     search_agent,
@@ -144,10 +135,16 @@ def validate_dataset(
         ):
             raise ValueError("evidence timestamps must be timezone-aware")
 
-        if not set(item.cited_source_ids) <= known_sources:
+        if (
+            item.cited_source_ids is not None
+            and not set(item.cited_source_ids) <= known_sources
+        ):
             raise ValueError("evidence cites unknown source")
 
-        if not set(item.parent_assertion_ids) <= known_assertions:
+        if (
+            item.parent_assertion_ids is not None
+            and not set(item.parent_assertion_ids) <= known_assertions
+        ):
             raise ValueError("evidence references unknown parent assertion")
 
     if any(count != 1 for count in evidence_counts.values()):

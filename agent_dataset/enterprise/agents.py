@@ -29,6 +29,8 @@ def make_result(source_id, kind, records):
             assertion_id=assertion_id,
             observed_at=record["observed_at"],
             provenance_ids=(record["provenance_id"],),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
             retrievals=(Retrieval(
                 retrieval_id=f"{source_id}-retrieval-{index:03d}",
                 kind=kind,

@@ -6,11 +6,19 @@ from pydantic import ValidationError
 
 from agent_dataset.dataset import (
     AGENTS,
-    SIMULATED_RELATIONSHIPS,
     load_dataset,
     validate_dataset,
 )
 from agent_dataset.extraction.schema import AgentResult, Evidence
+
+
+SIMULATED_RELATIONSHIPS = {
+    ("research_agent", "search_agent"): "lineage",
+    ("search_agent", "document_agent"): "provenance",
+    ("sql_agent", "api_agent"): "ownership",
+    ("research_agent", "sql_agent"): "temporal",
+    ("research_agent", "api_agent"): "independent conflict",
+}
 
 
 def test_counts():
@@ -48,6 +56,31 @@ def test_evidence():
             assertions,
             evidence + [evidence[0]],
         )
+
+
+def test_missingness():
+
+    missing = Evidence(
+        assertion_id="missing",
+        observed_at="2026-01-01T09:00:00Z",
+        provenance_ids=None,
+        cited_source_ids=None,
+        parent_assertion_ids=None,
+    )
+    observed = Evidence(
+        assertion_id="observed",
+        observed_at="2026-01-01T09:00:00Z",
+        provenance_ids=(),
+        cited_source_ids=(),
+        parent_assertion_ids=(),
+    )
+
+    assert missing.provenance_ids is None
+    assert missing.cited_source_ids is None
+    assert missing.parent_assertion_ids is None
+    assert observed.provenance_ids == ()
+    assert observed.cited_source_ids == ()
+    assert observed.parent_assertion_ids == ()
 
 
 def test_timestamps():

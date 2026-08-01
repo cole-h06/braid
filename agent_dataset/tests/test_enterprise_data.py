@@ -6,6 +6,7 @@ from pathlib import Path
 from agent_dataset.dataset import validate_dataset
 from agent_dataset.enterprise.data import FIXTURES, ORDER
 from agent_dataset.enterprise.workflow import run_enterprise
+from agent_dataset.workflow.hybrid_dependency import claim_telemetry
 
 
 def test_counts():
@@ -73,6 +74,15 @@ def test_times():
         for item in second["evidence"]
     ]
     assert first["hybrid"] == second["hybrid"]
+    assert claim_telemetry(
+        first["graph"],
+        first["hybrid"],
+        0.15,
+    ) == claim_telemetry(
+        second["graph"],
+        second["hybrid"],
+        0.15,
+    )
     assert all(
         retrieval.retrieved_at == later
         for item in second["evidence"]

@@ -37,16 +37,22 @@ def research_agent():
             assertion_id="research.refund_window",
             observed_at=datetime(2026, 1, 1, 9, tzinfo=timezone.utc),
             provenance_ids=(),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
         ),
         Evidence(
             assertion_id="research.warranty",
             observed_at=datetime(2026, 1, 1, 9, 5, tzinfo=timezone.utc),
             provenance_ids=(),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
         ),
         Evidence(
             assertion_id="research.return_shipping",
             observed_at=datetime(2026, 1, 1, 9, 10, tzinfo=timezone.utc),
             provenance_ids=(),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
         ),
     ]
 

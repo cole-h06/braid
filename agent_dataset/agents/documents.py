@@ -37,16 +37,22 @@ def document_agent():
             assertion_id="document.refund_window",
             observed_at=datetime(2026, 1, 4, 9, tzinfo=timezone.utc),
             provenance_ids=("policy_snapshot_A",),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
         ),
         Evidence(
             assertion_id="document.shipping_cost",
             observed_at=datetime(2026, 1, 4, 9, 5, tzinfo=timezone.utc),
             provenance_ids=("policy_snapshot_A",),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
         ),
         Evidence(
             assertion_id="document.support_hours",
             observed_at=datetime(2026, 1, 4, 9, 10, tzinfo=timezone.utc),
             provenance_ids=("policy_snapshot_A",),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
         ),
     ]
 

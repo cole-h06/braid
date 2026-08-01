@@ -14,6 +14,14 @@ SIGNAL_NAMES = (
     "graph",
 )
 
+OBSERVABILITY_NAMES = (
+    "provenance",
+    "lineage",
+    "ownership",
+    "temporal",
+    "structure",
+)
+
 
 def normalize_weights(weights):
 
@@ -74,6 +82,30 @@ def compute_hybrid_dependency(
         for item in evidence
     }
 
+    provenance_capture = build_capture(
+        source_ids,
+        assertion_lookup,
+        evidence,
+        ("provenance_ids",),
+    )
+
+    lineage_capture = build_capture(
+        source_ids,
+        assertion_lookup,
+        evidence,
+        (
+            "cited_source_ids",
+            "parent_assertion_ids",
+        ),
+    )
+
+    temporal_capture = build_capture(
+        source_ids,
+        assertion_lookup,
+        evidence,
+        ("observed_at",),
+    )
+
     provenance = build_provenance(
         source_ids,
         assertion_lookup,
@@ -103,7 +135,13 @@ def compute_hybrid_dependency(
         for name in SIGNAL_NAMES
     }
 
+    observability = {
+        name: empty_matrix(source_ids)
+        for name in OBSERVABILITY_NAMES
+    }
+
     dependency_matrix = empty_matrix(source_ids)
+    confidence_matrix = empty_matrix(source_ids)
 
     # compare one source pair
     for source_a, source_b in combinations(source_ids, 2):
@@ -132,6 +170,35 @@ def compute_hybrid_dependency(
             ),
         }
 
+        if not (
+            provenance_capture[source_a]
+            and provenance_capture[source_b]
+        ):
+            pair_signals["provenance"] = 0.0
+
+        pair_observability = {
+            "provenance": float(
+                provenance_capture[source_a]
+                and provenance_capture[source_b]
+            ),
+            "lineage": float(
+                pair_signals["lineage"] == 1.0
+                or (
+                    lineage_capture[source_a]
+                    and lineage_capture[source_b]
+                )
+            ),
+            "ownership": float(
+                source_lookup[source_a].owner_id is not None
+                and source_lookup[source_b].owner_id is not None
+            ),
+            "temporal": float(
+                temporal_capture[source_a]
+                and temporal_capture[source_b]
+            ),
+            "structure": 1.0,
+        }
+
         # combine the five signals using the normalized weights
         dependency = sum(
             normalized_weights[name] * value
@@ -140,12 +207,25 @@ def compute_hybrid_dependency(
 
         dependency = min(1.0, max(0.0, dependency))
 
+        confidence = sum(
+            normalized_weights[
+                "graph" if name == "structure" else name
+            ] * value
+            for name, value in pair_observability.items()
+        ) / sum(normalized_weights.values())
+
         for name, value in pair_signals.items():
             signals[name][source_a][source_b] = value
             signals[name][source_b][source_a] = value
 
+        for name, value in pair_observability.items():
+            observability[name][source_a][source_b] = value
+            observability[name][source_b][source_a] = value
+
         dependency_matrix[source_a][source_b] = dependency
         dependency_matrix[source_b][source_a] = dependency
+        confidence_matrix[source_a][source_b] = confidence
+        confidence_matrix[source_b][source_a] = confidence
 
     diagnostics = {
         "lineage_directions": lineage,
@@ -155,7 +235,9 @@ def compute_hybrid_dependency(
     return {
         "weights": normalized_weights,
         "signals": signals,
+        "observability": observability,
         "dependency_matrix": dependency_matrix,
+        "confidence_matrix": confidence_matrix,
         "diagnostics": diagnostics,
     }
 
@@ -167,6 +249,41 @@ def empty_matrix(source_ids):
             other_id: 0.0
             for other_id in source_ids
         }
+        for source_id in source_ids
+    }
+
+
+def build_capture(
+    source_ids,
+    assertion_lookup,
+    evidence,
+    fields,
+):
+
+    seen = {
+        source_id: False
+        for source_id in source_ids
+    }
+
+    available = {
+        source_id: True
+        for source_id in source_ids
+    }
+
+    for item in evidence:
+
+        source_id = assertion_lookup[item.assertion_id].source_id
+
+        seen[source_id] = True
+
+        if any(
+            getattr(item, field) is None
+            for field in fields
+        ):
+            available[source_id] = False
+
+    return {
+        source_id: seen[source_id] and available[source_id]
         for source_id in source_ids
     }
 
@@ -186,7 +303,8 @@ def build_provenance(
 
         source_id = assertion_lookup[item.assertion_id].source_id
 
-        provenance[source_id].update(item.provenance_ids)
+        if item.provenance_ids is not None:
+            provenance[source_id].update(item.provenance_ids)
 
     return provenance
 
@@ -216,10 +334,10 @@ def build_lineage(
 
         child_source = assertion_lookup[item.assertion_id].source_id
 
-        for parent_source in item.cited_source_ids:
+        for parent_source in item.cited_source_ids or ():
             directions[child_source][parent_source] = 1.0
 
-        for parent_id in item.parent_assertion_ids:
+        for parent_id in item.parent_assertion_ids or ():
 
             parent_source = assertion_lookup[parent_id].source_id
 
@@ -346,3 +464,92 @@ def structural_score(
         (source_a, source_b),
         0.0,
     )
+
+
+def claim_telemetry(
+    graph,
+    hybrid,
+    threshold,
+):
+
+    if not math.isfinite(threshold) or not 0.0 <= threshold <= 1.0:
+        raise ValueError("threshold must be finite and between zero and one")
+
+    dependency = hybrid["dependency_matrix"]
+    confidence = hybrid["confidence_matrix"]
+    claims = {}
+
+    for claim_id, source_ids in graph.claim_to_sources.items():
+
+        source_ids = tuple(sorted(source_ids))
+        source_count = len(source_ids)
+
+        if source_count == 1:
+            claims[claim_id] = {
+                "supporting_source_count": 1,
+                "estimated_independent_support_count": 1.0,
+                "dependency_clusters": 1,
+                "dependency_confidence": None,
+            }
+            continue
+
+        pairs = tuple(combinations(source_ids, 2))
+        dependency_sum = sum(
+            dependency[source_a][source_b]
+            for source_a, source_b in pairs
+        )
+
+        independent_count = (
+            source_count ** 2
+            / (source_count + 2 * dependency_sum)
+        )
+
+        pair_confidence = sum(
+            confidence[source_a][source_b]
+            for source_a, source_b in pairs
+        ) / len(pairs)
+
+        claims[claim_id] = {
+            "supporting_source_count": source_count,
+            "estimated_independent_support_count": independent_count,
+            "dependency_clusters": count_clusters(
+                source_ids,
+                dependency,
+                threshold,
+            ),
+            "dependency_confidence": pair_confidence,
+        }
+
+    return {
+        "threshold": threshold,
+        "claims": claims,
+    }
+
+
+def count_clusters(
+    source_ids,
+    dependency,
+    threshold,
+):
+
+    remaining = set(source_ids)
+    clusters = 0
+
+    while remaining:
+
+        clusters += 1
+        pending = [remaining.pop()]
+
+        while pending:
+
+            source_id = pending.pop()
+            connected = {
+                other_id
+                for other_id in remaining
+                if dependency[source_id][other_id] >= threshold
+            }
+
+            remaining -= connected
+            pending.extend(connected)
+
+    return clusters

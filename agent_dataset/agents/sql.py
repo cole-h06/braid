@@ -37,16 +37,22 @@ def sql_agent():
             assertion_id="sql.refund_window",
             observed_at=datetime(2026, 1, 1, 10, tzinfo=timezone.utc),
             provenance_ids=(),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
         ),
         Evidence(
             assertion_id="sql.warranty",
             observed_at=datetime(2026, 1, 1, 10, 5, tzinfo=timezone.utc),
             provenance_ids=(),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
         ),
         Evidence(
             assertion_id="sql.customer_tier",
             observed_at=datetime(2026, 1, 1, 10, 10, tzinfo=timezone.utc),
             provenance_ids=(),
+            cited_source_ids=(),
+            parent_assertion_ids=(),
         ),
     ]
 

@@ -109,6 +109,14 @@ def test_equivalence():
 
     assert workflow_hybrid["signals"] == sequential_hybrid["signals"]
     assert (
+        workflow_hybrid["observability"]
+        == sequential_hybrid["observability"]
+    )
+    assert (
+        workflow_hybrid["confidence_matrix"]
+        == sequential_hybrid["confidence_matrix"]
+    )
+    assert (
         workflow_hybrid["diagnostics"]
         == sequential_hybrid["diagnostics"]
     )
