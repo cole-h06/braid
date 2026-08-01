@@ -77,7 +77,7 @@ Alongside agreement-weighted credibility propagation, the current engine uses ad
 
 ## MCP Server
 
-You can find the Verity credibility inference engine through the open-source [`verity-mcp`](https://github.com/cole-h06/verity-mcp) server.
+You can find the Verity credibility inference engine through the open-source [`verity-mcp`](https://github.com/cole-h06/verity-mcp) server. It enables AI systems to incorporate credibility signals directly into their workflows through the [Model Context Protocol](https://modelcontextprotocol.io).
 
 This repository contains the research and reference implementation behind the server.
 
