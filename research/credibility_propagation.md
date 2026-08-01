@@ -103,7 +103,7 @@ $$ M_{ij}=\begin{cases}1, & \text{if source } i \text{ asserts claim } j \\ 0, &
 
 Let $D_S$ be the diagonal source-degree matrix:
 
-$$ D_S=\operatorname{diag}(d_1,\ldots,d_{|S|}). $$
+$$ D_S=\text{diag}(d_1,\ldots,d_{|S|}). $$
 
 We can then write source-to-claim propagation as
 
