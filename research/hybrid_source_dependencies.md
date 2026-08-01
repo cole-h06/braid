@@ -117,10 +117,9 @@ Dependent sources are discounted through this adjustment and independent corrobo
 
 The dependency matrix can also be used to summarize the structure of the evidence supporting a claim. The supporting-source count comes from the source-claim graph, whereas the estimated independent support count and dependency clusters are derived from the pairwise dependencies among those sources. We calculate dependency confidence separately from the available signals used to estimate those dependencies.
 
-Let
-$$ n_j = |A(j)| $$
+Let $n_j = |A(j)|$ denote the number of sources supporting claim $j$. 
 
-denote the number of sources supporting claim $j$. This is reported as `supporting_source_count`.
+This is reported as `supporting_source_count`.
 
 ### Estimated Independent Support
 
@@ -183,7 +182,7 @@ $$
 
 We then calculate claim-level dependency confidence across the source pairs supporting claim $j$:
 
-$$\gamma_j=\frac{2}{n_j(n_j-1)}\sum_{i<k,\;i,k\in A(j)}\gamma_{ik}$$
+$$ \gamma_j = \frac{2}{n_j(n_j-1)} \sum_{i<k,\; i,k\in A(j)} \gamma_{ik} $$
 
 This value is reported as `dependency_confidence`.
 
