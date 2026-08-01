@@ -1,6 +1,6 @@
 # Verity Research
 
-In this directory you can find the documented research of the mathematical and experimental of the Verity credibility inference engine.
+In this directory you can find the documented research of the mathematical and experimental development of the Verity credibility inference engine.
 
 The research includes the baseline credibility propagation algorithm, as well as methods for accounting for claim agreement and relationships between sources.
 
