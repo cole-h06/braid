@@ -75,15 +75,21 @@ Verity is an active research project focused on evaluating source credibility ba
 
 Alongside agreement-weighted credibility propagation, the current engine uses additional signals to identify when apparent agreement may come from dependent sources instead of independent support. It has been tested with a [controlled multi-agent dataset](agent_dataset/README.md) and a [simulated enterprise retrieval workflow](agent_dataset/enterprise/README.md).
 
+## MCP Server
+
+You can find the Verity credibility inference engine through the open-source [`verity-mcp`](https://github.com/cole-h06/verity-mcp) server.
+
+This repository contains the research and reference implementation behind the server.
+
 ## Vision
 
 Verity explores how credibility inference can be made accessible and simplified for AI systems.
 
-Modern autonomous agents are capable of retrieving vast amounts of information at scale, but still lack a native mechanism for reasoning about the underlying credibility of information. This becomes problematic as these agents become integrated into everyday decision making and act on information on behalf of users. Current methods for evaluating information primarily analyze what was said. While LLMs are capable of reasoning about semantic text and supporting evidence, their ability to reason about the structure of information itself is limited.
+Modern autonomous agents are capable of retrieving vast amounts of information at scale, but still lack a native mechanism for reasoning about the underlying credibility of information. This becomes problematic as these agents become integrated into everyday decisions and act on information on behalf of users. Current methods for evaluating information primarily analyze what was said. While LLMs are capable of reasoning about semantic text and supporting evidence, their ability to reason about the structure of information itself is limited.
 
 Verity takes a different approach by modeling information as a bipartite graph of source-to-claim assertions. It evaluates the topology of an information network and shifts credibility inference from reasoning about what was said to reasoning about how evidence is connected across sources.
 
-The mission is to make the Verity credibility inference engine accessible through an open-source [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that allows AI systems to seamlessly incorporate credibility inference directly into their reasoning process.
+The mission is to make the credibility inference directly accessible to AI systems through an open-source Model Context Protocol (MCP) server.
 
 ## Contact
 
