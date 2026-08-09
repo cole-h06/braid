@@ -83,7 +83,7 @@ This repository contains the research and reference implementation behind the se
 
 ## Vision
 
-Autonomous agents are capable of retrieving enormous amounts of information from multiple data sources at scale, but most systems still lack a native mechanism for estimating the reliability of this information. Most current methods analyze the semantic content of retrieved information. While modern LLMs are effective at reasoning about text and supporting context, their ability to reason about how information is structurally related across sources is limited.
+Autonomous agents are capable of retrieving enormous amounts of information from multiple data sources at scale, but most systems still lack a native mechanism for estimating the reliability of this information. Current methods mainly analyze the semantic content of retrieved information. While modern LLMs are effective at reasoning about text and supporting context, their ability to reason about how information is structurally related across sources is limited.
 
 Verity takes a complementary approach by shifting part of the evaluation process from reasoning about what was said to reasoning about how information is connected across sources.
 
