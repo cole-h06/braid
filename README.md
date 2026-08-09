@@ -1,4 +1,6 @@
-# Verity: A Structural Framework for Source Reliability Estimation
+# Verity
+
+## A Structural Framework for Source Reliability Estimation
 
 Verity estimates the reliability of assertions from multiple data sources. It models sources and claims as a bipartite graph to jointly estimate source reliability and claim support.
 
@@ -21,7 +23,7 @@ Estimating either quantity requires estimating the other.
 
 Sources and claims form a bipartite graph. Each edge represents a source asserting a claim. Verity models information as an interconnected network instead of a collection of independent observations.
 <p align="center">
-  <img src="images/propagation_animation.gif" width="520">
+  <img src="images/reliability_propagation_animation.gif" width="520">
 </p>
 
 <p align="center">
