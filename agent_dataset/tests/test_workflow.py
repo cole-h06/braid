@@ -31,7 +31,7 @@ def test_nodes():
         "validate",
         "build_graph",
         "dependency",
-        "inference",
+        "evaluation",
     }
 
 
@@ -126,10 +126,10 @@ def test_equivalence():
         == sequential_hybrid["dependency_matrix"]
     )
 
-    workflow_result = workflow["inference"]
-    sequential_result = sequential["inference"]
+    workflow_result = workflow["evaluation"]
+    sequential_result = sequential["evaluation"]
 
-    assert workflow_result["credibility"] == sequential_result["credibility"]
+    assert workflow_result["reliability"] == sequential_result["reliability"]
     assert workflow_result["claim_support"] == sequential_result["claim_support"]
     assert workflow_result["independence"] == sequential_result["independence"]
     assert workflow_result["iterations"] == sequential_result["iterations"]

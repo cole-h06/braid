@@ -1,3 +1,5 @@
+# v4.py
+
 import os
 import sqlite3
 import random
@@ -12,8 +14,8 @@ DB = os.path.join(
 )
 
 
-# start every source with equal weight
-def initialize_vector(source_ids):
+# start every source with equal reliability
+def initialize_uniform(source_ids):
 
     n = len(source_ids)
 
@@ -23,7 +25,9 @@ def initialize_vector(source_ids):
     }
 
 
-# start from random weights instead
+# random initialization lets us test
+# whether the system converges
+# to the same solution
 def initialize_random(source_ids):
 
     scores = {
@@ -36,10 +40,10 @@ def initialize_random(source_ids):
     )
 
 
-# unlike v1, a source now splits its credibility
-# across every claim it makes
+# distribute source reliability
+# across the claims it asserts
 def score_claims(
-    credibility,
+    reliability_vector,
     claim_to_sources,
     source_to_claims
 ):
@@ -52,8 +56,8 @@ def score_claims(
 
         for source_id in source_ids:
 
-            # if a source makes lots of claims,
-            # each claim gets a smaller share
+            # sources with many claims
+            # split their reliability
             degree = len(
                 source_to_claims[source_id]
             )
@@ -61,10 +65,8 @@ def score_claims(
             if degree == 0:
                 continue
 
-            # pass a fraction of the source score
-            # into this claim
             support += (
-                credibility[source_id]
+                reliability_vector[source_id]
                 / degree
             )
 
@@ -73,18 +75,19 @@ def score_claims(
     return claim_support
 
 
-# claims send support back into sources
+# claims propagate support
+# back into their sources
 def update_sources(
     claim_support,
     source_to_claims
 ):
 
-    next_credibility = {}
+    next_reliability_vector = {}
 
     for source_id, claim_ids in source_to_claims.items():
 
         if not claim_ids:
-            next_credibility[source_id] = 0.0
+            next_reliability_vector[source_id] = 0.0
             continue
 
         support_sum = 0.0
@@ -92,65 +95,110 @@ def update_sources(
         for claim_id in claim_ids:
             support_sum += claim_support[claim_id]
 
-        next_credibility[source_id] = (
-            support_sum / len(claim_ids)
-        )
+        next_reliability_vector[source_id] = support_sum
 
-    return next_credibility
+    return next_reliability_vector
 
 
-# otherwise scores grow every iteration
+# keep the reliability vector
+# on a fixed scale
 def normalize(
-    credibility
+    reliability_vector
 ):
 
     total = sum(
-        credibility.values()
+        reliability_vector.values()
     )
 
     if total == 0:
-        return credibility
+        return reliability_vector
 
     return {
         source_id: score / total
         for source_id, score
-        in credibility.items()
+        in reliability_vector.items()
     }
 
 
-# keep passing scores through the graph
-def run_iterations(
+# repeatedly pass reliability
+# through the graph until
+# the scores stop changing
+def run_until_convergence(
     source_to_claims,
     claim_to_sources,
-    credibility,
-    iterations=20
+    reliability_vector,
+    tolerance=1e-8,
+    max_iterations=1000
 ):
 
-    for iteration in range(iterations):
+    iteration = 0
 
-        # push source credibility into claims
+    while iteration < max_iterations:
+
+        previous = reliability_vector.copy()
+
+        # source -> claim
         claim_support = score_claims(
-            credibility,
+            reliability_vector,
             claim_to_sources,
             source_to_claims
         )
 
-        # then let claims vote back on sources
-        credibility = update_sources(
+        # claim -> source
+        reliability_vector = update_sources(
             claim_support,
             source_to_claims
         )
 
-        # keep everything on the same scale
-        credibility = normalize(
-            credibility
+        reliability_vector = normalize(
+            reliability_vector
         )
 
-    return credibility
+        # measure how much
+        # the vector changed
+        maximum_difference = 0.0
+
+        for source_id in reliability_vector:
+
+            difference = abs(
+                reliability_vector[source_id]
+                - previous[source_id]
+            )
+
+            if difference > maximum_difference:
+                maximum_difference = difference
+
+        print(
+            f"iteration "
+            f"{iteration + 1:>3}   "
+            f"delta = "
+            f"{maximum_difference:.12f}"
+        )
+
+        # stop once the
+        # vector stabilizes
+        if maximum_difference < tolerance:
+
+            print()
+            print(
+                f"converged after "
+                f"{iteration + 1} "
+                f"iterations"
+            )
+
+            return reliability_vector
+
+        iteration += 1
+
+    print()
+    print(
+        "maximum iterations reached"
+    )
+
+    return reliability_vector
 
 
-# see whether different starting points
-# end up at the same solution
+# compare two reliability vectors
 def compare_results(
     first,
     second
@@ -171,7 +219,8 @@ def compare_results(
     return maximum_difference
 
 
-# load the assertion graph from sqlite
+# load the bipartite graph
+# from sqlite
 def load_assertion_graph():
 
     conn = sqlite3.connect(DB)
@@ -221,8 +270,9 @@ def load_assertion_graph():
 
 def print_top_sources(
     title,
-    credibility,
-    source_names
+    reliability_vector,
+    source_names,
+    n=20
 ):
 
     print()
@@ -230,10 +280,10 @@ def print_top_sources(
     print("-" * len(title))
 
     for source_id, score in sorted(
-        credibility.items(),
+        reliability_vector.items(),
         key=lambda x: x[1],
         reverse=True
-    )[:10]:
+    )[:n]:
 
         domain = source_names.get(
             source_id,
@@ -241,15 +291,42 @@ def print_top_sources(
         )
 
         print(
-            f"{domain:<25}"
-            f"{score:.6f}"
+            f"{domain:<30}"
+            f"{score:.8f}"
+        )
+
+
+def print_bottom_sources(
+    title,
+    reliability_vector,
+    source_names,
+    n=20
+):
+
+    print()
+    print(title)
+    print("-" * len(title))
+
+    for source_id, score in sorted(
+        reliability_vector.items(),
+        key=lambda x: x[1]
+    )[:n]:
+
+        domain = source_names.get(
+            source_id,
+            str(source_id)
+        )
+
+        print(
+            f"{domain:<30}"
+            f"{score:.8f}"
         )
 
 
 def main():
 
     print()
-    print("loading assertion graph...")
+    print("loading graph...")
     print()
 
     (
@@ -259,11 +336,22 @@ def main():
     ) = load_assertion_graph()
 
     print(
-        f"sources: {len(source_to_claims)}"
+        f"sources: "
+        f"{len(source_to_claims)}"
     )
 
     print(
-        f"claims: {len(claim_to_sources)}"
+        f"claims: "
+        f"{len(claim_to_sources)}"
+    )
+
+    print(
+        f"assertions: "
+        f"{sum(
+            len(v)
+            for v
+            in source_to_claims.values()
+        )}"
     )
 
     source_ids = list(
@@ -271,28 +359,30 @@ def main():
     )
 
     print()
-    print("running uniform initialization...")
-    print()
+    print(
+        "running uniform initialization..."
+    )
 
-    uniform = initialize_vector(
+    uniform = initialize_uniform(
         source_ids
     )
 
-    uniform = run_iterations(
+    uniform = run_until_convergence(
         source_to_claims,
         claim_to_sources,
         uniform
     )
 
     print()
-    print("running random initialization...")
-    print()
+    print(
+        "running random initialization..."
+    )
 
     random_scores = initialize_random(
         source_ids
     )
 
-    random_scores = run_iterations(
+    random_scores = run_until_convergence(
         source_to_claims,
         claim_to_sources,
         random_scores
@@ -304,22 +394,42 @@ def main():
     )
 
     print_top_sources(
-        "uniform initialization",
+        "top sources (uniform)",
         uniform,
         source_names
     )
 
-    print_top_sources(
-        "random initialization",
-        random_scores,
+    print_bottom_sources(
+        "bottom sources (uniform)",
+        uniform,
         source_names
     )
 
     print()
+
     print(
-        f"maximum difference: "
-        f"{difference:.10f}"
+        "maximum difference between "
+        "initializations:"
     )
+
+    print(
+        f"{difference:.12f}"
+    )
+
+    print()
+
+    if difference < 1e-8:
+
+        print(
+            "same fixed point reached"
+        )
+
+    else:
+
+        print(
+            "different solutions found"
+        )
+
     print()
 
 

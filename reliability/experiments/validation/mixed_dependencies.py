@@ -1,4 +1,4 @@
-from credibility.engine import infer
+from reliability.engine import evaluate
 
 
 class Graph:
@@ -68,7 +68,7 @@ class Graph:
     }
 
 
-result = infer(
+result = evaluate(
     Graph()
 )
 

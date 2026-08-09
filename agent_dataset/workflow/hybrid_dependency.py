@@ -3,7 +3,7 @@ import math
 from datetime import timedelta
 from itertools import combinations
 
-from credibility.analysis.evidence_independence import build_pairwise_rows
+from reliability.analysis.evidence_independence import build_pairwise_rows
 
 
 SIGNAL_NAMES = (

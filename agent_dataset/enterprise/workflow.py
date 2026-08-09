@@ -117,5 +117,5 @@ def run_enterprise(
         "evidence": state["evidence"],
         "graph": state["graph"],
         "hybrid": state["hybrid"],
-        "inference": state["inference"],
+        "evaluation": state["evaluation"],
     }

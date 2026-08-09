@@ -1,0 +1,71 @@
+```latex
+\section{Assertion Evaluation}
+
+The graph defines how sources and claims are connected, but does not, on its own, provide any information about the reliability of either. Next, we describe an iterative evaluation algorithm that computes the reliability of each source, based on the properties of the network.
+
+In this way, the algorithm keeps iterating between the source nodes and the claim nodes. Sources distribute their reliability among the claims they assert, and then these claims redistribute their accumulated support back to the sources that assert them. Repeating this process causes the source reliability vector to converge toward a stable distribution.
+
+\subsection{Propagation Algorithm}
+
+Propagation consists of four stages that are done at each iteration step. In the first one, source reliability is propagated to the claims they assert. After this stage, in the second one, support for claims is aggregated from all asserting sources. After the aggregation process, the result is propagated back to the source nodes. Finally, the reliability vector is normalized before the next iteration begins. The following subsections describe each stage formally.
+
+\subsection{Claim Support}
+
+For the first stage in each iteration, the support for each claim is computed. In doing so, each of the sources distributes their reliability evenly across all of the claims that it asserts. Hence, sources that assert a lot of claims will have less reliability per claim as compared to the sources that assert fewer claims.
+
+Claim $c_j$ receives support according to the formula:
+
+\[
+c_j =
+\sum_{i \in A(j)}
+\frac{s_i}{d_i}.
+\]
+
+Here, $s_i$ is the reliability of source $i$, $d_i$ is the number of claims from source $i$, and $A(j)$ is the set of sources asserting claim $j$.
+
+\subsection{Source Update}
+
+The second step of the iteration process is updating the reliability of each source. This is done using the support from each claim that the source asserts. Because claims can be asserted by multiple sources, the support for each claim is divided evenly across all of the sources asserting it. Therefore, a source with highly supported claims will have high reliability.
+
+The new reliability of source $s_i$ is calculated according to the formula:
+
+\begin{equation}
+s_i' =
+\sum_{j \in C(i)}
+\frac{c_j}{a_j}.
+\end{equation}
+
+Here, $c_j$ is the support of claim $j$, $a_j$ is the number of sources asserting claim $j$ and $C(i)$ is the set of claims asserted by source $i$.
+
+\subsection{Normalization}
+
+The obtained reliability vector must be normalized after each step before moving on to the next step to maintain proportionality of the sources' reliability without changing its norm in future iterations.
+
+We normalize the reliability of source $s_i$ according to the following formula:
+
+\begin{equation}
+s_i =
+\frac{s_i'}
+{\sum_k s_k'}.
+\end{equation}
+
+where $s_i'$ is the updated reliability of source $i$ before normalization.
+
+\subsection{Convergence}
+
+The propagation process continues repeatedly until the source reliability vector converges to a stable distribution. In each step, the obtained source reliability vector is compared with the source reliability vector from the previous step. The convergence process is completed when the maximal difference between corresponding reliability values falls below a predefined threshold.
+
+Convergence criterion:
+
+\begin{equation}
+\max_i
+\left|
+s_i^{(t+1)}
+-
+s_i^{(t)}
+\right|
+<
+\varepsilon,
+\end{equation}
+
+where $s_i^{(t)}$ is the reliability of source $i$ after iteration $t$, and $\varepsilon$ is the threshold value of convergence.

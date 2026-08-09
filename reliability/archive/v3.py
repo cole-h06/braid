@@ -14,7 +14,7 @@ DB = os.path.join(
 )
 
 
-# start every source with equal credibility
+# start every source with equal reliability
 def initialize_uniform(source_ids):
 
     n = len(source_ids)
@@ -40,10 +40,10 @@ def initialize_random(source_ids):
     )
 
 
-# distribute source credibility
+# distribute source reliability
 # across the claims it asserts
 def score_claims(
-    credibility,
+    reliability_vector,
     claim_to_sources,
     source_to_claims
 ):
@@ -57,7 +57,7 @@ def score_claims(
         for source_id in source_ids:
 
             # sources with many claims
-            # split their credibility
+            # split their reliability
             degree = len(
                 source_to_claims[source_id]
             )
@@ -66,7 +66,7 @@ def score_claims(
                 continue
 
             support += (
-                credibility[source_id]
+                reliability_vector[source_id]
                 / degree
             )
 
@@ -82,12 +82,12 @@ def update_sources(
     source_to_claims
 ):
 
-    next_credibility = {}
+    next_reliability_vector = {}
 
     for source_id, claim_ids in source_to_claims.items():
 
         if not claim_ids:
-            next_credibility[source_id] = 0.0
+            next_reliability_vector[source_id] = 0.0
             continue
 
         support_sum = 0.0
@@ -95,41 +95,41 @@ def update_sources(
         for claim_id in claim_ids:
             support_sum += claim_support[claim_id]
 
-        next_credibility[source_id] = (
+        next_reliability_vector[source_id] = (
             support_sum
             / len(claim_ids)
         )
 
-    return next_credibility
+    return next_reliability_vector
 
 
-# keep the credibility vector
+# keep the reliability vector
 # on a fixed scale
 def normalize(
-    credibility
+    reliability_vector
 ):
 
     total = sum(
-        credibility.values()
+        reliability_vector.values()
     )
 
     if total == 0:
-        return credibility
+        return reliability_vector
 
     return {
         source_id: score / total
         for source_id, score
-        in credibility.items()
+        in reliability_vector.items()
     }
 
 
-# repeatedly pass credibility
+# repeatedly pass reliability
 # through the graph until
 # the scores stop changing
 def run_until_convergence(
     source_to_claims,
     claim_to_sources,
-    credibility,
+    reliability_vector,
     tolerance=1e-8,
     max_iterations=1000
 ):
@@ -138,33 +138,33 @@ def run_until_convergence(
 
     while iteration < max_iterations:
 
-        previous = credibility.copy()
+        previous = reliability_vector.copy()
 
         # source -> claim
         claim_support = score_claims(
-            credibility,
+            reliability_vector,
             claim_to_sources,
             source_to_claims
         )
 
         # claim -> source
-        credibility = update_sources(
+        reliability_vector = update_sources(
             claim_support,
             source_to_claims
         )
 
-        credibility = normalize(
-            credibility
+        reliability_vector = normalize(
+            reliability_vector
         )
 
         # measure how much
         # the vector changed
         maximum_difference = 0.0
 
-        for source_id in credibility:
+        for source_id in reliability_vector:
 
             difference = abs(
-                credibility[source_id]
+                reliability_vector[source_id]
                 - previous[source_id]
             )
 
@@ -189,7 +189,7 @@ def run_until_convergence(
                 f"iterations"
             )
 
-            return credibility
+            return reliability_vector
 
         iteration += 1
 
@@ -198,10 +198,10 @@ def run_until_convergence(
         "maximum iterations reached"
     )
 
-    return credibility
+    return reliability_vector
 
 
-# compare two credibility vectors
+# compare two reliability vectors
 def compare_results(
     first,
     second
@@ -273,7 +273,7 @@ def load_assertion_graph():
 
 def print_top_sources(
     title,
-    credibility,
+    reliability_vector,
     source_names,
     n=20
 ):
@@ -283,7 +283,7 @@ def print_top_sources(
     print("-" * len(title))
 
     for source_id, score in sorted(
-        credibility.items(),
+        reliability_vector.items(),
         key=lambda x: x[1],
         reverse=True
     )[:n]:
@@ -301,7 +301,7 @@ def print_top_sources(
 
 def print_bottom_sources(
     title,
-    credibility,
+    reliability_vector,
     source_names,
     n=20
 ):
@@ -311,7 +311,7 @@ def print_bottom_sources(
     print("-" * len(title))
 
     for source_id, score in sorted(
-        credibility.items(),
+        reliability_vector.items(),
         key=lambda x: x[1]
     )[:n]:
 
@@ -329,9 +329,7 @@ def print_bottom_sources(
 def main():
 
     print()
-    print(
-        "loading assertion graph..."
-    )
+    print("loading graph...")
     print()
 
     (

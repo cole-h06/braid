@@ -1,4 +1,4 @@
-from credibility.engine import infer
+from reliability.engine import evaluate
 
 from .dataset import BASELINE_WEIGHTS, load_dataset
 from .workflow.graph import build_graph
@@ -27,7 +27,7 @@ def run_experiment(
 
     graph.dependency_matrix = hybrid["dependency_matrix"]
 
-    result = infer(
+    result = evaluate(
         graph,
         debug=debug,
     )
@@ -38,7 +38,7 @@ def run_experiment(
         "evidence": evidence,
         "graph": graph,
         "hybrid": hybrid,
-        "inference": result,
+        "evaluation": result,
     }
 
 
@@ -89,13 +89,13 @@ def main():
     )
 
     print()
-    print("=== Source Credibility ===")
+    print("=== Source Reliability ===")
     print()
 
-    credibility = experiment["inference"]["credibility"]
+    reliability = experiment["evaluation"]["reliability"]
 
     for source_id, score in sorted(
-        credibility.items(),
+        reliability.items(),
         key=lambda item: item[1],
         reverse=True,
     ):
@@ -105,7 +105,7 @@ def main():
     print("=== Claim Support ===")
     print()
 
-    claim_support = experiment["inference"]["claim_support"]
+    claim_support = experiment["evaluation"]["claim_support"]
 
     for claim_id, score in sorted(
         claim_support.items(),

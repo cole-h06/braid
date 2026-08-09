@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from credibility.engine import infer
+from reliability.engine import evaluate
 
 from agent_dataset.run import run_experiment
 
@@ -13,18 +13,18 @@ def test_repeatability():
     second = run_experiment(debug=True)
 
     assert first["hybrid"] == second["hybrid"]
-    assert first["inference"] == second["inference"]
+    assert first["evaluation"] == second["evaluation"]
 
 
-def test_inference():
+def test_evaluation():
 
     experiment = run_experiment(debug=True)
-    result = experiment["inference"]
+    result = experiment["evaluation"]
 
     assert result["iterations"] < 1000
-    assert sum(result["credibility"].values()) == pytest.approx(1.0)
+    assert sum(result["reliability"].values()) == pytest.approx(1.0)
 
-    for score in result["credibility"].values():
+    for score in result["reliability"].values():
         assert math.isfinite(score)
         assert score >= 0.0
 
@@ -41,7 +41,7 @@ def test_inference():
 def test_independence():
 
     experiment = run_experiment(debug=True)
-    independence = experiment["inference"]["independence"]
+    independence = experiment["evaluation"]["independence"]
 
     refund_30 = (
         "refund_policy",
@@ -79,7 +79,7 @@ def test_singletons():
 
     experiment = run_experiment(debug=True)
     graph = experiment["graph"]
-    independence = experiment["inference"]["independence"]
+    independence = experiment["evaluation"]["independence"]
 
     for claim_id, source_ids in graph.claim_to_sources.items():
 
@@ -95,7 +95,7 @@ def test_discount():
     experiment = run_experiment(debug=True)
     graph = experiment["graph"]
 
-    hybrid_support = experiment["inference"]["claim_support"]
+    hybrid_support = experiment["evaluation"]["claim_support"]
 
     source_ids = graph.source_to_claims.keys()
 
@@ -107,7 +107,7 @@ def test_discount():
         for source_id in source_ids
     }
 
-    independent_support = infer(graph)["claim_support"]
+    independent_support = evaluate(graph)["claim_support"]
 
     shared_claims = (
         ("refund_policy", "window_days", "30"),

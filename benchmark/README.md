@@ -1,10 +1,10 @@
 # Verity Benchmark
 
-This is the directory containing the benchmark dataset used for developing the Verity credibility inference engine.
+This is the directory containing the benchmark dataset used for developing the Verity reliability propagation algorithm.
 
 With this benchmark, you can experiment with:
 
-- Credibility propagation
+- Reliability propagation
 - Agreement weighting
 - Source dependency modeling
 
@@ -28,7 +28,7 @@ pip install -r requirements.txt
 From the project root, run:
 
 ```bash
-python3 run_benchmark.py
+python run_benchmark.py
 ```
 
 ## Tables
@@ -42,7 +42,7 @@ The benchmark computes:
 - Source dependency matrix
 - Source independence estimates
 - Agreement-weighted claim support
-- Credibility propagation until convergence
-- Final source credibility scores
+- Reliability propagation until convergence
+- Final source reliability scores
 
-Product specifications are currently the benchmark being used for development as they provide large amounts of conflicting data published by independent sources. That said, the inference algorithms themselves are not limited by any specific domain and operate only on graph structure.
+Product specifications are currently the benchmark being used for development as they provide large amounts of conflicting data published by independent sources. That said, the evaluation algorithms themselves are not limited by any specific domain and operate only on graph structure.

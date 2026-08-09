@@ -28,7 +28,7 @@ GRAPH_ATTRIBUTES = {
 
 
 @dataclass
-class CredibilityGraph:
+class BipartiteGraph:
 
     source_to_claims: dict
     claim_to_sources: dict

@@ -1,6 +1,6 @@
 import math
 
-from credibility.engine import infer
+from reliability.engine import evaluate
 
 from agent_dataset.enterprise.workflow import build_enterprise, run_enterprise
 from agent_dataset.workflow.graph import build_graph
@@ -29,7 +29,7 @@ def test_nodes():
         "validate",
         "build_graph",
         "dependency",
-        "inference",
+        "evaluation",
     }
     assert nodes.index("research") > nodes.index("handbook")
     assert nodes.index("research") > nodes.index("vendor")
@@ -43,20 +43,20 @@ def test_repeatability():
     assert run_enterprise(debug=True) == run_enterprise(debug=True)
 
 
-def test_inference():
+def test_evaluation():
 
     result = run_enterprise(debug=True)
-    inference = result["inference"]
+    evaluation = result["evaluation"]
 
     assert all(
         math.isfinite(value)
-        for value in inference["credibility"].values()
+        for value in evaluation["reliability"].values()
     )
     assert all(
         math.isfinite(value)
-        for value in inference["claim_support"].values()
+        for value in evaluation["claim_support"].values()
     )
-    assert inference["iterations"] == 15
+    assert evaluation["iterations"] == 15
 
     singleton = (
         "northstar_returns",
@@ -64,7 +64,7 @@ def test_inference():
         "14 days",
     )
 
-    assert inference["independence"][singleton] == {"vendor": 1.0}
+    assert evaluation["independence"][singleton] == {"vendor": 1.0}
 
 
 def test_adjustment():
@@ -74,13 +74,13 @@ def test_adjustment():
         result["sources"],
         result["assertions"],
     )
-    zero_dependency = infer(graph)
+    zero_dependency = evaluate(graph)
     claim = (
         "northstar_returns",
         "return_window",
         "30 days",
     )
 
-    assert result["inference"]["claim_support"][claim] < (
+    assert result["evaluation"]["claim_support"][claim] < (
         zero_dependency["claim_support"][claim]
     )

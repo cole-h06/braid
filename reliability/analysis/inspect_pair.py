@@ -126,7 +126,7 @@ def main():
     if len(sys.argv) != 3:
 
         print("usage:")
-        print("python -m credibility.inspect_pair sourceA sourceB")
+        print("python -m reliability.analysis.inspect_pair sourceA sourceB")
         return
 
     domain_a = sys.argv[1]

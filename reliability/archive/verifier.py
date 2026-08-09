@@ -154,7 +154,7 @@ def print_top_sources(
 def main():
 
     print()
-    print("loading assertion graph...")
+    print("loading graph...")
 
     (
         source_to_claims,

@@ -1,6 +1,6 @@
 
 
-# start every source with equal credibility
+# start every source with equal reliability
 def initialize_uniform(source_ids):
 
     n = len(source_ids)
@@ -83,9 +83,9 @@ def compute_degrees(
     }
 
 
-# distribute source credibility across the claims it asserts
+# distribute source reliability across the claims it asserts
 def score_claims(
-    credibility,
+    reliability_vector,
     claim_to_sources,
     agreement_weights,
     independence,
@@ -102,7 +102,7 @@ def score_claims(
 
         for source_id in source_ids:
 
-            # sources with many claims split their credibility
+            # sources with many claims split their reliability
             degree = degrees[source_id]
 
             if degree == 0:
@@ -118,7 +118,7 @@ def score_claims(
 
             support += (
 
-                credibility[source_id]
+                reliability_vector[source_id]
                 * edge_weight
                 * claim_independence[source_id]
                 / degree
@@ -136,12 +136,12 @@ def update_sources(
     source_to_claims
 ):
 
-    next_credibility = {}
+    next_reliability_vector = {}
 
     for source_id, claim_ids in source_to_claims.items():
 
         if not claim_ids:
-            next_credibility[source_id] = 0.0
+            next_reliability_vector[source_id] = 0.0
             continue
 
         support_sum = 0.0
@@ -149,36 +149,36 @@ def update_sources(
         for claim_id in claim_ids:
             support_sum += claim_support[claim_id]
 
-        next_credibility[source_id] = support_sum
+        next_reliability_vector[source_id] = support_sum
 
-    return next_credibility
+    return next_reliability_vector
 
 
-# keep the credibility vector
+# keep the reliability vector
 # on a fixed scale
 def normalize(
-    credibility
+    reliability_vector
 ):
 
     total = sum(
-        credibility.values()
+        reliability_vector.values()
     )
 
     if total == 0:
-        return credibility
+        return reliability_vector
 
     return {
         source_id: score / total
         for source_id, score
-        in credibility.items()
+        in reliability_vector.items()
     }
 
 
-# repeatedly pass credibility through the graph until the scores stop changing
+# repeatedly pass reliability through the graph until the scores stop changing
 def run_until_convergence(
     source_to_claims,
     claim_to_sources,
-    credibility,
+    reliability_vector,
     agreement_weights,
     dependency_matrix,
     tolerance=1e-8,
@@ -200,11 +200,11 @@ def run_until_convergence(
 
     while iteration < max_iterations:
 
-        previous = credibility.copy()
+        previous = reliability_vector.copy()
 
         # source -> claim
         claim_support = score_claims(
-            credibility,
+            reliability_vector,
             claim_to_sources,
             agreement_weights,
             independence,
@@ -212,32 +212,32 @@ def run_until_convergence(
         )
 
         # claim -> source
-        credibility = update_sources(
+        reliability_vector = update_sources(
             claim_support,
             source_to_claims
         )
 
-        credibility = normalize(
-            credibility
+        reliability_vector = normalize(
+            reliability_vector
         )
 
         history.append({
 
             "iteration": iteration + 1,
 
-            "credibility": credibility.copy(),
+            "reliability": reliability_vector.copy(),
 
             "claim_support": claim_support.copy(),
 
         })
 
-        # we measure how much the credibility vector changed
+        # we measure how much the reliability vector changed
         maximum_difference = 0.0
 
-        for source_id in credibility:
+        for source_id in reliability_vector:
 
             difference = abs(
-                credibility[source_id]
+                reliability_vector[source_id]
                 - previous[source_id]
             )
 
@@ -248,7 +248,7 @@ def run_until_convergence(
         if maximum_difference < tolerance:
 
             return (
-                credibility,
+                reliability_vector,
                 claim_support,
                 iteration + 1,
                 history,
@@ -259,7 +259,7 @@ def run_until_convergence(
         iteration += 1
 
     return (
-        credibility,
+        reliability_vector,
         claim_support,
         max_iterations,
         history,
@@ -268,7 +268,7 @@ def run_until_convergence(
     )
 
 
-def infer(
+def evaluate(
     graph,
     debug=False,
 ):
@@ -277,12 +277,12 @@ def infer(
         graph.source_to_claims.keys()
     )
 
-    credibility = initialize_uniform(
+    reliability_vector = initialize_uniform(
         source_ids
     )
 
     (
-        credibility,
+        reliability_vector,
         claim_support,
         iterations,
         history,
@@ -291,13 +291,13 @@ def infer(
     ) = run_until_convergence(
         graph.source_to_claims,
         graph.claim_to_sources,
-        credibility,
+        reliability_vector,
         graph.agreement_weights,
         graph.dependency_matrix,
     )
 
     result = {
-        "credibility": credibility,
+        "reliability": reliability_vector,
         "claim_support": claim_support,
         "iterations": iterations,
     }

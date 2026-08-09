@@ -1,10 +1,10 @@
-from credibility.engine import infer
-from credibility.loader import load_postgres
-from credibility.source_dependency import compute_dependency_matrix
+from reliability.engine import evaluate
+from reliability.loader import load_postgres
+from reliability.source_dependency import compute_dependency_matrix
 
 
 print()
-print("Loading credibility graph...")
+print("Loading graph...")
 print()
 
 graph = load_postgres()
@@ -20,14 +20,14 @@ print()
 
 graph.dependency_matrix = compute_dependency_matrix()
 
-print("Running credibility inference...")
+print("Running assertion evaluation...")
 print()
 
-result = infer(
+result = evaluate(
     graph
 )
 
-credibility = result["credibility"]
+reliability = result["reliability"]
 claim_support = result["claim_support"]
 iterations = result["iterations"]
 
@@ -38,7 +38,7 @@ print("Top sources")
 
 for source_id, score in sorted(
 
-    credibility.items(),
+    reliability.items(),
     key=lambda item: item[1],
     reverse=True,
 
@@ -54,7 +54,7 @@ print("Lowest sources")
 
 for source_id, score in sorted(
 
-    credibility.items(),
+    reliability.items(),
     key=lambda item: item[1],
 
 )[:10]:

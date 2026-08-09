@@ -60,7 +60,7 @@ $$
 D \in [0,1]^{|S| \times |S|}
 $$
 
-where each entry represents the estimated dependency between a pair of sources. This matrix sets the foundation for adjusting credibility propagation and calculating claim-level dependency telemetry. It can allow corroboration to be adjusted according to each contributing source's estimated independence.
+where each entry represents the estimated dependency between a pair of sources. This matrix sets the foundation for adjusting reliability propagation and calculating claim-level dependency telemetry. It can allow corroboration to be adjusted according to each contributing source's estimated independence.
 
 The current framework treats dependency as symmetric, such that
 
@@ -106,7 +106,7 @@ $$
 
 where
 
-- $s_i^{(t)}$ is the credibility of source $i$ at iteration $t$,
+- $s_i^{(t)}$ is the reliability of source $i$ at iteration $t$,
 - $w_{ij}$ is the agreement weight for source $i$'s assertion of claim $j$,
 - $q_{ij}$ is the independence of source $i$ for claim $j$, and
 - $d_i$ is the number of claims asserted by source $i$.

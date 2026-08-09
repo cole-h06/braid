@@ -2,8 +2,8 @@ from typing import Annotated, TypedDict
 
 from langgraph.graph import END, START, StateGraph
 
-from credibility.engine import infer
-from credibility.graph import CredibilityGraph
+from reliability.engine import evaluate
+from reliability.graph import BipartiteGraph
 
 from ..agents.api import api_agent
 from ..agents.documents import document_agent
@@ -59,11 +59,11 @@ class WorkflowState(TypedDict, total=False):
 
     evidence: list[Evidence]
 
-    graph: CredibilityGraph
+    graph: BipartiteGraph
 
     hybrid: dict
 
-    inference: dict
+    evaluation: dict
 
 
 def research_node(state):
@@ -169,15 +169,15 @@ def build_pipeline(
             "hybrid": hybrid,
         }
 
-    def inference_node(state):
+    def evaluation_node(state):
 
-        result = infer(
+        result = evaluate(
             state["graph"],
             debug=debug,
         )
 
         return {
-            "inference": result,
+            "evaluation": result,
         }
 
     def collect_node(state):
@@ -208,7 +208,7 @@ def build_pipeline(
     workflow.add_node("validate", validate_node)
     workflow.add_node("build_graph", graph_node)
     workflow.add_node("dependency", dependency_node)
-    workflow.add_node("inference", inference_node)
+    workflow.add_node("evaluation", evaluation_node)
 
     for agent in roots:
         workflow.add_edge(START, agent)
@@ -222,8 +222,8 @@ def build_pipeline(
     workflow.add_edge("collect", "validate")
     workflow.add_edge("validate", "build_graph")
     workflow.add_edge("build_graph", "dependency")
-    workflow.add_edge("dependency", "inference")
-    workflow.add_edge("inference", END)
+    workflow.add_edge("dependency", "evaluation")
+    workflow.add_edge("evaluation", END)
 
     return workflow.compile()
 
@@ -272,5 +272,5 @@ def run_workflow(
         "evidence": state["evidence"],
         "graph": state["graph"],
         "hybrid": state["hybrid"],
-        "inference": state["inference"],
+        "evaluation": state["evaluation"],
     }

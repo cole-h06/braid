@@ -13,7 +13,7 @@ The dataset includes examples of:
 - structural assertion overlap;
 - independent conflicting evidence.
 
-The credibility inference engine uses the pairwise dependency matrix which is computed by combining these signals.
+The reliability propagation algorithm uses the pairwise dependency matrix which is computed by combining these signals.
 
 ## Baseline Weights
 
@@ -30,18 +30,18 @@ Note that these starting weights have been hand-tuned. They have not been calibr
 Run the experiment from the repository root:
 
 ```bash
-.venv/bin/python -m agent_dataset.run
+python3 -m agent_dataset.run
 ```
 
-Run its tests:
+Run the tests:
 
 ```bash
-.venv/bin/python -m pytest agent_dataset/tests -v
+python3 -m pytest agent_dataset/tests -v
 ```
 
 ## LangGraph Workflow
 
-The same five agents are also capable of running through LangGraph. They run in parallel, then their results are collected in a fixed order before validation, graph construction, hybrid dependency estimation, and inference.
+The same five agents are also capable of running through LangGraph. They run in parallel, then their results are collected in a fixed order before validation, graph construction, hybrid dependency estimation, and assertion evaluation.
 
 There is no LLM or external retrieval involved. It produces the same result as the sequential experiment.
 
@@ -65,4 +65,4 @@ print(result)
 
 ## Enterprise Retrieval
 
-The separate [enterprise experiment](enterprise/README.md) retrieves synthetic business facts through local documents, SQLite, and a vendor API snapshot before running the same dependency and inference code.
+The separate [enterprise experiment](enterprise/README.md) retrieves synthetic business facts through local documents, SQLite, and a vendor API snapshot before running the same dependency and evaluation code.

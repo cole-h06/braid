@@ -161,7 +161,7 @@ def build_property_groups(rows):
 # agreement = 0.33
 #
 # At this stage we are only measuring the
-# structure of agreement. Source credibility
+# structure of agreement. Source reliability
 # is not yet involved
 def calculate_agreement(groups):
 

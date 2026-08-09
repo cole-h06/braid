@@ -2,7 +2,7 @@
 
 ## Motivation
 
-In the baseline credibility propagation fraemwork, we treat each assertion equally. But, it does not know that, when several sources are referring to the same attribute, their assertions may be divided across conflicting claims.
+In the baseline reliability propagation fraemwork, we treat each assertion equally. But, it does not know that, when several sources are referring to the same attribute, their assertions may be divided across conflicting claims.
 
 For example, let's suppose a source reports a 30 day return window while another reports a 14 day return window. Both claims and their supporting sources are recorded by the graph, but the baseline propagation equation does not use the amount of agreement each assertion has.
 
@@ -47,15 +47,15 @@ $$ c_j^{(t)}=\sum_{i\in A(j)}\frac{s_i^{(t)}w_{ij}}{d_i}. $$
 
 where
 
-- $s_i^{(t)}$ is the credibility of source $i$ at iteration $t$,
+- $s_i^{(t)}$ is the reliability of source $i$ at iteration $t$,
 - $w_{ij}$ is the agreement weight for the assertion, and
 - $d_i$ is the number of claims asserted by source $i$.
 
-Source degree controls how a source's credibility is distributed. Agreement weighting then adjusts the contribution based on how many sources referring to the attribute assert the same claim.
+Source degree controls how a source's reliability is distributed. Agreement weighting then adjusts the contribution based on how many sources referring to the attribute assert the same claim.
 
 ## Example
 
-Suppose four equally credible sources address the same return-window attribute.
+Suppose four equally reliable sources address the same return-window attribute.
 
 Three sources assert a 30-day return window. One source asserts a 14-day return window.
 
@@ -67,7 +67,7 @@ and
 
 $$ w_{14}=\frac{1}{4}. $$
 
-If every source begins with credibility $\frac{1}{4}$ and asserts only one claim, the agreement-weighted support for the 30-day claim is
+If every source begins with reliability $\frac{1}{4}$ and asserts only one claim, the agreement-weighted support for the 30-day claim is
 
 $$ c_{30}=3\left(\frac{1}{4}\right)\left(\frac{3}{4}\right)=\frac{9}{16}. $$
 

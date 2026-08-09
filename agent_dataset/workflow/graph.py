@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from credibility.graph import CredibilityGraph
+from reliability.graph import BipartiteGraph
 
 
 def build_graph(
@@ -46,7 +46,7 @@ def build_graph(
 
         claim_lookup[claim_id] = property_key
 
-    return CredibilityGraph(
+    return BipartiteGraph(
         source_to_claims=dict(source_to_claims),
         claim_to_sources=dict(claim_to_sources),
         source_names=source_names,

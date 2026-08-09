@@ -18,6 +18,6 @@ url: https://github.com/cole-h06/Verity
 license: MIT
 
 abstract: >
-  Verity is a graph-based credibility inference engine for information
-  networks. It models sources and claims as a bipartite graph to estimate
-  source credibility and claim support.
+  Verity estimates the reliability of assertions from multiple data sources.
+  It models sources and claims as a bipartite graph to estimate
+  source reliability and claim support.

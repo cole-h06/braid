@@ -1,93 +1,89 @@
-# Verity
+# Verity: A Structural Framework for Source Reliability Estimation
 
-A graph-based credibility inference engine for information networks. Verity models sources and claims as a bipartite graph to infer source credibility and claim support.
+Verity estimates the reliability of assertions from multiple data sources. It models sources and claims as a bipartite graph to jointly estimate source reliability and claim support.
 
 ## Problem
 
-As AI systems, from foundational large language models (LLMs) to fully autonomous agents, reason and execute complex tasks across digital environments using information collected from many sources, evaluating the credibility of this information becomes highly important.
+As agentic systems, from foundational large language models (LLMs) to fully autonomous multi-agent workflows, reason and execute complex tasks across digital environments, estimating the reliability of the information they retrieve becomes highly important.
+
+We typically rely on agreement between sources as a signal of reliability. But agreement does not necessarily indicate independent confirmation. Source B may simply repeat information originating from Source A.
 
 ## Research Challenge
 
-Source credibility and claim credibility depend on each other recursively.
+Source reliability and claim support depend on each other recursively.
 
-A source gains credibility when it supports claims that receive stronger support across the network.
-A claim gains support when it is asserted by more credible sources.
+A source becomes more reliable when it asserts claims that receive stronger support across the network.
+A claim gains support when it is asserted by more reliable sources.
 
-When an agent scrapes data from 50 different websites, how do we know who to trust?
-
-We typically rely on agreement between sources as evidence of truth. But, if Source A and Source B agree, is it really agreement? Or did Source B just copy its data from Source A?
+Estimating either quantity requires estimating the other.
 
 ## Approach
 
 Sources and claims form a bipartite graph. Each edge represents a source asserting a claim. Verity models information as an interconnected network instead of a collection of independent observations.
 <p align="center">
-  <img src="images/credibility_animation.gif" width="520">
+  <img src="images/propagation_animation.gif" width="520">
 </p>
 
 <p align="center">
-  <em>An animation of credibility propagation running on a small network of sources and claims. Node size represents inferred credibility, while edges represent assertions.</em>
+  <em>An animation of reliability propagation running on a small network of sources and claims. Node size represents estimated reliability, while edges represent assertions.</em>
 </p>
 
-Credibility is computed iteratively across the graph. At each iteration step, each source distributes its credibility across all claims it asserts, and each claim in turn redistributes the support it has accumulated back to the asserting sources. The iterations repeat until the credibility vector reaches a fixed point. Agreement weighting and dependency adjustment influence how much support each assertion contributes
+Reliability is computed iteratively across the graph. At each iteration, every source distributes its reliability across all claims it asserts. In turn, every claim redistributes the support it has accumulated back to its asserting sources. Iterations repeat until the reliability vector reaches a fixed point. Agreement weighting and dependency adjustment influence how much support each assertion contributes.
 
 ## Domain-Agnostic Design
 
-Verity does not interpret a claim's meaning. The current implementation uses product specifications as a development dataset because they provide conflicting information collected from multiple sources. Clients can construct the same source-claim graph from information in any domain.
+Verity does not interpret a claim's meaning. The current implementation uses product specifications as a development dataset because they provide conflicting information collected from multiple data sources. The same graph structure can represent information from any domain.
 
-The core inference engine receives unique source and claim identifiers, as well as the assertion edges that create the relationships between them. Before inference, the input data is prepared and converted into a source-claim graph.
+The core algorithm receives unique source and claim identifiers together with the assertion edges that form the connections between them. Before evaluation, the submitted assertions are canonicalized and converted into a bipartite graph.
 
-The current research also uses provenance and evidence metadata before inference to estimate source dependency. This results in a dependency matrix that is used to reduce the influence of evidence that may not be independent.
-
-Some examples of equivalent assertions that could be merged before graph construction:
-
-```text
-Product specifications:
-
-- Bluetooth 5.3
-- BT 5.3
-- Bluetooth version 5.3
-
-AI coding agents:
-
-- Python 3.12
-- Python 3.12.0
-- Python v3.12
-
-Enterprise knowledge:
-
-- Financial Report -> Revenue: $4.2M
-- ERP Export -> Revenue = 4,200,000 USD
-- Slack Discussion -> Quarterly revenue was $4.2 million
-```
+The current research also uses provenance and contextual metadata to estimate source dependencies. This creates a dependency matrix that reduces the influence of assertions that may not be supported by independent sources.
 
 ## Repository
 
 - `agent_dataset/` — Multi-agent and enterprise retrieval experiments
-- `benchmark/` — Reproducible benchmark dataset
-- `credibility/` — Credibility inference engine and dependency analysis
+- `benchmark/` — Reproducible benchmark dataset used for development
+- `reliability/` — Reliability propagation and dependency analysis
 - `paper/` — Research paper
 - `research/` — Research notes
 - `scripts/` — Development utilities
+
+## Getting Started
+
+Clone the repository:
+
+```bash
+git clone https://github.com/cole-h06/Verity.git
+cd Verity
+```
+
+Create a virtual environment and install the dependencies:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Then explore one of the included experiments:
+
+- [`benchmark/`](benchmark/README.md) — Reproducible benchmark dataset
+- [`agent_dataset/`](agent_dataset/README.md) — Multi-agent retrieval workflow
   
 ## Current Status
 
-Verity is an active research project focused on evaluating source credibility based on the graph structure of an information network.
-
-Alongside agreement-weighted credibility propagation, the current engine uses additional signals to identify when apparent agreement may come from dependent sources instead of independent support. It has been tested with a [controlled multi-agent dataset](agent_dataset/README.md) and a [simulated enterprise retrieval workflow](agent_dataset/enterprise/README.md).
+Verity is an active research project focused on estimating information reliability based on the graph structure of an information network. The current algorithm has been tested with a [controlled multi-agent dataset](agent_dataset/README.md) and a [simulated enterprise retrieval workflow](agent_dataset/enterprise/README.md).
 
 ## MCP Server
 
-The Verity credibility inference engine will be exposed through an open-source [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that allows AI systems to seamlessly incorporate credibility inference directly into their reasoning process.
+Verity will be accessible through an open-source [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server.
 
 This repository contains the research and reference implementation behind the server.
 
 ## Vision
 
-Verity explores how credibility inference can be made accessible and simplified for AI systems.
+Autonomous agents are capable of retrieving enormous amounts of information from various data sources at scale, but still lack a native mechanism for estimating the reliability of this information. Most current methods analyze the semantic content of retrieved information. While modern LLMs are effective at reasoning about text and supporting context, their ability to reason about how information is structurally related across sources is limited.
 
-Modern autonomous agents are capable of retrieving vast amounts of information at scale, but still lack a native mechanism for reasoning about the underlying credibility of information. This becomes problematic as these agents become integrated into everyday decisions and act on information on behalf of users. Current methods for evaluating information primarily analyze what was said. While LLMs are capable of reasoning about semantic text and supporting evidence, their ability to reason about the structure of information itself is limited.
-
-Verity takes a different approach by modeling information as a bipartite graph of source-to-claim assertions. It evaluates the topology of an information network and shifts credibility inference from reasoning about what was said to reasoning about how evidence is connected across sources.
+Verity takes a complementary approach by evaluating the topology of an information network. It shifts part of the evaluation process from reasoning about what was said to reasoning about how information is connected across sources.
 
 ## Contact
 

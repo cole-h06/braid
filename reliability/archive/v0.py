@@ -21,9 +21,9 @@ def initialize_vector(source_ids):
     }
 
 
-# source credibility flows into claims
+# source reliability flows into claims
 def score_claims(
-    credibility,
+    reliability_vector,
     claim_to_sources
 ):
 
@@ -34,24 +34,24 @@ def score_claims(
         support = 0.0
 
         for source_id in source_ids:
-            support += credibility[source_id]
+            support += reliability_vector[source_id]
 
         claim_support[claim_id] = support
 
     return claim_support
 
-# claims push credibility back into sources
+# claims push reliability back into sources
 def update_sources(
     claim_support,
     source_to_claims
 ):
 
-    next_credibility = {}
+    next_reliability_vector = {}
 
     for source_id, claim_ids in source_to_claims.items():
 
         if not claim_ids:
-            next_credibility[source_id] = 0.0
+            next_reliability_vector[source_id] = 0.0
             continue
 
         support_sum = 0.0
@@ -59,28 +59,28 @@ def update_sources(
         for claim_id in claim_ids:
             support_sum += claim_support[claim_id]
 
-        next_credibility[source_id] = (
+        next_reliability_vector[source_id] = (
             support_sum / len(claim_ids)
         )
 
-    return next_credibility
+    return next_reliability_vector
 
 # otherwise scores grow every iteration
 def normalize(
-    credibility
+    reliability_vector
 ):
 
     total = sum(
-        credibility.values()
+        reliability_vector.values()
     )
 
     if total == 0:
-        return credibility
+        return reliability_vector
 
     return {
         source_id: score / total
         for source_id, score
-        in credibility.items()
+        in reliability_vector.items()
     }
 
 # simple recursive update loop
@@ -90,7 +90,7 @@ def run_iterations(
     iterations=20
 ):
 
-    credibility = initialize_vector(
+    reliability_vector = initialize_vector(
         source_to_claims.keys()
     )
 
@@ -103,26 +103,26 @@ def run_iterations(
             )
 
         claim_support = score_claims(
-            credibility,
+            reliability_vector,
             claim_to_sources
         )
 
-        credibility = update_sources(
+        reliability_vector = update_sources(
             claim_support,
             source_to_claims
         )
 
-        credibility = normalize(
-            credibility
+        reliability_vector = normalize(
+            reliability_vector
         )
 
-    return credibility, claim_support
+    return reliability_vector, claim_support
 
 
 def main():
 
     print()
-    print("loading assertion graph...")
+    print("loading graph...")
     print()
 
     conn = sqlite3.connect(DB)
@@ -170,10 +170,10 @@ def main():
     )
 
     print()
-    print("running credibility iterations...")
+    print("running reliability iterations...")
     print()
 
-    credibility, claim_support = run_iterations(
+    reliability_vector, claim_support = run_iterations(
         source_to_claims,
         claim_to_sources
     )
@@ -224,7 +224,7 @@ def main():
         )
 
     for source_id, score in sorted(
-        credibility.items(),
+        reliability_vector.items(),
         key=lambda x: x[1],
         reverse=True
     )[:20]:

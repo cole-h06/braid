@@ -1,10 +1,10 @@
 import os
 import time
 
-from credibility.graph import CredibilityGraph
-from credibility.loader import load_from_csv
-from credibility.engine import infer
-from credibility.source_dependency import compute_dependency_matrix
+from reliability.graph import BipartiteGraph
+from reliability.loader import load_from_csv
+from reliability.engine import evaluate
+from reliability.source_dependency import compute_dependency_matrix
 
 
 def main():
@@ -29,7 +29,7 @@ def main():
         benchmark
     )
 
-    graph = CredibilityGraph(
+    graph = BipartiteGraph(
         source_to_claims=source_to_claims,
         claim_to_sources=claim_to_sources,
         source_names=source_names,
@@ -42,7 +42,7 @@ def main():
         graph
     )
 
-    print("running credibility inference...")
+    print("running assertion evaluation...")
     print()
 
     print("Graph Statistics")
@@ -57,7 +57,7 @@ def main():
 
     start = time.perf_counter()
 
-    result = infer(
+    result = evaluate(
         graph
     )
 
@@ -66,7 +66,7 @@ def main():
         - start
     )
 
-    credibility = result["credibility"]
+    reliability = result["reliability"]
 
     print(
         f"Converged after "
@@ -74,13 +74,13 @@ def main():
     )
 
     print(
-        f"Inference time: "
+        f"Evaluation time: "
         f"{elapsed * 1000:.2f} ms"
     )
     print()
 
     for source_id, score in sorted(
-        credibility.items(),
+        reliability.items(),
         key=lambda item: item[1],
         reverse=True,
     ):
