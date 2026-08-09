@@ -1,6 +1,6 @@
 # Verity Research
 
-In this directory you can find the documented research of the mathematical and experimental of the Verity reliability propagation algorithm.
+In this directory you can find the experimental research behind the Verity reliability propagation algorithm.
 
 The research includes the baseline reliability propagation algorithm, as well as methods for accounting for claim agreement and relationships between sources.
 
