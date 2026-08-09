@@ -42,12 +42,12 @@ The current research also uses provenance and contextual metadata to estimate so
 
 ## Repository
 
-- `agent_dataset/` — Multi-agent and enterprise retrieval experiments
-- `benchmark/` — Reproducible benchmark dataset used for development
-- `reliability/` — Reliability propagation and dependency analysis
-- `paper/` — Research paper
-- `research/` — Research notes
-- `scripts/` — Development utilities
+- `agent_dataset/` - Multi-agent and enterprise retrieval experiments
+- `benchmark/` - Reproducible benchmark dataset used for development
+- `reliability/` - Reliability propagation and dependency analysis
+- `paper/` - Research paper
+- `research/` - Research notes
+- `scripts/` - Development utilities
 
 ## Getting Started
 
@@ -68,8 +68,8 @@ pip install -r requirements.txt
 
 Then explore one of the included experiments:
 
-- [`benchmark/`](benchmark/README.md) — Reproducible benchmark dataset
-- [`agent_dataset/`](agent_dataset/README.md) — Multi-agent retrieval workflow
+- [`benchmark/`](benchmark/README.md) - Reproducible benchmark dataset
+- [`agent_dataset/`](agent_dataset/README.md) - Multi-agent retrieval workflow
   
 ## Current Status
 
