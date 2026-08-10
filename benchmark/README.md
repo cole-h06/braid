@@ -1,20 +1,20 @@
-# Verity Benchmark
+# BRAID Benchmark
 
-This is the directory containing the benchmark dataset used for developing the Verity reliability propagation algorithm.
+This is the directory containing the benchmark dataset used to develop and evaluate the BRAID algorithm.
 
 With this benchmark, you can experiment with:
 
 - Reliability propagation
 - Agreement weighting
-- Source dependency modeling
+- Source dependency estimation
 
 ## Running the benchmark
 
 Clone the repository:
 
 ```bash
-git clone https://github.com/cole-h06/Verity.git
-cd Verity
+git clone https://github.com/cole-h06/braid.git
+cd braid
 ```
 
 Create a virtual environment and install the dependencies:
@@ -45,4 +45,4 @@ The benchmark computes:
 - Reliability propagation until convergence
 - Final source reliability scores
 
-Product specifications are currently the benchmark being used for development as they provide large amounts of conflicting data published by independent sources. That said, the evaluation algorithms themselves are not limited by any specific domain and operate only on graph structure.
+Product specifications are currently the development benchmark because they provide large amounts of conflicting information retrieved from multiple data sources. BRAID itself is not limited by any specific information domain and operates on structured sources, claims, assertions, and associated dependency signals.

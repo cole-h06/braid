@@ -3,7 +3,7 @@ from datetime import datetime
 
 import psycopg
 
-DB_NAME = "verity_dev"
+DB_NAME = "braid_dev"
 
 WINDOW_HOURS = 24 * 7
 

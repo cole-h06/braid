@@ -1,10 +1,10 @@
 import sys
 import psycopg
 
-DB_NAME = "verity_dev"
+DB_NAME = "braid_dev"
 
 
-def load_ownership(claim_id):
+def load_provenance(claim_id):
 
     with psycopg.connect(
         dbname=DB_NAME
@@ -17,11 +17,11 @@ def load_ownership(claim_id):
                 SELECT
                     s.id,
                     s.domain,
-                    o.owner_id
-                FROM assertion_ownership o
+                    p.upstream_document_id
+                FROM assertion_provenance p
                 JOIN sources s
-                    ON o.source_id = s.id
-                WHERE o.claim_id = %s
+                    ON p.source_id = s.id
+                WHERE p.claim_id = %s
                 ORDER BY s.id;
                 """,
                 (claim_id,)
@@ -34,13 +34,13 @@ def build_matrix(rows):
 
     matrix = {}
 
-    for _, domain, owner in rows:
+    for _, domain, upstream in rows:
 
         matrix[domain] = {}
 
-        for _, other_domain, other_owner in rows:
+        for _, other_domain, other_upstream in rows:
 
-            if owner == other_owner:
+            if upstream == other_upstream:
                 matrix[domain][other_domain] = 1.0
             else:
                 matrix[domain][other_domain] = 0.0
@@ -79,21 +79,21 @@ def main():
     if len(sys.argv) != 2:
 
         print(
-            "Usage: python3 ownership_matrix.py <claim_id>"
+            "Usage: python3 provenance_matrix.py <claim_id>"
         )
 
         return
 
     claim_id = int(sys.argv[1])
 
-    rows = load_ownership(
+    rows = load_provenance(
         claim_id
     )
 
     if not rows:
 
         print(
-            f"No ownership metadata found for claim {claim_id}."
+            f"No provenance metadata found for claim {claim_id}."
         )
 
         return

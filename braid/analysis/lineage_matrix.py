@@ -2,7 +2,7 @@ import sys
 
 import psycopg
 
-DB_NAME = "verity_dev"
+DB_NAME = "braid_dev"
 
 
 def load_lineage(claim_id):

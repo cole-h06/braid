@@ -3,7 +3,7 @@ import math
 from datetime import timedelta
 from itertools import combinations
 
-from reliability.analysis.evidence_independence import build_pairwise_rows
+from braid.analysis.evidence_independence import build_pairwise_rows
 
 
 SIGNAL_NAMES = (
@@ -199,7 +199,7 @@ def compute_hybrid_dependency(
             "structure": 1.0,
         }
 
-        # combine the five signals using the normalized weights
+        # we combine the five signals using the normalized weights
         dependency = sum(
             normalized_weights[name] * value
             for name, value in pair_signals.items()

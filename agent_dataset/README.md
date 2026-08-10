@@ -1,6 +1,6 @@
 ## Mocked Agent Dataset
 
-This experiment displays how Verity integrates into a multi-agent workflow.
+This experiment displays how BRAID integrates into a multi-agent workflow.
 
 Five specialized agents return fifteen assertions. Each assertion has a separate evidence record that stores the metadata used to test source dependency.
 

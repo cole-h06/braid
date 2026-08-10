@@ -1,6 +1,6 @@
-from reliability.engine import evaluate
-from reliability.loader import load_postgres
-from reliability.source_dependency import compute_dependency_matrix
+from braid.engine import evaluate
+from braid.loader import load_postgres
+from braid.source_dependency import compute_dependency_matrix
 
 
 print()

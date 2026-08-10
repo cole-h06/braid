@@ -4,7 +4,7 @@
 
 Source reliability and claim support depend on each other. A source gains reliability when it supports claims that receive stronger support across the information network. And a claim, in turn, receives stronger support when it is asserted by sources with higher reliability.
 
-Verity models these relationships as a bipartite graph. It repeatedly propagates reliability between the source and claim nodes until the source scores converge.
+BRAID models these relationships as a bipartite graph. It repeatedly propagates reliability between the source and claim nodes until the source scores converge.
 
 ## Graph Framework
 

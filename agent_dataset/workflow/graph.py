@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from reliability.graph import BipartiteGraph
+from braid.graph import BipartiteGraph
 
 
 def build_graph(

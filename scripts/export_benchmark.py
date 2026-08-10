@@ -135,7 +135,7 @@ def main():
     )
 
     with psycopg.connect(
-        "dbname=verity_dev"
+        "dbname=braid_dev"
     ) as conn:
 
         with conn.cursor() as cur:

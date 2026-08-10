@@ -126,14 +126,14 @@ def main():
     if len(sys.argv) != 3:
 
         print("usage:")
-        print("python -m reliability.analysis.inspect_pair sourceA sourceB")
+        print("python -m braid.analysis.inspect_pair sourceA sourceB")
         return
 
     domain_a = sys.argv[1]
     domain_b = sys.argv[2]
 
     conn = psycopg2.connect(
-        dbname="verity_dev",
+        dbname="braid_dev",
         user="colehoke"
     )
 

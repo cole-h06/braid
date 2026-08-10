@@ -2,7 +2,7 @@ import psycopg
 import os
 
 conn = psycopg.connect(
-    dbname="verity_dev",
+    dbname="braid_dev",
     user="colehoke",
 )
 cursor = conn.cursor()

@@ -1,18 +1,16 @@
-# Verity Research
+# BRAID Research
 
-In this directory you can find the experimental research behind the Verity reliability propagation algorithm.
+In this directory you can find the documented experimental research behind the BRAID algorithm.
 
-The research includes the baseline reliability propagation algorithm, as well as methods for accounting for claim agreement and relationships between sources.
+## Methods
 
-## Framework
+- [Reliability Propagation](reliability_propagation.md) describes the full process of how reliability and support scores are distributed between sources and claims. This process repeats across the graph until convergence.
 
-- [Reliability Propagation](reliability_propagation.md) describes the baseline iterative algorithm.
+- [Agreement Weighting](agreement_weighting.md) adjusts the influence each assertion has on claim support. We base this off the distribution of sources across conflicting claims.
 
-- [Agreement Weighting](agreement_weighting.md) explains how the influence of each assertion can be changed based on the distribution of sources across conflicting claims.
+- [Structural Source Dependencies](structural_source_dependencies.md) analyzes which source relationship signals can be derived from graph structure and identifies the limitations of structural dependency estimation.
 
-- [Structural Source Dependencies](structural_source_dependencies.md) analyze if assertion overlap and graph structure can provide meaningful signals relating to source relationships.
-
-- [Hybrid Source Dependencies](hybrid_source_dependencies.md) combines graph structure with provenance and contextual metadata evidence. Also defines how source dependency affects propagation and claim-level telemetry.
+- [Hybrid Source Dependencies](hybrid_source_dependencies.md) combines graph structure with provenance and contextual metadata to estimate pairwise source dependencies. Defines how those estimates can adjust reliability propagation.
 
 ## Experiments
 
@@ -20,10 +18,10 @@ The [`agent_dataset`](../agent_dataset/README.md) contains the test for evaluati
 
 In the [`benchmark`](../benchmark/README.md) you can find the reproducible product specification dataset used during development.
 
-The reliability propagation algorithm and dependency analysis code are located in [`reliability`](../reliability/).
+The BRAID reference implementation is located in [`braid`](../braid/).
 
 ## Status
 
-Please note these documents are research notes in progress, not a final specification.
+Please note these documents are notes in progress, not a final specification.
 
 The developing research paper is located in [`paper`](../paper/).

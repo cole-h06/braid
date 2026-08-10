@@ -1,10 +1,10 @@
 import os
 import time
 
-from reliability.graph import BipartiteGraph
-from reliability.loader import load_from_csv
-from reliability.engine import evaluate
-from reliability.source_dependency import compute_dependency_matrix
+from braid.graph import BipartiteGraph
+from braid.loader import load_from_csv
+from braid.engine import evaluate
+from braid.source_dependency import compute_dependency_matrix
 
 
 def main():
