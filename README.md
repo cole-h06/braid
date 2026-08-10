@@ -44,7 +44,7 @@ BRAID combines the graph-derived signals with provenance and contextual metadata
 
 - `agent_dataset/` - Multi-agent and enterprise retrieval experiments
 - `benchmark/` - Reproducible benchmark dataset used for development
-- `reliability/` - Reliability propagation and dependency analysis
+- `braid/` - Reliability propagation and dependency analysis
 - `paper/` - Research paper
 - `research/` - Research notes
 - `scripts/` - Development utilities
