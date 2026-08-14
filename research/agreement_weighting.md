@@ -2,11 +2,11 @@
 
 ## Motivation
 
-In the baseline reliability propagation fraemwork, we treat each assertion equally. But, it does not know that, when several sources are referring to the same attribute, their assertions may be divided across conflicting claims.
+In the baseline reliability propagation framework, we treat each assertion equally. But, it does not know that, when several sources are referring to the same attribute, their assertions may be divided across conflicting claims.
 
 For example, let's suppose a source reports a 30 day return window while another reports a 14 day return window. Both claims and their supporting sources are recorded by the graph, but the baseline propagation equation does not use the amount of agreement each assertion has.
 
-That information is introduced into source-to-claim propagation via agreement-weighting. Essentially, it increases each assertion's influence that agrees with a larger share of sources referring to the same attribute.
+That information is introduced into source-to-claim propagation via agreement weighting. Essentially, it increases each assertion's influence that agrees with a larger share of sources referring to the same attribute.
 
 ## Agreement Framework
 
@@ -109,4 +109,4 @@ When there are conflicting claims for the same attribute, agreement weighting me
 
 A large group of sources can still repeat information from the same origin. That said, agreement alone is incapable of distinguishing independent support from copied or otherwise related evidence.
 
-[Hybrid source dependency estimation](hybrid_source_dependencies.md) expands this framework by adjusting assertion contributions based on the estimated independence of the supporting sources.
+[Source Dependency Estimation](source_dependency_estimation.md) expands this framework by adjusting assertion contributions based on the estimated independence of the supporting sources.

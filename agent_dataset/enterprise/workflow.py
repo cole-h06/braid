@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from agent_dataset.dataset import BASELINE_WEIGHTS
+from agent_dataset.dataset import DEPENDENCY_WEIGHTS
 from agent_dataset.workflow.pipeline import build_pipeline
 
 from .agents import (
@@ -19,8 +19,8 @@ def build_enterprise(
     debug=False,
 ):
 
-    observed_at = datetime.fromisoformat(
-        load_manifest()["research_observed_at"]
+    source_modified_at = datetime.fromisoformat(
+        load_manifest()["research_source_modified_at"]
     )
 
     def handbook_node(state):
@@ -62,7 +62,7 @@ def build_enterprise(
                 "research": research_agent(
                     state["results"]["handbook"],
                     state["results"]["vendor"],
-                    observed_at,
+                    source_modified_at,
                     clock(),
                 ),
             }
@@ -87,7 +87,7 @@ def build_enterprise(
             "research",
         ),),
         weights=(
-            BASELINE_WEIGHTS
+            DEPENDENCY_WEIGHTS
             if weights is None
             else weights
         ),

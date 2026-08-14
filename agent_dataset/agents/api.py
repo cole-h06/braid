@@ -36,21 +36,30 @@ def api_agent():
         Evidence(
             assertion_id="api.refund_window",
             observed_at=datetime(2026, 1, 8, 9, tzinfo=timezone.utc),
-            provenance_ids=(),
+            source_modified_at=datetime(
+                2026, 1, 8, 8, tzinfo=timezone.utc
+            ),
+            upstream_source_ids=(),
             cited_source_ids=(),
             parent_assertion_ids=(),
         ),
         Evidence(
             assertion_id="api.warranty",
             observed_at=datetime(2026, 1, 8, 9, 5, tzinfo=timezone.utc),
-            provenance_ids=(),
+            source_modified_at=datetime(
+                2026, 1, 8, 8, 5, tzinfo=timezone.utc
+            ),
+            upstream_source_ids=(),
             cited_source_ids=(),
             parent_assertion_ids=(),
         ),
         Evidence(
             assertion_id="api.shipping_cost",
             observed_at=datetime(2026, 1, 8, 9, 10, tzinfo=timezone.utc),
-            provenance_ids=(),
+            source_modified_at=datetime(
+                2026, 1, 8, 8, 10, tzinfo=timezone.utc
+            ),
+            upstream_source_ids=(),
             cited_source_ids=(),
             parent_assertion_ids=(),
         ),

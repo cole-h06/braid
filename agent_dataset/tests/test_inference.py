@@ -41,38 +41,34 @@ def test_evaluation():
 def test_independence():
 
     experiment = run_experiment(debug=True)
+
+    graph = experiment["graph"]
+    dependency = experiment["hybrid"]["dependency_matrix"]
     independence = experiment["evaluation"]["independence"]
 
-    refund_30 = (
-        "refund_policy",
-        "window_days",
-        "30",
-    )
+    for claim_id, source_ids in graph.claim_to_sources.items():
 
-    expected = {
-        "research_agent": 0.8263888888888888,
-        "search_agent": 0.7847222222222222,
-        "sql_agent": 0.9263888888888889,
-        "document_agent": 0.8958333333333334,
-    }
+        source_ids = tuple(source_ids)
 
-    assert independence[refund_30] == pytest.approx(expected)
+        for source_id in source_ids:
 
-    shipping_free = (
-        "shipping",
-        "cost",
-        "free",
-    )
+            if len(source_ids) == 1:
+                expected = 1.0
+            else:
+                dependency_sum = sum(
+                    dependency[source_id][other_id]
+                    for other_id in source_ids
+                    if other_id != source_id
+                )
 
-    assert (
-        independence[shipping_free]["search_agent"]
-        == pytest.approx(0.7125)
-    )
+                expected = 1.0 - (
+                    dependency_sum
+                    / (len(source_ids) - 1)
+                )
 
-    assert (
-        independence[shipping_free]["document_agent"]
-        == pytest.approx(0.7125)
-    )
+            assert independence[claim_id][source_id] == pytest.approx(
+                expected
+            )
 
 
 def test_singletons():

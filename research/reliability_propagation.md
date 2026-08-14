@@ -65,7 +65,7 @@ The unnormalized reliability of source $i$ for the next iteration is
 
 $$ \tilde{s}_i^{(t+1)}=\sum_{j\in C(i)}c_j^{(t)}. $$
 
-Sources receive more reliability when they connect to strongly supported claims. Because those claim-support values were produced by the source scores from the previous iteration, both  reliability and claim support are updated through the graph recursively.
+Sources receive more reliability when they connect to strongly supported claims. Because those claim-support values were produced by the source scores from the previous iteration, both reliability and claim support are updated through the graph recursively.
 
 ## Normalization
 
@@ -125,4 +125,4 @@ Reliability is measured from the distribution of assertions throughout the graph
 
 The final score values are internal graph scores. They do not, however, imply probabilities of truth, nor do they directly analyze a claim's semantic meaning.
 
-We treat each assertion equally using this framework. [Agreement weighting](agreement_weighting.md) expands source-to-claim propagation by accounting for agreement or conflict. [hybrid source dependency estimation](hybrid_source_dependencies.md) discounts evidence based on the dependency relationships between sources.
+We treat each assertion equally using this baseline framework. [Agreement weighting](agreement_weighting.md) expands source-to-claim propagation by accounting for agreement or conflict. [Source Dependency Estimation](source_dependency_estimation.md) discounts evidence based on the dependency relationships between sources.

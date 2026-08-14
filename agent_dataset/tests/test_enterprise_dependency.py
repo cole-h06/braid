@@ -20,8 +20,9 @@ PAIRS = (
 
 
 EXPECTED = {
-    "provenance": (1, 0, 0, 0.5, 0, 0, 0.5, 0, 0, 0.5),
-    "lineage": (0, 0, 0, 1, 0, 0, 0, 0, 0, 1),
+    "upstream": (0, 1, 0, 1, 0, 0, 0, 0, 0, 1),
+    "citation": (0, 0, 0, 1, 0, 0, 0, 0, 0, 1),
+    "assertion_lineage": (0, 0, 0, 1, 0, 0, 0, 0, 0, 1),
     "ownership": (1, 0, 0, 0, 0, 0, 0, 0, 0, 0),
     "temporal": (0, 1, 0, 0, 0, 0, 0, 0, 0, 1),
     "graph": (
@@ -101,16 +102,16 @@ def test_dependencies():
     matrix = run_enterprise()["hybrid"]["dependency_matrix"]
 
     assert pair_values(matrix) == pytest.approx((
-        0.44166666666666665,
-        0.19166666666666665,
+        0.14166666666666666,
+        0.39166666666666666,
         0.0,
-        0.45,
+        0.675,
         0.04166666666666666,
         0.0,
-        0.15,
+        0.024999999999999998,
         0.0,
         0.024999999999999998,
-        0.6,
+        0.775,
     ))
 
     ranking = sorted(
@@ -122,19 +123,32 @@ def test_dependencies():
     assert ranking[:3] == [
         ("vendor", "research"),
         ("handbook", "research"),
-        ("handbook", "faq"),
+        ("handbook", "sql"),
     ]
 
 
 def test_directions():
 
     diagnostics = run_enterprise()["hybrid"]["diagnostics"]
-    lineage = diagnostics["lineage_directions"]
+
+    upstream = diagnostics["upstream_directions"]
+    citation = diagnostics["citation_directions"]
+    assertion_lineage = diagnostics["assertion_lineage_directions"]
     temporal = diagnostics["temporal_directions"]
 
-    assert lineage["research"]["handbook"] == 1.0
-    assert lineage["handbook"]["research"] == 0.0
-    assert lineage["research"]["vendor"] == 1.0
+    assert upstream["sql"]["handbook"] == 1.0
+    assert upstream["handbook"]["sql"] == 0.0
+    assert upstream["research"]["handbook"] == 1.0
+    assert upstream["research"]["vendor"] == 1.0
+
+    assert citation["research"]["handbook"] == 1.0
+    assert citation["research"]["vendor"] == 1.0
+    assert citation["handbook"]["research"] == 0.0
+
+    assert assertion_lineage["research"]["handbook"] == 1.0
+    assert assertion_lineage["research"]["vendor"] == 1.0
+    assert assertion_lineage["handbook"]["research"] == 0.0
+
     assert temporal["sql"]["handbook"] == 1.0
     assert temporal["handbook"]["sql"] == 0.0
     assert temporal["research"]["vendor"] == 1.0
@@ -155,11 +169,11 @@ def test_telemetry():
         ),
         ("northstar_returns", "shipping_fee", "USD 5"): (
             2,
-            1.25,
+            1.1267605633802817,
         ),
         ("northstar_returns", "shipping_fee", "customer pays"): (
             3,
-            2.0689655172413794,
+            2.1686746987951806,
         ),
         ("northstar_returns", "warranty", "2 years"): (
             4,
@@ -193,11 +207,11 @@ def test_clusters():
     thresholds = (0.15, 0.25, 0.30, 0.45, 0.60)
     expected = {
         ("northstar_returns", "return_window", "30 days"): (
-            1,
+            2,
             2,
             2,
             3,
-            4,
+            3,
         ),
         ("northstar_returns", "shipping_fee", "USD 5"): (
             1,
@@ -207,18 +221,18 @@ def test_clusters():
             1,
         ),
         ("northstar_returns", "shipping_fee", "customer pays"): (
-            1,
+            2,
             2,
             2,
             3,
             3,
         ),
         ("northstar_returns", "warranty", "2 years"): (
-            1,
+            2,
             2,
             2,
             3,
-            4,
+            3,
         ),
     }
 

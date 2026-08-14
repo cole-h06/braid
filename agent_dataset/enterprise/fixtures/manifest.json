@@ -1,13 +1,13 @@
 {
   "retrieved_at": "2026-02-05T12:05:00Z",
-  "research_observed_at": "2026-02-05T12:04:00Z",
-  "database_id": "northstar_ops_memory",
+  "research_source_modified_at": "2026-02-05T12:04:00Z",
+  "database_id": "northstar_policy_config",
   "query_id": "returns_policy_by_record",
   "snapshots": {
-    "docs/handbook.md": "b3b959ef125b34451f8a6e38647c6d57f39a2f47cf4d16fe037a5ee1a53e7e98",
-    "docs/faq.md": "1ce0b8ca753a7df960288319009e797d8349c36fa66784d56a6d9e63efbcf5db",
-    "company.sql": "b46e5d959d3254f171173d917f4cbac8896fbe09840d89effd2a6271e5e288a7",
-    "vendor.json": "75548db1a2abc9bb0e5a7e45f98aeb3e46d989bbebf767d34bb4802847734211"
+    "docs/handbook.md": "027c08f84353673305400b3274157f7139cc61fdf71294a30ec0cdb93ca300fa",
+    "docs/faq.md": "032bab4df4f48849db9cc053476a024a78412e6e5abeb8ec0da69b5cb60b8e87",
+    "company.sql": "bf3dde35cd11df45830e5a841326c11784df0a6f5d5717470e6a6aaa517f3a13",
+    "vendor.json": "a49874f80fd5c16eb5ccd76f7460a981d753ea79bdf1a1bedb0cbd33380f82dd"
   },
   "sources": [
     {"source_id": "handbook", "display_name": "Returns Handbook", "owner_id": "northstar_policy"},

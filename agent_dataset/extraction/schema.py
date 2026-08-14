@@ -58,7 +58,9 @@ class Evidence(BaseModel):
 
     observed_at: datetime
 
-    provenance_ids: tuple[str, ...] | None
+    source_modified_at: datetime | None = None
+
+    upstream_source_ids: tuple[str, ...] | None = None
 
     cited_source_ids: tuple[str, ...] | None = None
 
@@ -69,15 +71,17 @@ class Evidence(BaseModel):
         exclude_if=lambda value: not value,
     )
 
-    @field_validator("observed_at")
+    @field_validator("observed_at", "source_modified_at")
     @classmethod
-    def validate_observed_at(
+    def validate_timestamps(
         cls,
         value,
     ):
 
-        if value.tzinfo is None or value.utcoffset() is None:
-            raise ValueError("observed_at must be timezone-aware")
+        if value is not None and (
+            value.tzinfo is None or value.utcoffset() is None
+        ):
+            raise ValueError("timestamps must be timezone-aware")
 
         return value
 

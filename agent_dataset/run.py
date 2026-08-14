@@ -1,6 +1,6 @@
 from braid.engine import evaluate
 
-from .dataset import BASELINE_WEIGHTS, load_dataset
+from .dataset import DEPENDENCY_WEIGHTS, load_dataset
 from .workflow.graph import build_graph
 from .workflow.hybrid_dependency import compute_hybrid_dependency
 
@@ -22,7 +22,7 @@ def run_experiment(
         sources,
         assertions,
         evidence,
-        BASELINE_WEIGHTS if weights is None else weights,
+        DEPENDENCY_WEIGHTS if weights is None else weights,
     )
 
     graph.dependency_matrix = hybrid["dependency_matrix"]

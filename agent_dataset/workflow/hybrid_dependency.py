@@ -7,16 +7,18 @@ from braid.analysis.evidence_independence import build_pairwise_rows
 
 
 SIGNAL_NAMES = (
-    "provenance",
-    "lineage",
+    "upstream",
+    "citation",
+    "assertion_lineage",
     "ownership",
     "temporal",
     "graph",
 )
 
 OBSERVABILITY_NAMES = (
-    "provenance",
-    "lineage",
+    "upstream",
+    "citation",
+    "assertion_lineage",
     "ownership",
     "temporal",
     "structure",
@@ -26,7 +28,7 @@ OBSERVABILITY_NAMES = (
 def normalize_weights(weights):
 
     if set(weights) != set(SIGNAL_NAMES):
-        raise ValueError("weights must contain exactly five signal names")
+        raise ValueError("weights must contain exactly six signal names")
 
     if any(
         not math.isfinite(value) or value < 0.0
@@ -82,37 +84,47 @@ def compute_hybrid_dependency(
         for item in evidence
     }
 
-    provenance_capture = build_capture(
+    upstream_capture = build_capture(
         source_ids,
         assertion_lookup,
         evidence,
-        ("provenance_ids",),
+        ("upstream_source_ids",),
     )
 
-    lineage_capture = build_capture(
+    citation_capture = build_capture(
         source_ids,
         assertion_lookup,
         evidence,
-        (
-            "cited_source_ids",
-            "parent_assertion_ids",
-        ),
+        ("cited_source_ids",),
+    )
+
+    assertion_lineage_capture = build_capture(
+        source_ids,
+        assertion_lookup,
+        evidence,
+        ("parent_assertion_ids",),
     )
 
     temporal_capture = build_capture(
         source_ids,
         assertion_lookup,
         evidence,
-        ("observed_at",),
+        ("source_modified_at",),
     )
 
-    provenance = build_provenance(
+    upstream = build_upstream(
         source_ids,
         assertion_lookup,
         evidence,
     )
 
-    lineage = build_lineage(
+    citations = build_citations(
+        source_ids,
+        assertion_lookup,
+        evidence,
+    )
+
+    assertion_lineage = build_assertion_lineage(
         source_ids,
         assertion_lookup,
         evidence,
@@ -147,13 +159,17 @@ def compute_hybrid_dependency(
     for source_a, source_b in combinations(source_ids, 2):
 
         pair_signals = {
-            "provenance": provenance_score(
-                provenance[source_a],
-                provenance[source_b],
+            "upstream": max(
+                upstream[source_a][source_b],
+                upstream[source_b][source_a],
             ),
-            "lineage": max(
-                lineage[source_a][source_b],
-                lineage[source_b][source_a],
+            "citation": max(
+                citations[source_a][source_b],
+                citations[source_b][source_a],
+            ),
+            "assertion_lineage": max(
+                assertion_lineage[source_a][source_b],
+                assertion_lineage[source_b][source_a],
             ),
             "ownership": ownership_score(
                 source_lookup[source_a],
@@ -170,22 +186,26 @@ def compute_hybrid_dependency(
             ),
         }
 
-        if not (
-            provenance_capture[source_a]
-            and provenance_capture[source_b]
-        ):
-            pair_signals["provenance"] = 0.0
-
         pair_observability = {
-            "provenance": float(
-                provenance_capture[source_a]
-                and provenance_capture[source_b]
-            ),
-            "lineage": float(
-                pair_signals["lineage"] == 1.0
+            "upstream": float(
+                pair_signals["upstream"] == 1.0
                 or (
-                    lineage_capture[source_a]
-                    and lineage_capture[source_b]
+                    upstream_capture[source_a]
+                    and upstream_capture[source_b]
+                )
+            ),
+            "citation": float(
+                pair_signals["citation"] == 1.0
+                or (
+                    citation_capture[source_a]
+                    and citation_capture[source_b]
+                )
+            ),
+            "assertion_lineage": float(
+                pair_signals["assertion_lineage"] == 1.0
+                or (
+                    assertion_lineage_capture[source_a]
+                    and assertion_lineage_capture[source_b]
                 )
             ),
             "ownership": float(
@@ -199,7 +219,7 @@ def compute_hybrid_dependency(
             "structure": 1.0,
         }
 
-        # we combine the five signals using the normalized weights
+        # combine the six signals using the normalized weights
         dependency = sum(
             normalized_weights[name] * value
             for name, value in pair_signals.items()
@@ -224,11 +244,14 @@ def compute_hybrid_dependency(
 
         dependency_matrix[source_a][source_b] = dependency
         dependency_matrix[source_b][source_a] = dependency
+
         confidence_matrix[source_a][source_b] = confidence
         confidence_matrix[source_b][source_a] = confidence
 
     diagnostics = {
-        "lineage_directions": lineage,
+        "upstream_directions": upstream,
+        "citation_directions": citations,
+        "assertion_lineage_directions": assertion_lineage,
         "temporal_directions": temporal,
     }
 
@@ -288,41 +311,7 @@ def build_capture(
     }
 
 
-def build_provenance(
-    source_ids,
-    assertion_lookup,
-    evidence,
-):
-
-    provenance = {
-        source_id: set()
-        for source_id in source_ids
-    }
-
-    for item in evidence:
-
-        source_id = assertion_lookup[item.assertion_id].source_id
-
-        if item.provenance_ids is not None:
-            provenance[source_id].update(item.provenance_ids)
-
-    return provenance
-
-
-def provenance_score(
-    provenance_a,
-    provenance_b,
-):
-
-    union = provenance_a | provenance_b
-
-    if not union:
-        return 0.0
-
-    return len(provenance_a & provenance_b) / len(union)
-
-
-def build_lineage(
+def build_upstream(
     source_ids,
     assertion_lookup,
     evidence,
@@ -334,14 +323,55 @@ def build_lineage(
 
         child_source = assertion_lookup[item.assertion_id].source_id
 
-        for parent_source in item.cited_source_ids or ():
-            directions[child_source][parent_source] = 1.0
+        for parent_source in item.upstream_source_ids or ():
+            if parent_source in directions[child_source]:
+                directions[child_source][parent_source] = 1.0
+
+    return directions
+
+
+def build_citations(
+    source_ids,
+    assertion_lookup,
+    evidence,
+):
+
+    directions = empty_matrix(source_ids)
+
+    for item in evidence:
+
+        child_source = assertion_lookup[item.assertion_id].source_id
+
+        for cited_source in item.cited_source_ids or ():
+            if cited_source in directions[child_source]:
+                directions[child_source][cited_source] = 1.0
+
+    return directions
+
+
+def build_assertion_lineage(
+    source_ids,
+    assertion_lookup,
+    evidence,
+):
+
+    directions = empty_matrix(source_ids)
+
+    for item in evidence:
+
+        child_source = assertion_lookup[item.assertion_id].source_id
 
         for parent_id in item.parent_assertion_ids or ():
 
-            parent_source = assertion_lookup[parent_id].source_id
+            parent_assertion = assertion_lookup.get(parent_id)
 
-            directions[child_source][parent_source] = 1.0
+            if parent_assertion is None:
+                continue
+
+            parent_source = parent_assertion.source_id
+
+            if parent_source in directions[child_source]:
+                directions[child_source][parent_source] = 1.0
 
     return directions
 
@@ -356,7 +386,7 @@ def build_temporal(
 
     directions = empty_matrix(source_ids)
 
-    observed_at = {}
+    source_modified_at = {}
 
     for assertion in assertions:
 
@@ -365,9 +395,15 @@ def build_temporal(
             assertion.attribute,
         )
 
-        observed_at[assertion.source_id, property_key] = (
-            evidence_lookup[assertion.assertion_id].observed_at
-        )
+        item = evidence_lookup.get(assertion.assertion_id)
+
+        if item is None:
+            continue
+
+        source_modified_at[
+            assertion.source_id,
+            property_key,
+        ] = item.source_modified_at
 
     for child_source, parent_source in combinations(source_ids, 2):
 
@@ -375,7 +411,7 @@ def build_temporal(
             child_source,
             parent_source,
             source_to_assertions,
-            observed_at,
+            source_modified_at,
             temporal_window,
         )
 
@@ -383,7 +419,7 @@ def build_temporal(
             parent_source,
             child_source,
             source_to_assertions,
-            observed_at,
+            source_modified_at,
             temporal_window,
         )
 
@@ -394,7 +430,7 @@ def temporal_score(
     child_source,
     parent_source,
     source_to_assertions,
-    observed_at,
+    source_modified_at,
     temporal_window,
 ):
 
@@ -410,19 +446,33 @@ def temporal_score(
     if not matches:
         return 0.0
 
+    observable = 0
     qualifying = 0
 
     for property_key in matches:
 
-        difference = (
-            observed_at[child_source, property_key]
-            - observed_at[parent_source, property_key]
+        child_modified_at = source_modified_at.get(
+            (child_source, property_key)
         )
+
+        parent_modified_at = source_modified_at.get(
+            (parent_source, property_key)
+        )
+
+        if child_modified_at is None or parent_modified_at is None:
+            continue
+
+        observable += 1
+
+        difference = child_modified_at - parent_modified_at
 
         if timedelta(0) < difference <= temporal_window:
             qualifying += 1
 
-    return qualifying / len(matches)
+    if observable == 0:
+        return 0.0
+
+    return qualifying / observable
 
 
 def ownership_score(
@@ -477,6 +527,7 @@ def claim_telemetry(
 
     dependency = hybrid["dependency_matrix"]
     confidence = hybrid["confidence_matrix"]
+
     claims = {}
 
     for claim_id, source_ids in graph.claim_to_sources.items():
@@ -494,6 +545,7 @@ def claim_telemetry(
             continue
 
         pairs = tuple(combinations(source_ids, 2))
+
         dependency_sum = sum(
             dependency[source_a][source_b]
             for source_a, source_b in pairs
@@ -543,6 +595,7 @@ def count_clusters(
         while pending:
 
             source_id = pending.pop()
+
             connected = {
                 other_id
                 for other_id in remaining

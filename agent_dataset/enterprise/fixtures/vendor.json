@@ -1,7 +1,7 @@
 {
   "endpoint": "https://returns.vendor.example/v1/policy",
   "response_id": "vendor-policy-response-004",
-  "observed_at": "2026-02-05T12:00:00Z",
+  "source_modified_at": "2026-02-05T12:00:00Z",
   "origin_id": "vendor_policy_v4",
   "facts": [
     {"record_id": "vendor-001", "attribute": "return_window", "value": "14 days"},

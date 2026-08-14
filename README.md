@@ -38,14 +38,13 @@ BRAID does not interpret a claim's meaning. The current implementation uses prod
 
 The algorithm receives unique source and claim identifiers, where assertion edges connect the nodes. Before evaluation, the submitted assertions are canonicalized and converted into a bipartite graph.
 
-BRAID combines the graph-derived signals with provenance and contextual metadata to estimate source dependencies. This creates a dependency matrix that reduces the influence of assertions that may not be supported by independent sources.
+BRAID combines a graph-derived structural redundancy signal with provenance and contextual metadata to estimate source dependencies. This creates a dependency matrix that reduces the influence of assertions that may not be supported by independent sources.
 
 ## Repository
 
 - `agent_dataset/` - Multi-agent and enterprise retrieval experiments
 - `benchmark/` - Reproducible benchmark dataset used for development
 - `braid/` - Reliability propagation and dependency analysis
-- `paper/` - Research paper
 - `research/` - Research notes
 - `scripts/` - Development utilities
 
@@ -70,7 +69,7 @@ Then explore one of the included experiments:
 
 - [`benchmark/`](benchmark/README.md) - Reproducible benchmark dataset
 - [`agent_dataset/`](agent_dataset/README.md) - Multi-agent retrieval workflow
-  
+
 ## Current Status
 
 BRAID is an active research project focused on developing a method for estimating information reliability through structural analysis of bipartite information networks. The algorithm has been tested with a [controlled multi-agent dataset](agent_dataset/README.md) and a [simulated enterprise retrieval workflow](agent_dataset/enterprise/README.md).
@@ -89,7 +88,7 @@ BRAID takes a complementary approach to semantic reasoning by evaluating the str
 
 ## Contact
 
-Feel free to connect with me whether you have any ideas, questions, feedback, or if you just want to chat about interesting topics! 
+Feel free to connect with me whether you have any ideas, questions, feedback, or if you just want to chat about interesting topics!
 
 Email: colehoke1@gmail.com
 

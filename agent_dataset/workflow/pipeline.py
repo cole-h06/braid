@@ -10,7 +10,7 @@ from ..agents.documents import document_agent
 from ..agents.research import research_agent
 from ..agents.search import search_agent
 from ..agents.sql import sql_agent
-from ..dataset import BASELINE_WEIGHTS, SOURCES, validate_dataset
+from ..dataset import DEPENDENCY_WEIGHTS, SOURCES, validate_dataset
 from ..extraction.schema import (
     AgentResult,
     Assertion,
@@ -146,7 +146,7 @@ def build_pipeline(
 ):
 
     weights = (
-        BASELINE_WEIGHTS
+        DEPENDENCY_WEIGHTS
         if weights is None
         else weights
     )

@@ -32,6 +32,17 @@ def test_documents():
         "2 years",
         "customer pays",
     ]
+
+    assert records[0]["observed_at"] == NOW
+    assert records[0]["source_modified_at"] == datetime(
+        2026,
+        2,
+        2,
+        9,
+        tzinfo=timezone.utc,
+    )
+    assert records[0]["upstream_source_ids"] == ()
+
     assert records[0]["fields"]["document_id"] == "returns_handbook"
     assert records[0]["fields"]["chunk_id"] == (
         "returns_handbook#return_window"
@@ -49,9 +60,25 @@ def test_sql():
         "policy-002",
         "policy-003",
     ]
-    assert records[0]["fields"]["database_id"] == "northstar_ops_memory"
+
+    assert records[0]["observed_at"] == NOW
+    assert records[0]["source_modified_at"] == datetime(
+        2026,
+        2,
+        2,
+        9,
+        30,
+        tzinfo=timezone.utc,
+    )
+    assert records[0]["upstream_source_ids"] == ("handbook",)
+
+    assert records[0]["fields"]["database_id"] == (
+        "northstar_policy_config"
+    )
     assert records[0]["fields"]["table"] == "policy_config"
-    assert records[0]["fields"]["query_id"] == "returns_policy_by_record"
+    assert records[0]["fields"]["query_id"] == (
+        "returns_policy_by_record"
+    )
 
 
 def test_api():
@@ -63,6 +90,17 @@ def test_api():
         "1 year",
         "USD 5",
     ]
+
+    assert records[0]["observed_at"] == NOW
+    assert records[0]["source_modified_at"] == datetime(
+        2026,
+        2,
+        5,
+        12,
+        tzinfo=timezone.utc,
+    )
+    assert records[0]["upstream_source_ids"] == ()
+
     assert records[0]["fields"]["endpoint"] == (
         "https://returns.vendor.example/v1/policy"
     )
@@ -83,15 +121,30 @@ def test_agents():
         vendor_agent(NOW),
     )
 
-    assert all(len(result.assertions) == 3 for result in results)
-    assert all(len(result.evidence) == 3 for result in results)
+    assert all(
+        len(result.assertions) == 3
+        for result in results
+    )
+
+    assert all(
+        len(result.evidence) == 3
+        for result in results
+    )
+
     assert all(
         item.retrievals[0].retrieved_at == NOW
         for result in results
         for item in result.evidence
     )
+
     assert all(
-        item.observed_at != NOW
+        item.observed_at == NOW
+        for result in results
+        for item in result.evidence
+    )
+
+    assert all(
+        item.source_modified_at is not None
         for result in results
         for item in result.evidence
     )
@@ -124,6 +177,7 @@ def test_malformed(tmp_path, monkeypatch):
 
     path = tmp_path / "company.sql"
     path.write_text("not valid SQL")
+
     manifest = {
         "database_id": "bad-database",
         "query_id": "bad-query",
@@ -147,6 +201,7 @@ def test_hash(tmp_path, monkeypatch):
 
     path = tmp_path / "vendor.json"
     path.write_text("{}")
+
     manifest = {
         "snapshots": {
             "vendor.json": "0" * 64,
@@ -161,6 +216,7 @@ def test_hash(tmp_path, monkeypatch):
 
     assert caught.value.source_id == "vendor"
     assert caught.value.resource_id == "vendor.json"
+
     assert str(caught.value.__cause__) == (
         "snapshot hash mismatch: vendor.json"
     )

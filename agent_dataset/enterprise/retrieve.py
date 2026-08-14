@@ -73,6 +73,19 @@ def _load_document(name, retrieved_at):
         for line in header.splitlines()
     )
 
+    source_modified_at = datetime.fromisoformat(
+        metadata["source_modified_at"]
+    )
+
+    upstream_source_ids = tuple(
+        source_id
+        for source_id in metadata.get(
+            "upstream_source_ids",
+            "",
+        ).split(",")
+        if source_id
+    )
+
     records = []
 
     for section in sections:
@@ -84,8 +97,9 @@ def _load_document(name, retrieved_at):
         records.append({
             "attribute": attribute,
             "value": value.strip(),
-            "observed_at": datetime.fromisoformat(metadata["observed_at"]),
-            "provenance_id": metadata["policy_release_id"],
+            "observed_at": retrieved_at,
+            "source_modified_at": source_modified_at,
+            "upstream_source_ids": upstream_source_ids,
             "retrieved_at": retrieved_at,
             "resource_id": metadata["document_id"],
             "fields": {
@@ -123,8 +137,10 @@ def _load_sql(retrieved_at):
     manifest = load_manifest()
     path = FIXTURES / "company.sql"
     script = _read_snapshot(path).decode()
+
     query = (
-        "SELECT record_id, attribute, value, observed_at, origin_id "
+        "SELECT record_id, attribute, value, "
+        "source_modified_at, upstream_source_id "
         "FROM policy_config ORDER BY record_id"
     )
 
@@ -140,8 +156,15 @@ def _load_sql(retrieved_at):
         {
             "attribute": attribute,
             "value": value,
-            "observed_at": datetime.fromisoformat(observed_at),
-            "provenance_id": origin_id,
+            "observed_at": retrieved_at,
+            "source_modified_at": datetime.fromisoformat(
+                source_modified_at
+            ),
+            "upstream_source_ids": (
+                (upstream_source_id,)
+                if upstream_source_id is not None
+                else ()
+            ),
             "retrieved_at": retrieved_at,
             "resource_id": manifest["database_id"],
             "fields": {
@@ -152,7 +175,13 @@ def _load_sql(retrieved_at):
                 "record_id": record_id,
             },
         }
-        for record_id, attribute, value, observed_at, origin_id in rows
+        for (
+            record_id,
+            attribute,
+            value,
+            source_modified_at,
+            upstream_source_id,
+        ) in rows
     ]
 
 
@@ -178,12 +207,21 @@ def _load_api(retrieved_at):
     content = _read_snapshot(path)
     response = json.loads(content)
 
+    source_modified_at = datetime.fromisoformat(
+        response["source_modified_at"]
+    )
+
+    upstream_source_ids = tuple(
+        response.get("upstream_source_ids", ())
+    )
+
     return [
         {
             "attribute": item["attribute"],
             "value": item["value"],
-            "observed_at": datetime.fromisoformat(response["observed_at"]),
-            "provenance_id": response["origin_id"],
+            "observed_at": retrieved_at,
+            "source_modified_at": source_modified_at,
+            "upstream_source_ids": upstream_source_ids,
             "retrieved_at": retrieved_at,
             "resource_id": response["response_id"],
             "fields": {

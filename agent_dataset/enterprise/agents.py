@@ -1,9 +1,4 @@
-from agent_dataset.extraction.schema import (
-    AgentResult,
-    Assertion,
-    Evidence,
-    Retrieval,
-)
+from agent_dataset.extraction.schema import AgentResult, Assertion, Evidence, Retrieval
 
 from .retrieve import api_snapshot, document, sql_records
 
@@ -28,7 +23,8 @@ def make_result(source_id, kind, records):
         evidence.append(Evidence(
             assertion_id=assertion_id,
             observed_at=record["observed_at"],
-            provenance_ids=(record["provenance_id"],),
+            source_modified_at=record["source_modified_at"],
+            upstream_source_ids=record["upstream_source_ids"],
             cited_source_ids=(),
             parent_assertion_ids=(),
             retrievals=(Retrieval(
@@ -85,7 +81,7 @@ def vendor_agent(retrieved_at):
 def research_agent(
     handbook,
     vendor,
-    observed_at,
+    source_modified_at,
     retrieved_at,
 ):
 
@@ -121,11 +117,13 @@ def research_agent(
     for index, parent in enumerate(parents, 1):
 
         assertion_id = f"research-{index:03d}"
+
         parent_result = (
             handbook_evidence
             if parent.source_id == "handbook"
             else vendor_evidence
         )
+
         parent_evidence = parent_result[parent.assertion_id]
 
         assertions.append(Assertion(
@@ -138,8 +136,9 @@ def research_agent(
 
         evidence.append(Evidence(
             assertion_id=assertion_id,
-            observed_at=observed_at,
-            provenance_ids=parent_evidence.provenance_ids,
+            observed_at=retrieved_at,
+            source_modified_at=source_modified_at,
+            upstream_source_ids=(parent.source_id,),
             cited_source_ids=(parent.source_id,),
             parent_assertion_ids=(parent.assertion_id,),
             retrievals=(Retrieval(

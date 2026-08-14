@@ -1,41 +1,44 @@
-# Hybrid Source Dependency Estimation
+# Source Dependency Estimation
+
+This document defines the v1 source dependency estimation model used by BRAID.
 
 ## Motivation
 
-The previous structural source dependency investigation showed that useful relationship signals can, in fact, be derived directly from the source-claim graph. The experiments that tested directional inclusion asymmetry, rarity weighted overlap, and community structure each contain structural signals of how sources relate to each other.
+The previous structural source dependency investigation showed that useful relationship signals can, in fact, be derived directly from the graph. The experiments that tested directional inclusion asymmetry, rarity weighted overlap, and community structure each contain possible structural signals of how sources relate to each other. Of these, directional inclusion and rarity-weighted overlap were combined into a single structural redundancy signal for the v1 source dependency model.
 
 However, that said, I have observed that these graph-derived signals are incapable of estimating source dependencies accurately alone. The graph can ultimately only capture the observed pattern of shared assertions. It does not provide any information as to how those assertions originated, if they were copied, if they share a common owner, or if they were simply independently produced.
 
-This motivated me to look into a hybrid approach that combines structural graph signals with provenance and metadata. It doesn't replace the information contained within the graph. Instead, these additional signals can provide complementary evidence which may enable source dependencies to be estimated more reliably and accurately.
+This motivated me to look into a hybrid approach that combines a graph-derived structural signal with provenance and metadata. It doesn't replace the information contained within the graph. Instead, these additional signals can provide complementary evidence which may enable source dependencies to be estimated more reliably and accurately.
 
 ## Research Question
 
-Can source dependencies be estimated more reliably through combining structural graph signals with provenance and metadata rather than just using graph topology alone?
+Can source dependencies be estimated more reliably through combining a graph-derived structural signal with provenance and metadata rather than just using graph topology alone?
 
 ## Hypothesis
 
-Complementary information can be provided by combining structural graph signals and provenance regarding relationships between sources. I believe that combining both forms of "evidence" within a hybrid framework could lead to more accurate estimation of source dependencies than either could alone.
+Complementary information can be provided by combining a graph-derived structural signal and provenance regarding relationships between sources. I believe that combining both forms of "evidence" within a hybrid framework could lead to more accurate estimation of source dependencies than either could alone.
 
 ## Mathematical Framework
 
-In order to formalize this hybrid approach, let $\delta_{ik}$ denote the estimated dependency between sources $i$ and $k$. Specifically, let
+In order to formalize the v1 source dependency model, let $\delta_{ik}$ denote the estimated dependency between sources $i$ and $k$. Specifically, let
 
-$$ \delta_{ik} = \alpha_1 p_{ik} + \alpha_2 l_{ik} + \alpha_3 o_{ik} + \alpha_4 t_{ik} + \alpha_5 g_{ik} $$
+$$ \delta_{ik} = \alpha_u u_{ik} + \alpha_c c_{ik} + \alpha_a a_{ik} + \alpha_o o_{ik} + \alpha_t t_{ik} + \alpha_g g_{ik} $$
 
 where
 
-- $p_{ik}$ represents shared provenance,
-- $l_{ik}$ represents explicit lineage or citation relationships,
+- $u_{ik}$ represents upstream source lineage,
+- $c_{ik}$ represents explicit citation relationships,
+- $a_{ik}$ represents assertion-level lineage,
 - $o_{ik}$ represents shared ownership,
-- $t_{ik}$ represents temporal copying evidence, and
-- $g_{ik}$ represents graph-derived structural signals.
+- $t_{ik}$ represents temporal dependency based on source modification time, and
+- $g_{ik}$ represents graph-derived structural redundancy based on directional inclusion and the rarity of shared assertions.
 
-The coefficients $\alpha_1,\ldots,\alpha_5$ determine the relative contribution of each signal toward the estimated dependency. Determining appropriate values for these coefficients is itself a research problem and is left for future experiments.
+The coefficients $\alpha_u,\alpha_c,\alpha_a,\alpha_o,\alpha_t,\alpha_g$ determine the relative contribution of each signal toward the estimated dependency. Determining appropriate values for these coefficients is itself a research problem and is left for future experiments.
 
 The signal weights are normalized so that
 
 $$
-\sum_{r=1}^{5}\alpha_r=1.
+\alpha_u+\alpha_c+\alpha_a+\alpha_o+\alpha_t+\alpha_g=1.
 $$
 
 When a signal is unavailable, its contribution to $\delta_{ik}$ is defined as $0$. The remaining weights are not renormalized. We do this to prevent missing metadata from increasing the influence of remaining signals. Dependency confidence separately reports how much of the weighted signal set was observable.
@@ -173,12 +176,11 @@ $$
 
 It is important that an observable signal with a value of $0$ must be distinguishable from a signal that's unavailable. If there is a value of $0$, it means that the signal was analyzed but no evidence of dependency was provided. An unavailable signal, on the other hand, means that the required metadata was not present.
 
-For raw provenance and lineage fields, `None` means that metadata was unavailable or was not captured. An empty tuple means capture was completed without finding a relationship, and a nonempty tuple contains the observed relationships. Computed observability remains separate from the raw records.
+For relationship fields such as `upstream_source_ids`, `cited_source_ids`, and `parent_assertion_ids`, `None` means that the metadata was unavailable or was not captured. An empty tuple means capture was completed without finding a relationship. A nonempty tuple contains the observed relationships. Computed observability remains separate from the raw records.
 
 The confidence associated with a pairwise dependency estimate is
 
-$$
-\gamma_{ik} = \frac{\sum_{r=1}^{5}\alpha_r m_{ik}^{(r)}}{\sum_{r=1}^{5}\alpha_r}$$
+$$ \gamma_{ik} = \frac{\sum_{r=1}^{6}\alpha_r m_{ik}^{(r)}}{\sum_{r=1}^{6}\alpha_r} $$
 
 We then calculate claim-level dependency confidence across the source pairs supporting claim $j$:
 

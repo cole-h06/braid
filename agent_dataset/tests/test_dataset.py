@@ -13,10 +13,10 @@ from agent_dataset.extraction.schema import AgentResult, Evidence
 
 
 SIMULATED_RELATIONSHIPS = {
-    ("research_agent", "search_agent"): "lineage",
-    ("search_agent", "document_agent"): "provenance",
-    ("sql_agent", "api_agent"): "ownership",
-    ("research_agent", "sql_agent"): "temporal",
+    ("research_agent", "search_agent"): "citation and assertion lineage",
+    ("search_agent", "document_agent"): "shared upstream source",
+    ("sql_agent", "api_agent"): "shared ownership",
+    ("research_agent", "sql_agent"): "temporal dependency",
     ("research_agent", "api_agent"): "independent conflict",
 }
 
@@ -63,41 +63,55 @@ def test_missingness():
     missing = Evidence(
         assertion_id="missing",
         observed_at="2026-01-01T09:00:00Z",
-        provenance_ids=None,
+        upstream_source_ids=None,
         cited_source_ids=None,
         parent_assertion_ids=None,
+        source_modified_at=None,
     )
+
     observed = Evidence(
         assertion_id="observed",
         observed_at="2026-01-01T09:00:00Z",
-        provenance_ids=(),
+        upstream_source_ids=(),
         cited_source_ids=(),
         parent_assertion_ids=(),
+        source_modified_at="2026-01-01T08:00:00Z",
     )
 
-    assert missing.provenance_ids is None
+    assert missing.upstream_source_ids is None
     assert missing.cited_source_ids is None
     assert missing.parent_assertion_ids is None
-    assert observed.provenance_ids == ()
+    assert missing.source_modified_at is None
+
+    assert observed.upstream_source_ids == ()
     assert observed.cited_source_ids == ()
     assert observed.parent_assertion_ids == ()
+    assert observed.source_modified_at is not None
 
 
 def test_timestamps():
 
-    # reject evidence without a valid timezone
+    # reject evidence without valid timezone aware timestamps
     with pytest.raises(ValidationError):
         Evidence(
             assertion_id="example",
             observed_at="not-a-datetime",
-            provenance_ids=(),
+            upstream_source_ids=(),
         )
 
     with pytest.raises(ValidationError):
         Evidence(
             assertion_id="example",
             observed_at=datetime(2026, 1, 1, 9),
-            provenance_ids=(),
+            upstream_source_ids=(),
+        )
+
+    with pytest.raises(ValidationError):
+        Evidence(
+            assertion_id="example",
+            observed_at="2026-01-01T09:00:00Z",
+            upstream_source_ids=(),
+            source_modified_at=datetime(2026, 1, 1, 8),
         )
 
     sources, assertions, evidence = load_dataset()
@@ -109,12 +123,26 @@ def test_timestamps():
 
     with pytest.raises(
         ValueError,
-        match="timezone-aware",
+        match="observed_at must be timezone-aware",
     ):
         validate_dataset(
             sources,
             assertions,
             [bad_time, *evidence[1:]],
+        )
+
+    bad_modified_time = evidence[0].model_copy(
+        update={"source_modified_at": datetime(2026, 1, 1, 9)}
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="source modification timestamps must be timezone-aware",
+    ):
+        validate_dataset(
+            sources,
+            assertions,
+            [bad_modified_time, *evidence[1:]],
         )
 
 
@@ -134,6 +162,20 @@ def test_sources():
             sources,
             [bad_source, *assertions[1:]],
             evidence,
+        )
+
+    bad_upstream = evidence[0].model_copy(
+        update={"upstream_source_ids": ("unknown",)}
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="unknown upstream source",
+    ):
+        validate_dataset(
+            sources,
+            assertions,
+            [bad_upstream, *evidence[1:]],
         )
 
     bad_citation = evidence[0].model_copy(

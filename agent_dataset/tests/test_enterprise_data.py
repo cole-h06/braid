@@ -48,11 +48,18 @@ def test_lineage():
     result = run_enterprise()
     research = result["evidence"][-3:]
 
+    assert [item.upstream_source_ids for item in research] == [
+        ("handbook",),
+        ("handbook",),
+        ("vendor",),
+    ]
+
     assert [item.cited_source_ids for item in research] == [
         ("handbook",),
         ("handbook",),
         ("vendor",),
     ]
+
     assert [item.parent_assertion_ids for item in research] == [
         ("handbook-001",),
         ("handbook-002",),
@@ -69,11 +76,26 @@ def test_times():
     assert [
         item.observed_at
         for item in first["evidence"]
-    ] == [
+    ] != [
         item.observed_at
         for item in second["evidence"]
     ]
+
+    assert all(
+        item.observed_at == later
+        for item in second["evidence"]
+    )
+
+    assert [
+        item.source_modified_at
+        for item in first["evidence"]
+    ] == [
+        item.source_modified_at
+        for item in second["evidence"]
+    ]
+
     assert first["hybrid"] == second["hybrid"]
+
     assert claim_telemetry(
         first["graph"],
         first["hybrid"],
@@ -83,6 +105,7 @@ def test_times():
         second["hybrid"],
         0.15,
     )
+
     assert all(
         retrieval.retrieved_at == later
         for item in second["evidence"]
@@ -94,6 +117,7 @@ def test_labels():
 
     result = run_enterprise()
     content = repr(result)
+
     relationships = json.loads(
         (FIXTURES / "relationships.json").read_text()
     )
@@ -102,6 +126,7 @@ def test_labels():
         assertion.value
         for assertion in result["assertions"]
     })
+
     assert "SQL seeded from handbook" not in content
     assert not hasattr(result["graph"], "evidence")
     assert not hasattr(result["graph"], "retrievals")

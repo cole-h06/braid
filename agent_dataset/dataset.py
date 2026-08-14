@@ -35,11 +35,12 @@ SOURCES = (
 )
 
 
-BASELINE_WEIGHTS = {
-    "provenance": 0.25,
-    "lineage": 0.30,
-    "ownership": 0.15,
-    "temporal": 0.15,
+DEPENDENCY_WEIGHTS = {
+    "upstream": 0.25,
+    "citation": 0.20,
+    "assertion_lineage": 0.20,
+    "ownership": 0.10,
+    "temporal": 0.10,
     "graph": 0.15,
 }
 
@@ -133,7 +134,22 @@ def validate_dataset(
             item.observed_at.tzinfo is None
             or item.observed_at.utcoffset() is None
         ):
-            raise ValueError("evidence timestamps must be timezone-aware")
+            raise ValueError("observed_at must be timezone-aware")
+
+        if (
+            item.source_modified_at is not None
+            and (
+                item.source_modified_at.tzinfo is None
+                or item.source_modified_at.utcoffset() is None
+            )
+        ):
+           raise ValueError("source modification timestamps must be timezone-aware")
+
+        if (
+            item.upstream_source_ids is not None
+            and not set(item.upstream_source_ids) <= known_sources
+        ):
+           raise ValueError("evidence references unknown upstream source")
 
         if (
             item.cited_source_ids is not None
