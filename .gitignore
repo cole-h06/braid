@@ -17,3 +17,9 @@ venv/
 
 
 paper/
+
+# Test and packaging output
+.pytest_cache/
+*.egg-info/
+build/
+dist/

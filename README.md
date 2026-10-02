@@ -23,7 +23,7 @@ Ultimately, estimating either quantity requires estimating the other.
 
 Sources and claims form a bipartite graph. Each edge represents a source asserting a claim. BRAID models information as an interconnected network instead of a collection of independent observations.
 <p align="center">
-  <img src="images/reliability_propagation_animation.gif" width="520">
+  <img src="research/figures/reliability_propagation_animation.gif" width="520">
 </p>
 
 <p align="center">
@@ -34,7 +34,7 @@ Reliability is computed iteratively across the graph. At each iteration, every s
 
 ## Domain-Agnostic Design
 
-BRAID does not interpret a claim's meaning. The current implementation uses product specifications as a development dataset because they provide conflicting information collected from multiple data sources. The same graph structure can represent information from any domain.
+BRAID does not interpret a claim's meaning. Frozen structural fixtures in `tests/fixtures/` are the canonical conformance and development data. Synthetic algorithm experiments and applied agent environments provide additional research inputs. The same graph structure can represent information from any domain.
 
 The algorithm receives unique source and claim identifiers, where assertion edges connect the nodes. Before evaluation, the submitted assertions are canonicalized and converted into a bipartite graph.
 
@@ -44,25 +44,31 @@ agreement alone does not establish copying.
 
 ## Algorithm Authority
 
-[BRAID 1.0.0](research/README.md) defines the current mathematical contract,
+[BRAID 1.0.0](spec/README.md) defines the current mathematical contract,
 reference implementation and BRAID-owned frozen conformance fixtures. Omneum
 is a downstream implementation, not an algorithmic authority. See the
-[synchronization record](research/synchronization.md) for migration evidence,
+[synchronization record](spec/synchronization.md) for migration evidence,
 limitations and the protected research-test conflict.
 
 Run independent conformance with:
 
 ```bash
-python -m pytest agent_dataset/tests/test_spec_conformance.py
+python -m pytest tests/test_spec_conformance.py
 ```
 
 ## Repository
 
-- `agent_dataset/` - Multi-agent and enterprise retrieval experiments
-- `benchmark/` - Reproducible benchmark dataset used for development
-- `braid/` - Reliability propagation and dependency analysis
-- `research/` - Normative specifications, manifest and historical research notes
+- `src/braid/` - BRAID reference implementation (Python imports remain `braid`)
+- `spec/` - Normative specification, algorithm manifest and synchronization history
+- `tests/` - Repository conformance tests and canonical frozen fixtures
+- `experiments/algorithm/` - Direct synthetic BRAID experiments
+- `experiments/applied/agent_dataset/` - Agent and enterprise retrieval experiments
+- `research/analysis/` - Reusable historical research diagnostics
+- `research/figures/` - Research figures and animation
 - `scripts/` - Development utilities
+
+The old product-spec CSV benchmark and PostgreSQL execution pathway are retired.
+The [reorganization record](research/reorganization.md) lists all moves and deletions.
 
 ## Getting Started
 
@@ -79,16 +85,31 @@ Create a virtual environment and install the dependencies:
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+pip install -e .
 ```
 
 Then explore one of the included experiments:
 
-- [`benchmark/`](benchmark/README.md) - Reproducible benchmark dataset
-- [`agent_dataset/`](agent_dataset/README.md) - Multi-agent retrieval workflow
+- [Algorithm experiments](experiments/algorithm/README.md)
+- [Agent retrieval workflow](experiments/applied/agent_dataset/README.md)
+
+From the repository root, expose the applied experiment package when running its commands:
+
+```bash
+PYTHONPATH=experiments/applied python -m agent_dataset.run
+python -m pytest
+```
+
+Pytest configures `src/` and `experiments/applied/` automatically. For development
+without installing the package, use `PYTHONPATH=src:experiments/applied` for Python commands.
+
+Known failures are preserved: `test_discount` fails its strict-decrease assertion,
+and all nine direct algorithm scripts fail because their graph stubs lack explicit
+attribute identities. These remain visible; no xfails or skips were added.
 
 ## Current Status
 
-BRAID is an active research project focused on developing a method for estimating information reliability through structural analysis of bipartite information networks. The algorithm has been tested with a [controlled multi-agent dataset](agent_dataset/README.md) and a [simulated enterprise retrieval workflow](agent_dataset/enterprise/README.md).
+BRAID is an active research project focused on developing a method for estimating information reliability through structural analysis of bipartite information networks. The algorithm has been tested with a [controlled multi-agent dataset](experiments/applied/agent_dataset/README.md) and a [simulated enterprise retrieval workflow](experiments/applied/agent_dataset/enterprise/README.md).
 
 ## MCP Server
 
