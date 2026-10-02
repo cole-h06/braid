@@ -1,0 +1,1623 @@
+{
+  "algorithm_version": "braid-1.0.0",
+  "fixture_revision": 1,
+  "records": [
+    {
+      "name": "captured_absence",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0,
+        "coverage": 0.5714285714285714,
+        "excluded": []
+      }
+    },
+    {
+      "name": "unknown_not_independent",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": null
+        },
+        {
+          "source_id": "b",
+          "owner_id": null
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": null,
+          "cited_source_ids": null,
+          "parent_assertion_ids": null,
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": null,
+          "cited_source_ids": null,
+          "parent_assertion_ids": null,
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": false,
+          "citation": false,
+          "assertion_lineage": false,
+          "ownership": false,
+          "temporal": false,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0,
+        "coverage": 0,
+        "excluded": []
+      }
+    },
+    {
+      "name": "shared_external_upstream",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [
+            "external"
+          ],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [
+            "external"
+          ],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 1,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 1,
+        "coverage": 0.5714285714285714,
+        "excluded": []
+      }
+    },
+    {
+      "name": "citation_across_conflicting_claims",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "no"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [
+            "b"
+          ],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": null,
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 1,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 1,
+        "coverage": 0.5714285714285714,
+        "excluded": []
+      }
+    },
+    {
+      "name": "assertion_lineage_across_conflicting_claims",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "no"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [
+            "b-x"
+          ],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": null,
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 1,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 1,
+        "coverage": 0.5714285714285714,
+        "excluded": []
+      }
+    },
+    {
+      "name": "universal_ownership_excluded",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-a"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 1,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0,
+        "coverage": 0.42857142857142855,
+        "excluded": [
+          "ownership"
+        ]
+      }
+    },
+    {
+      "name": "nonuniversal_ownership_enabled",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "c",
+          "owner_id": "owner-c"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "c-z",
+          "source_id": "c",
+          "entity": "other",
+          "attribute": "z",
+          "value": "unrelated"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "c-z",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 1,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0.14285714285714285,
+        "coverage": 0.5714285714285714,
+        "excluded": []
+      }
+    },
+    {
+      "name": "temporal_equal",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 1,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": true,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0.14285714285714285,
+        "coverage": 0.7142857142857143,
+        "excluded": []
+      }
+    },
+    {
+      "name": "temporal_half_window",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T01:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0.5,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": true,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0.07142857142857142,
+        "coverage": 0.7142857142857143,
+        "excluded": []
+      }
+    },
+    {
+      "name": "temporal_window_boundary",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T02:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": true,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0,
+        "coverage": 0.7142857142857143,
+        "excluded": []
+      }
+    },
+    {
+      "name": "temporal_beyond_window",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T03:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": true,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0,
+        "coverage": 0.7142857142857143,
+        "excluded": []
+      }
+    },
+    {
+      "name": "temporal_one_missing_match_disables",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "a-y",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "y",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-y",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "y",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "a-y",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-y",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0,
+        "coverage": 0.5714285714285714,
+        "excluded": []
+      }
+    },
+    {
+      "name": "temporal_ignores_missing_nonmatch",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "a-y",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "y",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": "2026-01-01T00:00:00Z",
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "a-y",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 1,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": true,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0.14285714285714285,
+        "coverage": 0.7142857142857143,
+        "excluded": []
+      }
+    },
+    {
+      "name": "retrieval_same_resource",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": [
+            {
+              "retrieval_id": "first",
+              "kind": "document",
+              "resource_id": "resource",
+              "retrieved_at": "2026-01-01T00:00:00Z"
+            }
+          ]
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": [
+            {
+              "retrieval_id": "second",
+              "kind": "document",
+              "resource_id": "resource",
+              "retrieved_at": "2026-01-01T00:00:00Z"
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 1
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": true
+        },
+        "dependency": 0.14285714285714285,
+        "coverage": 0.7142857142857143,
+        "excluded": []
+      }
+    },
+    {
+      "name": "retrieval_different_kind",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": [
+            {
+              "retrieval_id": "first",
+              "kind": "document",
+              "resource_id": "resource",
+              "retrieved_at": "2026-01-01T00:00:00Z"
+            }
+          ]
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": [
+            {
+              "retrieval_id": "second",
+              "kind": "api",
+              "resource_id": "resource",
+              "retrieved_at": "2026-01-01T00:00:00Z"
+            }
+          ]
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": true
+        },
+        "dependency": 0,
+        "coverage": 0.7142857142857143,
+        "excluded": []
+      }
+    },
+    {
+      "name": "retrieval_one_sided",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": [
+            {
+              "retrieval_id": "first",
+              "kind": "document",
+              "resource_id": "resource",
+              "retrieved_at": "2026-01-01T00:00:00Z"
+            }
+          ]
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": true
+        },
+        "dependency": 0,
+        "coverage": 0.7142857142857143,
+        "excluded": []
+      }
+    },
+    {
+      "name": "retrieval_missing_match_denominator",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "a-y",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "y",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-y",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "y",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": [
+            {
+              "retrieval_id": "first",
+              "kind": "document",
+              "resource_id": "resource",
+              "retrieved_at": "2026-01-01T00:00:00Z"
+            }
+          ]
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": [
+            {
+              "retrieval_id": "second",
+              "kind": "document",
+              "resource_id": "resource",
+              "retrieved_at": "2026-01-01T00:00:00Z"
+            }
+          ]
+        },
+        {
+          "assertion_id": "a-y",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-y",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 1,
+        "ownership": 1,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0.5
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": true
+        },
+        "dependency": 0.07142857142857142,
+        "coverage": 0.7142857142857143,
+        "excluded": []
+      }
+    },
+    {
+      "name": "graph_overlap_not_provenance",
+      "sources": [
+        {
+          "source_id": "a",
+          "owner_id": "owner-a"
+        },
+        {
+          "source_id": "b",
+          "owner_id": "owner-b"
+        }
+      ],
+      "assertions": [
+        {
+          "assertion_id": "a-x",
+          "source_id": "a",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        },
+        {
+          "assertion_id": "b-x",
+          "source_id": "b",
+          "entity": "entity",
+          "attribute": "x",
+          "value": "yes"
+        }
+      ],
+      "evidence": [
+        {
+          "assertion_id": "a-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        },
+        {
+          "assertion_id": "b-x",
+          "observed_at": "2026-01-01T00:00:00Z",
+          "source_modified_at": null,
+          "upstream_source_ids": [],
+          "cited_source_ids": [],
+          "parent_assertion_ids": [],
+          "retrievals": []
+        }
+      ],
+      "weights": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 0,
+        "graph": 1,
+        "retrieval": 0
+      },
+      "expected": {
+        "signals": {
+          "upstream": 0,
+          "citation": 0,
+          "assertion_lineage": 0,
+          "ownership": 0,
+          "temporal": 0,
+          "graph": 0,
+          "retrieval": 0
+        },
+        "observable": {
+          "upstream": true,
+          "citation": true,
+          "assertion_lineage": true,
+          "ownership": true,
+          "temporal": false,
+          "graph": false,
+          "retrieval": false
+        },
+        "dependency": 0,
+        "coverage": 0,
+        "excluded": []
+      }
+    }
+  ]
+}

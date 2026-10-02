@@ -1,0 +1,5 @@
+pydantic
+psycopg[binary]
+networkx
+pytest
+langgraph

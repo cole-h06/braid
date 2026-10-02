@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use BRAID, please cite it as below."
+title: "BRAID: Bipartite Reliability Analysis for Interdependent Data-Sources"
+type: software
+authors:
+  - family-names: "Hoke"
+    given-names: "Cole"
+year: 2026
+url: "https://github.com/cole-h06/braid"

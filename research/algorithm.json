@@ -1,0 +1,35 @@
+{
+  "algorithm_version": "braid-1.0.0",
+  "fixture_revision": 1,
+  "status": "synchronization baseline",
+  "specification": [
+    "research/reliability_propagation.md",
+    "research/agreement_weighting.md",
+    "research/source_dependency_estimation.md",
+    "research/dependency_telemetry.md"
+  ],
+  "reference": [
+    "braid/engine.py",
+    "braid/graph.py",
+    "braid/dependency.py"
+  ],
+  "fixtures": [
+    "agent_dataset/tests/fixtures/braid_sync_v1.json",
+    "agent_dataset/tests/fixtures/braid_dependency_v1.json"
+  ],
+  "conformance_command": "python -m pytest agent_dataset/tests/test_spec_conformance.py",
+  "numerical_contract": {
+    "arithmetic": "binary64",
+    "convergence_tolerance": 1e-8,
+    "max_iterations": 1000,
+    "fixture_relative_tolerance": 1e-12,
+    "fixture_absolute_tolerance": 1e-14
+  },
+  "migration_evidence": {
+    "repository": "Omneum",
+    "revision": "af1ee33bee4fcaef845416541d4004c70494e8bc",
+    "propagation_label": "omneum-v2",
+    "estimator_label": "dependency-estimator-v4",
+    "normative": false
+  }
+}

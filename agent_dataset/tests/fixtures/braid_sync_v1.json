@@ -1,0 +1,1287 @@
+{
+  "algorithm_version": "braid-1.0.0",
+  "fixture_revision": 1,
+  "relative_tolerance": 1e-12,
+  "absolute_tolerance": 1e-14,
+  "propagation": [
+    {
+      "name": "singleton",
+      "assertions": [
+        [
+          "a",
+          "x",
+          "x1"
+        ]
+      ],
+      "dependency": {},
+      "coverage": {},
+      "expected": {
+        "reliability": {
+          "a": 1
+        },
+        "iterations": 1,
+        "delta": 0,
+        "claims": {
+          "x1": {
+            "support": 1,
+            "agreement": 1,
+            "independence": {
+              "a": 1
+            },
+            "contributions": {
+              "a": 1
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 1,
+            "coverage": null
+          }
+        }
+      }
+    },
+    {
+      "name": "unequal_degree",
+      "assertions": [
+        [
+          "a",
+          "x",
+          "x1"
+        ],
+        [
+          "b",
+          "x",
+          "x1"
+        ],
+        [
+          "b",
+          "y",
+          "y1"
+        ]
+      ],
+      "dependency": {},
+      "coverage": {},
+      "expected": {
+        "reliability": {
+          "a": 0.3333333333333333,
+          "b": 0.6666666666666666
+        },
+        "iterations": 2,
+        "delta": 0,
+        "claims": {
+          "x1": {
+            "support": 0.6666666666666666,
+            "agreement": 1,
+            "independence": {
+              "a": 1,
+              "b": 1
+            },
+            "contributions": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 2,
+            "coverage": 0
+          },
+          "y1": {
+            "support": 0.3333333333333333,
+            "agreement": 1,
+            "independence": {
+              "b": 1
+            },
+            "contributions": {
+              "b": 0.3333333333333333
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 1,
+            "coverage": null
+          }
+        }
+      }
+    },
+    {
+      "name": "conflict_tie",
+      "assertions": [
+        [
+          "a",
+          "x",
+          "x1"
+        ],
+        [
+          "b",
+          "x",
+          "x2"
+        ]
+      ],
+      "dependency": {},
+      "coverage": {},
+      "expected": {
+        "reliability": {
+          "a": 0.5,
+          "b": 0.5
+        },
+        "iterations": 1,
+        "delta": 0,
+        "claims": {
+          "x1": {
+            "support": 0.25,
+            "agreement": 0.5,
+            "independence": {
+              "a": 1
+            },
+            "contributions": {
+              "a": 0.25
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "x2"
+            ],
+            "effective_count": 1,
+            "coverage": null
+          },
+          "x2": {
+            "support": 0.25,
+            "agreement": 0.5,
+            "independence": {
+              "b": 1
+            },
+            "contributions": {
+              "b": 0.25
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "x1"
+            ],
+            "effective_count": 1,
+            "coverage": null
+          }
+        }
+      }
+    },
+    {
+      "name": "disconnected",
+      "assertions": [
+        [
+          "a",
+          "x",
+          "x1"
+        ],
+        [
+          "b",
+          "x",
+          "x1"
+        ],
+        [
+          "c",
+          "y",
+          "y1"
+        ]
+      ],
+      "dependency": {},
+      "coverage": {},
+      "expected": {
+        "reliability": {
+          "a": 0.3333333333333333,
+          "b": 0.3333333333333333,
+          "c": 0.3333333333333333
+        },
+        "iterations": 1,
+        "delta": 0,
+        "claims": {
+          "x1": {
+            "support": 0.6666666666666666,
+            "agreement": 1,
+            "independence": {
+              "a": 1,
+              "b": 1
+            },
+            "contributions": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 2,
+            "coverage": 0
+          },
+          "y1": {
+            "support": 0.3333333333333333,
+            "agreement": 1,
+            "independence": {
+              "c": 1
+            },
+            "contributions": {
+              "c": 0.3333333333333333
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 1,
+            "coverage": null
+          }
+        }
+      }
+    },
+    {
+      "name": "dependent_support",
+      "assertions": [
+        [
+          "a",
+          "x",
+          "x1"
+        ],
+        [
+          "b",
+          "x",
+          "x1"
+        ]
+      ],
+      "dependency": {
+        "a": {
+          "a": 0,
+          "b": 0.5
+        },
+        "b": {
+          "a": 0.5,
+          "b": 0
+        }
+      },
+      "coverage": {
+        "a": {
+          "a": 0,
+          "b": 0.4
+        },
+        "b": {
+          "a": 0.4,
+          "b": 0
+        }
+      },
+      "expected": {
+        "reliability": {
+          "a": 0.5,
+          "b": 0.5
+        },
+        "iterations": 1,
+        "delta": 0,
+        "claims": {
+          "x1": {
+            "support": 0.6666666666666666,
+            "agreement": 1,
+            "independence": {
+              "a": 0.6666666666666666,
+              "b": 0.6666666666666666
+            },
+            "contributions": {
+              "a": 0.3333333333333333,
+              "b": 0.3333333333333333
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 1.3333333333333333,
+            "coverage": 0.4
+          }
+        }
+      }
+    },
+    {
+      "name": "slow_conflict",
+      "assertions": [
+        [
+          "a",
+          "x",
+          "x1"
+        ],
+        [
+          "b",
+          "x",
+          "x2"
+        ],
+        [
+          "b",
+          "y",
+          "y1"
+        ]
+      ],
+      "dependency": {},
+      "coverage": {},
+      "expected": {
+        "error": "nonconvergence"
+      }
+    },
+    {
+      "name": "synthetic_0",
+      "assertions": [
+        [
+          "api_agent",
+          "a001",
+          "c001"
+        ],
+        [
+          "api_agent",
+          "a003",
+          "c004"
+        ],
+        [
+          "api_agent",
+          "a005",
+          "c007"
+        ],
+        [
+          "document_agent",
+          "a001",
+          "c002"
+        ],
+        [
+          "document_agent",
+          "a003",
+          "c005"
+        ],
+        [
+          "document_agent",
+          "a004",
+          "c006"
+        ],
+        [
+          "research_agent",
+          "a001",
+          "c002"
+        ],
+        [
+          "research_agent",
+          "a002",
+          "c003"
+        ],
+        [
+          "research_agent",
+          "a005",
+          "c008"
+        ],
+        [
+          "search_agent",
+          "a001",
+          "c002"
+        ],
+        [
+          "search_agent",
+          "a003",
+          "c005"
+        ],
+        [
+          "search_agent",
+          "a005",
+          "c008"
+        ],
+        [
+          "sql_agent",
+          "a000",
+          "c000"
+        ],
+        [
+          "sql_agent",
+          "a001",
+          "c002"
+        ],
+        [
+          "sql_agent",
+          "a005",
+          "c008"
+        ]
+      ],
+      "dependency": {
+        "api_agent": {
+          "api_agent": 0,
+          "document_agent": 0,
+          "research_agent": 0,
+          "search_agent": 0,
+          "sql_agent": 0.1
+        },
+        "document_agent": {
+          "api_agent": 0,
+          "document_agent": 0,
+          "research_agent": 0,
+          "search_agent": 0,
+          "sql_agent": 0
+        },
+        "research_agent": {
+          "api_agent": 0,
+          "document_agent": 0,
+          "research_agent": 0,
+          "search_agent": 1,
+          "sql_agent": 0
+        },
+        "search_agent": {
+          "api_agent": 0,
+          "document_agent": 0,
+          "research_agent": 1,
+          "search_agent": 0,
+          "sql_agent": 0
+        },
+        "sql_agent": {
+          "api_agent": 0.1,
+          "document_agent": 0,
+          "research_agent": 0,
+          "search_agent": 0,
+          "sql_agent": 0
+        }
+      },
+      "coverage": {
+        "api_agent": {
+          "api_agent": 0,
+          "document_agent": 0.75,
+          "research_agent": 0.75,
+          "search_agent": 0.75,
+          "sql_agent": 0.75
+        },
+        "document_agent": {
+          "api_agent": 0.75,
+          "document_agent": 0,
+          "research_agent": 0.75,
+          "search_agent": 0.75,
+          "sql_agent": 0.75
+        },
+        "research_agent": {
+          "api_agent": 0.75,
+          "document_agent": 0.75,
+          "research_agent": 0,
+          "search_agent": 0.75,
+          "sql_agent": 0.75
+        },
+        "search_agent": {
+          "api_agent": 0.75,
+          "document_agent": 0.75,
+          "research_agent": 0.75,
+          "search_agent": 0,
+          "sql_agent": 0.75
+        },
+        "sql_agent": {
+          "api_agent": 0.75,
+          "document_agent": 0.75,
+          "research_agent": 0.75,
+          "search_agent": 0.75,
+          "sql_agent": 0
+        }
+      },
+      "expected": {
+        "reliability": {
+          "api_agent": 6.364691457144884e-10,
+          "document_agent": 0.2499999998408827,
+          "research_agent": 0.2499999999469609,
+          "search_agent": 0.2499999996287263,
+          "sql_agent": 0.2499999999469609
+        },
+        "iterations": 11,
+        "delta": 3.1823457174999e-9,
+        "claims": {
+          "c000": {
+            "support": 0.08333333331565365,
+            "agreement": 1,
+            "independence": {
+              "sql_agent": 1
+            },
+            "contributions": {
+              "sql_agent": 0.08333333331565365
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 1,
+            "coverage": null
+          },
+          "c002": {
+            "support": 0.19999999988684997,
+            "agreement": 0.8,
+            "independence": {
+              "sql_agent": 1,
+              "document_agent": 1,
+              "research_agent": 0.5,
+              "search_agent": 0.5
+            },
+            "contributions": {
+              "sql_agent": 0.06666666665252292,
+              "document_agent": 0.0666666666242354,
+              "research_agent": 0.03333333332626146,
+              "search_agent": 0.03333333328383018
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "c001"
+            ],
+            "effective_count": 2.6666666666666665,
+            "coverage": 0.75
+          },
+          "c001": {
+            "support": 4.2431276380965885e-11,
+            "agreement": 0.2,
+            "independence": {
+              "api_agent": 1
+            },
+            "contributions": {
+              "api_agent": 4.2431276380965885e-11
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "c002"
+            ],
+            "effective_count": 1,
+            "coverage": null
+          },
+          "c003": {
+            "support": 0.08333333331565365,
+            "agreement": 1,
+            "independence": {
+              "research_agent": 1
+            },
+            "contributions": {
+              "research_agent": 0.08333333331565365
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 1,
+            "coverage": null
+          },
+          "c005": {
+            "support": 0.11111111099324646,
+            "agreement": 0.6666666666666666,
+            "independence": {
+              "document_agent": 1,
+              "search_agent": 1
+            },
+            "contributions": {
+              "document_agent": 0.05555555552019616,
+              "search_agent": 0.05555555547305029
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "c004"
+            ],
+            "effective_count": 2,
+            "coverage": 0.75
+          },
+          "c004": {
+            "support": 7.071879396827648e-11,
+            "agreement": 0.3333333333333333,
+            "independence": {
+              "api_agent": 1
+            },
+            "contributions": {
+              "api_agent": 7.071879396827648e-11
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "c005"
+            ],
+            "effective_count": 1,
+            "coverage": null
+          },
+          "c006": {
+            "support": 0.08333333328029424,
+            "agreement": 1,
+            "independence": {
+              "document_agent": 1
+            },
+            "contributions": {
+              "document_agent": 0.08333333328029424
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 1,
+            "coverage": null
+          },
+          "c008": {
+            "support": 0.12499999993370114,
+            "agreement": 0.75,
+            "independence": {
+              "sql_agent": 1,
+              "research_agent": 0.5,
+              "search_agent": 0.5
+            },
+            "contributions": {
+              "sql_agent": 0.06249999998674024,
+              "research_agent": 0.03124999999337012,
+              "search_agent": 0.03124999995359079
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "c007"
+            ],
+            "effective_count": 1.8,
+            "coverage": 0.75
+          },
+          "c007": {
+            "support": 5.303909547620736e-11,
+            "agreement": 0.25,
+            "independence": {
+              "api_agent": 1
+            },
+            "contributions": {
+              "api_agent": 5.303909547620736e-11
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "c008"
+            ],
+            "effective_count": 1,
+            "coverage": null
+          }
+        }
+      }
+    },
+    {
+      "name": "synthetic_1",
+      "assertions": [
+        [
+          "faq",
+          "a000",
+          "c001"
+        ],
+        [
+          "faq",
+          "a001",
+          "c003"
+        ],
+        [
+          "faq",
+          "a002",
+          "c005"
+        ],
+        [
+          "handbook",
+          "a000",
+          "c001"
+        ],
+        [
+          "handbook",
+          "a001",
+          "c003"
+        ],
+        [
+          "handbook",
+          "a002",
+          "c005"
+        ],
+        [
+          "research",
+          "a000",
+          "c001"
+        ],
+        [
+          "research",
+          "a001",
+          "c002"
+        ],
+        [
+          "research",
+          "a002",
+          "c005"
+        ],
+        [
+          "sql",
+          "a000",
+          "c001"
+        ],
+        [
+          "sql",
+          "a001",
+          "c003"
+        ],
+        [
+          "sql",
+          "a002",
+          "c005"
+        ],
+        [
+          "vendor",
+          "a000",
+          "c000"
+        ],
+        [
+          "vendor",
+          "a001",
+          "c002"
+        ],
+        [
+          "vendor",
+          "a002",
+          "c004"
+        ]
+      ],
+      "dependency": {
+        "faq": {
+          "faq": 0,
+          "handbook": 0.1,
+          "research": 0,
+          "sql": 0,
+          "vendor": 0
+        },
+        "handbook": {
+          "faq": 0.1,
+          "handbook": 0,
+          "research": 1,
+          "sql": 1,
+          "vendor": 0
+        },
+        "research": {
+          "faq": 0,
+          "handbook": 1,
+          "research": 0,
+          "sql": 1,
+          "vendor": 1
+        },
+        "sql": {
+          "faq": 0,
+          "handbook": 1,
+          "research": 1,
+          "sql": 0,
+          "vendor": 0
+        },
+        "vendor": {
+          "faq": 0,
+          "handbook": 0,
+          "research": 1,
+          "sql": 0,
+          "vendor": 0
+        }
+      },
+      "coverage": {
+        "faq": {
+          "faq": 0,
+          "handbook": 0.8500000000000001,
+          "research": 0.8500000000000001,
+          "sql": 0.8500000000000001,
+          "vendor": 0.75
+        },
+        "handbook": {
+          "faq": 0.8500000000000001,
+          "handbook": 0,
+          "research": 0.8500000000000001,
+          "sql": 0.8500000000000001,
+          "vendor": 0.75
+        },
+        "research": {
+          "faq": 0.8500000000000001,
+          "handbook": 0.8500000000000001,
+          "research": 0,
+          "sql": 0.8500000000000001,
+          "vendor": 0.8500000000000001
+        },
+        "sql": {
+          "faq": 0.8500000000000001,
+          "handbook": 0.8500000000000001,
+          "research": 0.8500000000000001,
+          "sql": 0,
+          "vendor": 0.75
+        },
+        "vendor": {
+          "faq": 0.75,
+          "handbook": 0.75,
+          "research": 0.8500000000000001,
+          "sql": 0.75,
+          "vendor": 0
+        }
+      },
+      "expected": {
+        "reliability": {
+          "faq": 0.2643542279470778,
+          "handbook": 0.2643542279470778,
+          "research": 0.1945334884793187,
+          "sql": 0.2643542279470778,
+          "vendor": 0.012403827679447893
+        },
+        "iterations": 11,
+        "delta": 5.650894745190538e-9,
+        "claims": {
+          "c001": {
+            "support": 0.12761604132022658,
+            "agreement": 0.8,
+            "independence": {
+              "faq": 0.9090909090909091,
+              "sql": 0.3333333333333333,
+              "handbook": 0.3225806451612903,
+              "research": 0.3333333333333333
+            },
+            "contributions": {
+              "faq": 0.06408587344171583,
+              "sql": 0.023498153595295806,
+              "handbook": 0.022740148640608845,
+              "research": 0.017291865642606107
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "c000"
+            ],
+            "effective_count": 1.5686274509803924,
+            "coverage": 0.85
+          },
+          "c000": {
+            "support": 0.0008269218452965262,
+            "agreement": 0.2,
+            "independence": {
+              "vendor": 1
+            },
+            "contributions": {
+              "vendor": 0.0008269218452965262
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "c001"
+            ],
+            "effective_count": 1,
+            "coverage": null
+          },
+          "c003": {
+            "support": 0.09967642101381159,
+            "agreement": 0.6,
+            "independence": {
+              "faq": 0.9090909090909091,
+              "sql": 0.5,
+              "handbook": 0.47619047619047616
+            },
+            "contributions": {
+              "faq": 0.04806440508128687,
+              "sql": 0.026435422794707782,
+              "handbook": 0.025176593137816932
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "c002"
+            ],
+            "effective_count": 1.7307692307692306,
+            "coverage": 0.8500000000000001
+          },
+          "c002": {
+            "support": 0.013795821077251108,
+            "agreement": 0.4,
+            "independence": {
+              "research": 0.5,
+              "vendor": 0.5
+            },
+            "contributions": {
+              "research": 0.012968899231954581,
+              "vendor": 0.0008269218452965262
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "c003"
+            ],
+            "effective_count": 1,
+            "coverage": 0.8500000000000001
+          },
+          "c005": {
+            "support": 0.12761604132022658,
+            "agreement": 0.8,
+            "independence": {
+              "faq": 0.9090909090909091,
+              "sql": 0.3333333333333333,
+              "handbook": 0.3225806451612903,
+              "research": 0.3333333333333333
+            },
+            "contributions": {
+              "faq": 0.06408587344171583,
+              "sql": 0.023498153595295806,
+              "handbook": 0.022740148640608845,
+              "research": 0.017291865642606107
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "c004"
+            ],
+            "effective_count": 1.5686274509803924,
+            "coverage": 0.85
+          },
+          "c004": {
+            "support": 0.0008269218452965262,
+            "agreement": 0.2,
+            "independence": {
+              "vendor": 1
+            },
+            "contributions": {
+              "vendor": 0.0008269218452965262
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "c005"
+            ],
+            "effective_count": 1,
+            "coverage": null
+          }
+        }
+      }
+    }
+  ],
+  "fusion": [
+    {
+      "name": "direct_not_attenuated",
+      "signals": {
+        "upstream": 1,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 0,
+        "graph": 0,
+        "retrieval": 0
+      },
+      "observable": {
+        "upstream": true,
+        "citation": false,
+        "assertion_lineage": false,
+        "ownership": false,
+        "temporal": false,
+        "graph": false,
+        "retrieval": false
+      },
+      "weights": {
+        "upstream": 1,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 0,
+        "graph": 9,
+        "retrieval": 0
+      },
+      "excluded": [],
+      "expected": [
+        1,
+        0.1
+      ]
+    },
+    {
+      "name": "direct_disabled",
+      "signals": {
+        "upstream": 1,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 1,
+        "graph": 0,
+        "retrieval": 0
+      },
+      "observable": {
+        "upstream": true,
+        "citation": false,
+        "assertion_lineage": false,
+        "ownership": false,
+        "temporal": true,
+        "graph": false,
+        "retrieval": false
+      },
+      "weights": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 1,
+        "graph": 1,
+        "retrieval": 0
+      },
+      "excluded": [],
+      "expected": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "name": "no_available_renormalization",
+      "signals": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 1,
+        "temporal": 0,
+        "graph": 0,
+        "retrieval": 0
+      },
+      "observable": {
+        "upstream": false,
+        "citation": false,
+        "assertion_lineage": false,
+        "ownership": true,
+        "temporal": false,
+        "graph": false,
+        "retrieval": false
+      },
+      "weights": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 1,
+        "temporal": 0,
+        "graph": 3,
+        "retrieval": 0
+      },
+      "excluded": [],
+      "expected": [
+        0.25,
+        0.25
+      ]
+    },
+    {
+      "name": "excluded_ownership",
+      "signals": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 1,
+        "temporal": 0,
+        "graph": 0,
+        "retrieval": 0
+      },
+      "observable": {
+        "upstream": false,
+        "citation": false,
+        "assertion_lineage": false,
+        "ownership": true,
+        "temporal": false,
+        "graph": false,
+        "retrieval": false
+      },
+      "weights": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 1,
+        "temporal": 0,
+        "graph": 0,
+        "retrieval": 0
+      },
+      "excluded": [
+        "ownership"
+      ],
+      "expected": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "unknown_is_masked",
+      "signals": {
+        "upstream": 1,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 0,
+        "graph": 1,
+        "retrieval": 0
+      },
+      "observable": {
+        "upstream": false,
+        "citation": false,
+        "assertion_lineage": false,
+        "ownership": false,
+        "temporal": false,
+        "graph": false,
+        "retrieval": false
+      },
+      "weights": {
+        "upstream": 1,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 0,
+        "graph": 1,
+        "retrieval": 0
+      },
+      "excluded": [],
+      "expected": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "contextual_sum",
+      "signals": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 1,
+        "temporal": 0.5,
+        "graph": 0,
+        "retrieval": 1
+      },
+      "observable": {
+        "upstream": false,
+        "citation": false,
+        "assertion_lineage": false,
+        "ownership": true,
+        "temporal": true,
+        "graph": false,
+        "retrieval": true
+      },
+      "weights": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 1,
+        "temporal": 2,
+        "graph": 1,
+        "retrieval": 1
+      },
+      "excluded": [],
+      "expected": [
+        0.6,
+        0.8
+      ]
+    },
+    {
+      "name": "direct_max_not_sum",
+      "signals": {
+        "upstream": 0.6,
+        "citation": 0.3,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 0,
+        "graph": 0,
+        "retrieval": 0
+      },
+      "observable": {
+        "upstream": true,
+        "citation": true,
+        "assertion_lineage": false,
+        "ownership": false,
+        "temporal": false,
+        "graph": false,
+        "retrieval": false
+      },
+      "weights": {
+        "upstream": 1,
+        "citation": 1,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 0,
+        "graph": 0,
+        "retrieval": 0
+      },
+      "excluded": [],
+      "expected": [
+        0.6,
+        1
+      ]
+    },
+    {
+      "name": "explicit_graph_signal",
+      "signals": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 0,
+        "graph": 0.8,
+        "retrieval": 0
+      },
+      "observable": {
+        "upstream": false,
+        "citation": false,
+        "assertion_lineage": false,
+        "ownership": false,
+        "temporal": false,
+        "graph": true,
+        "retrieval": false
+      },
+      "weights": {
+        "upstream": 0,
+        "citation": 0,
+        "assertion_lineage": 0,
+        "ownership": 0,
+        "temporal": 0,
+        "graph": 1,
+        "retrieval": 0
+      },
+      "excluded": [],
+      "expected": [
+        0.8,
+        1
+      ]
+    }
+  ],
+  "clusters": [
+    {
+      "name": "transitive",
+      "sources": [
+        "a",
+        "b",
+        "c"
+      ],
+      "dependency": {
+        "a": {
+          "a": 0,
+          "b": 0.5,
+          "c": 0
+        },
+        "b": {
+          "a": 0.5,
+          "b": 0,
+          "c": 0.5
+        },
+        "c": {
+          "a": 0,
+          "b": 0.5,
+          "c": 0
+        }
+      },
+      "threshold": 0.5,
+      "expected": [
+        [
+          "a",
+          "b",
+          "c"
+        ]
+      ]
+    },
+    {
+      "name": "induced_supporters",
+      "sources": [
+        "a",
+        "c"
+      ],
+      "dependency": {
+        "a": {
+          "a": 0,
+          "b": 0.5,
+          "c": 0
+        },
+        "b": {
+          "a": 0.5,
+          "b": 0,
+          "c": 0.5
+        },
+        "c": {
+          "a": 0,
+          "b": 0.5,
+          "c": 0
+        }
+      },
+      "threshold": 0.5,
+      "expected": [
+        [
+          "a"
+        ],
+        [
+          "c"
+        ]
+      ]
+    },
+    {
+      "name": "zero_threshold",
+      "sources": [
+        "a",
+        "b"
+      ],
+      "dependency": {
+        "a": {
+          "a": 0,
+          "b": 0
+        },
+        "b": {
+          "a": 0,
+          "b": 0
+        }
+      },
+      "threshold": 0,
+      "expected": [
+        [
+          "a",
+          "b"
+        ]
+      ]
+    }
+  ]
+}

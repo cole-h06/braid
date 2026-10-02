@@ -1,0 +1,19 @@
+{
+  "retrieved_at": "2026-02-05T12:05:00Z",
+  "research_source_modified_at": "2026-02-05T12:04:00Z",
+  "database_id": "northstar_policy_config",
+  "query_id": "returns_policy_by_record",
+  "snapshots": {
+    "docs/handbook.md": "027c08f84353673305400b3274157f7139cc61fdf71294a30ec0cdb93ca300fa",
+    "docs/faq.md": "032bab4df4f48849db9cc053476a024a78412e6e5abeb8ec0da69b5cb60b8e87",
+    "company.sql": "bf3dde35cd11df45830e5a841326c11784df0a6f5d5717470e6a6aaa517f3a13",
+    "vendor.json": "a49874f80fd5c16eb5ccd76f7460a981d753ea79bdf1a1bedb0cbd33380f82dd"
+  },
+  "sources": [
+    {"source_id": "handbook", "display_name": "Returns Handbook", "owner_id": "northstar_policy"},
+    {"source_id": "faq", "display_name": "Returns FAQ", "owner_id": "northstar_policy"},
+    {"source_id": "sql", "display_name": "Policy Configuration", "owner_id": "northstar_ops"},
+    {"source_id": "vendor", "display_name": "Returns Vendor", "owner_id": "returns_vendor"},
+    {"source_id": "research", "display_name": "Policy Research", "owner_id": "northstar_research"}
+  ]
+}
