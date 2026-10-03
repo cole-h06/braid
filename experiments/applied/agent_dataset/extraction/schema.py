@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -12,19 +12,6 @@ class SourceMetadata(BaseModel):
     display_name: str
 
     owner_id: str | None = None
-
-
-class Assertion(BaseModel):
-
-    assertion_id: str
-
-    source_id: str
-
-    entity: str
-
-    attribute: str
-
-    value: str
 
 
 class Retrieval(BaseModel):
@@ -52,9 +39,20 @@ class Retrieval(BaseModel):
         return value
 
 
-class Evidence(BaseModel):
+class Observation(BaseModel):
+    """A structured assertion accompanied by provenance metadata."""
 
     assertion_id: str
+
+    source_id: str
+
+    entity_namespace: str = "agent_dataset"
+
+    entity: str
+
+    attribute: str
+
+    value: str
 
     observed_at: datetime
 
@@ -70,6 +68,10 @@ class Evidence(BaseModel):
         default=(),
         exclude_if=lambda value: not value,
     )
+
+    metadata: dict[str, Any] = Field(default_factory=dict)
+
+    dependency_signals: dict[str, Any] = Field(default_factory=dict)
 
     @field_validator("observed_at", "source_modified_at")
     @classmethod
@@ -88,6 +90,4 @@ class Evidence(BaseModel):
 
 class AgentResult(BaseModel):
 
-    assertions: tuple[Assertion, ...]
-
-    evidence: tuple[Evidence, ...]
+    observations: tuple[Observation, ...]

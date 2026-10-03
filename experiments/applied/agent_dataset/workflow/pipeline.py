@@ -13,8 +13,7 @@ from ..agents.sql import sql_agent
 from ..dataset import DEPENDENCY_WEIGHTS, SOURCES, validate_dataset
 from ..extraction.schema import (
     AgentResult,
-    Assertion,
-    Evidence,
+    Observation,
     SourceMetadata,
 )
 from .graph import build_graph
@@ -55,9 +54,7 @@ class WorkflowState(TypedDict, total=False):
 
     sources: tuple[SourceMetadata, ...]
 
-    assertions: list[Assertion]
-
-    evidence: list[Evidence]
+    observations: list[Observation]
 
     graph: BipartiteGraph
 
@@ -115,8 +112,7 @@ def validate_node(state):
 
     validate_dataset(
         state["sources"],
-        state["assertions"],
-        state["evidence"],
+        state["observations"],
     )
 
     return {}
@@ -126,7 +122,7 @@ def graph_node(state):
 
     graph = build_graph(
         state["sources"],
-        state["assertions"],
+        state["observations"],
     )
 
     return {
@@ -156,8 +152,7 @@ def build_pipeline(
         hybrid = compute_hybrid_dependency(
             state["graph"],
             state["sources"],
-            state["assertions"],
-            state["evidence"],
+            state["observations"],
             weights,
         )
 
@@ -183,21 +178,18 @@ def build_pipeline(
 
     def collect_node(state):
 
-        assertions = []
-        evidence = []
+        observations = []
 
         # keep collection stable after the parallel agent nodes finish
         for source_id in order:
 
             result = state["results"][source_id]
 
-            assertions.extend(result.assertions)
-            evidence.extend(result.evidence)
+            observations.extend(result.observations)
 
         return {
             "sources": sources,
-            "assertions": assertions,
-            "evidence": evidence,
+            "observations": observations,
         }
 
     workflow = StateGraph(WorkflowState)
@@ -269,8 +261,7 @@ def run_workflow(
 
     return {
         "sources": state["sources"],
-        "assertions": state["assertions"],
-        "evidence": state["evidence"],
+        "observations": state["observations"],
         "graph": state["graph"],
         "hybrid": state["hybrid"],
         "evaluation": state["evaluation"],

@@ -10,18 +10,17 @@ def run_experiment(
     debug=False,
 ):
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     graph = build_graph(
         sources,
-        assertions,
+        observations,
     )
 
     hybrid = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         DEPENDENCY_WEIGHTS if weights is None else weights,
     )
 
@@ -35,8 +34,7 @@ def run_experiment(
 
     return {
         "sources": sources,
-        "assertions": assertions,
-        "evidence": evidence,
+        "observations": observations,
         "graph": graph,
         "hybrid": hybrid,
         "evaluation": result,

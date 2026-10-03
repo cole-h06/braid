@@ -1,27 +1,22 @@
-from agent_dataset.extraction.schema import AgentResult, Assertion, Evidence, Retrieval
+from agent_dataset.extraction.schema import AgentResult, Observation, Retrieval
 
 from .retrieve import api_snapshot, document, sql_records
 
 
 def make_result(source_id, kind, records):
 
-    assertions = []
-    evidence = []
+    observations = []
 
     for index, record in enumerate(records, 1):
 
         assertion_id = f"{source_id}-{index:03d}"
 
-        assertions.append(Assertion(
+        observations.append(Observation(
             assertion_id=assertion_id,
             source_id=source_id,
             entity="northstar_returns",
             attribute=record["attribute"],
             value=record["value"],
-        ))
-
-        evidence.append(Evidence(
-            assertion_id=assertion_id,
             observed_at=record["observed_at"],
             source_modified_at=record["source_modified_at"],
             upstream_source_ids=record["upstream_source_ids"],
@@ -37,8 +32,7 @@ def make_result(source_id, kind, records):
         ))
 
     return AgentResult(
-        assertions=tuple(assertions),
-        evidence=tuple(evidence),
+        observations=tuple(observations),
     )
 
 
@@ -85,57 +79,35 @@ def research_agent(
     retrieved_at,
 ):
 
-    handbook_assertions = {
+    handbook_observations = {
         item.attribute: item
-        for item in handbook.assertions
+        for item in handbook.observations
     }
 
-    vendor_assertions = {
+    vendor_observations = {
         item.attribute: item
-        for item in vendor.assertions
-    }
-
-    handbook_evidence = {
-        item.assertion_id: item
-        for item in handbook.evidence
-    }
-
-    vendor_evidence = {
-        item.assertion_id: item
-        for item in vendor.evidence
+        for item in vendor.observations
     }
 
     parents = (
-        handbook_assertions["return_window"],
-        handbook_assertions["warranty"],
-        vendor_assertions["shipping_fee"],
+        handbook_observations["return_window"],
+        handbook_observations["warranty"],
+        vendor_observations["shipping_fee"],
     )
 
-    assertions = []
-    evidence = []
+    observations = []
 
     for index, parent in enumerate(parents, 1):
 
         assertion_id = f"research-{index:03d}"
 
-        parent_result = (
-            handbook_evidence
-            if parent.source_id == "handbook"
-            else vendor_evidence
-        )
-
-        parent_evidence = parent_result[parent.assertion_id]
-
-        assertions.append(Assertion(
+        observations.append(Observation(
             assertion_id=assertion_id,
             source_id="research",
+            entity_namespace=parent.entity_namespace,
             entity=parent.entity,
             attribute=parent.attribute,
             value=parent.value,
-        ))
-
-        evidence.append(Evidence(
-            assertion_id=assertion_id,
             observed_at=retrieved_at,
             source_modified_at=source_modified_at,
             upstream_source_ids=(parent.source_id,),
@@ -154,6 +126,5 @@ def research_agent(
         ))
 
     return AgentResult(
-        assertions=tuple(assertions),
-        evidence=tuple(evidence),
+        observations=tuple(observations),
     )

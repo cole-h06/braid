@@ -9,7 +9,7 @@ from agent_dataset.dataset import (
     load_dataset,
     validate_dataset,
 )
-from agent_dataset.extraction.schema import AgentResult, Evidence
+from agent_dataset.extraction.schema import AgentResult, Observation
 
 
 SIMULATED_RELATIONSHIPS = {
@@ -23,11 +23,10 @@ SIMULATED_RELATIONSHIPS = {
 
 def test_counts():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     assert len(sources) == 5
-    assert len(assertions) == 15
-    assert len(evidence) == 15
+    assert len(observations) == 15
     assert len(SIMULATED_RELATIONSHIPS) == 5
 
 
@@ -42,25 +41,28 @@ def test_repeatability():
         assert result == agent()
 
 
-def test_evidence():
+def test_duplicate_observations():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
-    # each assertion should have one evidence record
+    # Observation assertion IDs must be unique.
     with pytest.raises(
         ValueError,
-        match="exactly one evidence record",
+        match="assertion IDs must be unique",
     ):
         validate_dataset(
             sources,
-            assertions,
-            evidence + [evidence[0]],
+            observations + [observations[0]],
         )
 
 
 def test_missingness():
 
-    missing = Evidence(
+    missing = Observation(
+        source_id="example_source",
+        entity="example_entity",
+        attribute="example_attribute",
+        value="example_value",
         assertion_id="missing",
         observed_at="2026-01-01T09:00:00Z",
         upstream_source_ids=None,
@@ -69,7 +71,11 @@ def test_missingness():
         source_modified_at=None,
     )
 
-    observed = Evidence(
+    observed = Observation(
+        source_id="example_source",
+        entity="example_entity",
+        attribute="example_attribute",
+        value="example_value",
         assertion_id="observed",
         observed_at="2026-01-01T09:00:00Z",
         upstream_source_ids=(),
@@ -91,33 +97,45 @@ def test_missingness():
 
 def test_timestamps():
 
-    # reject evidence without valid timezone aware timestamps
+    # reject observations without valid timezone aware timestamps
     with pytest.raises(ValidationError):
-        Evidence(
+        Observation(
+            source_id="example_source",
+            entity="example_entity",
+            attribute="example_attribute",
+            value="example_value",
             assertion_id="example",
             observed_at="not-a-datetime",
             upstream_source_ids=(),
         )
 
     with pytest.raises(ValidationError):
-        Evidence(
+        Observation(
+            source_id="example_source",
+            entity="example_entity",
+            attribute="example_attribute",
+            value="example_value",
             assertion_id="example",
             observed_at=datetime(2026, 1, 1, 9),
             upstream_source_ids=(),
         )
 
     with pytest.raises(ValidationError):
-        Evidence(
+        Observation(
+            source_id="example_source",
+            entity="example_entity",
+            attribute="example_attribute",
+            value="example_value",
             assertion_id="example",
             observed_at="2026-01-01T09:00:00Z",
             upstream_source_ids=(),
             source_modified_at=datetime(2026, 1, 1, 8),
         )
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     # model_copy bypasses field validation so dataset validation sees bad data
-    bad_time = evidence[0].model_copy(
+    bad_time = observations[0].model_copy(
         update={"observed_at": datetime(2026, 1, 1, 9)}
     )
 
@@ -127,11 +145,10 @@ def test_timestamps():
     ):
         validate_dataset(
             sources,
-            assertions,
-            [bad_time, *evidence[1:]],
+            [bad_time, *observations[1:]],
         )
 
-    bad_modified_time = evidence[0].model_copy(
+    bad_modified_time = observations[0].model_copy(
         update={"source_modified_at": datetime(2026, 1, 1, 9)}
     )
 
@@ -141,16 +158,15 @@ def test_timestamps():
     ):
         validate_dataset(
             sources,
-            assertions,
-            [bad_modified_time, *evidence[1:]],
+            [bad_modified_time, *observations[1:]],
         )
 
 
 def test_sources():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
-    bad_source = assertions[0].model_copy(
+    bad_source = observations[0].model_copy(
         update={"source_id": "unknown"}
     )
 
@@ -160,17 +176,16 @@ def test_sources():
     ):
         validate_dataset(
             sources,
-            [bad_source, *assertions[1:]],
-            evidence,
+            [bad_source, *observations[1:]],
         )
 
-    external_upstream = evidence[0].model_copy(
+    external_upstream = observations[0].model_copy(
         update={"upstream_source_ids": ("unknown",)}
     )
 
-    validate_dataset(sources, assertions, [external_upstream, *evidence[1:]])
-    bad_upstream = evidence[0].model_copy(
-        update={"upstream_source_ids": (assertions[0].source_id,)}
+    validate_dataset(sources, [external_upstream, *observations[1:]])
+    bad_upstream = observations[0].model_copy(
+        update={"upstream_source_ids": (observations[0].source_id,)}
     )
 
     with pytest.raises(
@@ -179,11 +194,10 @@ def test_sources():
     ):
         validate_dataset(
             sources,
-            assertions,
-            [bad_upstream, *evidence[1:]],
+            [bad_upstream, *observations[1:]],
         )
 
-    bad_citation = evidence[0].model_copy(
+    bad_citation = observations[0].model_copy(
         update={"cited_source_ids": ("unknown",)}
     )
 
@@ -193,30 +207,15 @@ def test_sources():
     ):
         validate_dataset(
             sources,
-            assertions,
-            [bad_citation, *evidence[1:]],
+            [bad_citation, *observations[1:]],
         )
 
 
-def test_assertions():
+def test_observations():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
-    bad_assertion = evidence[0].model_copy(
-        update={"assertion_id": "unknown"}
-    )
-
-    with pytest.raises(
-        ValueError,
-        match="unknown assertion",
-    ):
-        validate_dataset(
-            sources,
-            assertions,
-            [bad_assertion, *evidence[1:]],
-        )
-
-    bad_parent = evidence[0].model_copy(
+    bad_parent = observations[0].model_copy(
         update={"parent_assertion_ids": ("unknown",)}
     )
 
@@ -226,14 +225,13 @@ def test_assertions():
     ):
         validate_dataset(
             sources,
-            assertions,
-            [bad_parent, *evidence[1:]],
+            [bad_parent, *observations[1:]],
         )
 
 
 def test_ids():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     duplicate_source = [
         *sources,
@@ -246,12 +244,11 @@ def test_ids():
     ):
         validate_dataset(
             duplicate_source,
-            assertions,
-            evidence,
+            observations,
         )
 
-    duplicate_assertion = assertions[1].model_copy(
-        update={"assertion_id": assertions[0].assertion_id}
+    duplicate_assertion = observations[1].model_copy(
+        update={"assertion_id": observations[0].assertion_id}
     )
 
     with pytest.raises(
@@ -260,20 +257,19 @@ def test_ids():
     ):
         validate_dataset(
             sources,
-            [assertions[0], duplicate_assertion, *assertions[2:]],
-            evidence,
+            [observations[0], duplicate_assertion, *observations[2:]],
         )
 
 
 def test_values():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     # conflicts can exist across sources, but not within one source
-    duplicate_value = assertions[1].model_copy(
+    duplicate_value = observations[1].model_copy(
         update={
-            "entity": assertions[0].entity,
-            "attribute": assertions[0].attribute,
+            "entity": observations[0].entity,
+            "attribute": observations[0].attribute,
         }
     )
 
@@ -283,6 +279,32 @@ def test_values():
     ):
         validate_dataset(
             sources,
-            [assertions[0], duplicate_value, *assertions[2:]],
-            evidence,
+            [observations[0], duplicate_value, *observations[2:]],
         )
+
+
+def test_observation_boundary():
+
+    _, observations = load_dataset()
+    original = observations[0]
+    payload = original.model_dump()
+    payload.update(
+        entity_namespace="policies",
+        metadata={"extractor": {"version": 1}},
+        dependency_signals={"citation": {"captured": True}},
+    )
+    observation = Observation.model_validate(payload)
+    result = AgentResult(observations=(observation,))
+
+    assert set(result.model_dump()) == {"observations"}
+    assert AgentResult.model_validate_json(result.model_dump_json()) == result
+    assert observation.entity_namespace == "policies"
+    assert observation.metadata == {"extractor": {"version": 1}}
+    assert observation.dependency_signals == {"citation": {"captured": True}}
+    assert original.metadata == {}
+    assert original.dependency_signals == {}
+
+    observation.metadata["extra"] = True
+    observation.dependency_signals["extra"] = True
+    assert observations[1].metadata == {}
+    assert observations[1].dependency_signals == {}

@@ -113,8 +113,7 @@ def run_enterprise(
 
     return {
         "sources": state["sources"],
-        "assertions": state["assertions"],
-        "evidence": state["evidence"],
+        "observations": state["observations"],
         "graph": state["graph"],
         "hybrid": state["hybrid"],
         "evaluation": state["evaluation"],

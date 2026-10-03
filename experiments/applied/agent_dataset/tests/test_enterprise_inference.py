@@ -76,7 +76,7 @@ def test_adjustment():
 
     graph = build_graph(
         result["sources"],
-        result["assertions"],
+        result["observations"],
     )
 
     zero_dependency = evaluate(graph)

@@ -4,11 +4,11 @@ from agent_dataset.workflow.graph import build_graph
 
 def load_graph():
 
-    sources, assertions, _ = load_dataset()
+    sources, observations = load_dataset()
 
     return build_graph(
         sources,
-        assertions,
+        observations,
     )
 
 
@@ -18,15 +18,15 @@ def test_counts():
 
     assert len(graph.source_to_claims) == 5
     assert len(graph.claim_to_sources) == 9
-    assert not hasattr(graph, "evidence")
+    assert not hasattr(graph, "observations")
 
 
-def test_assertions():
+def test_observations():
 
     graph = load_graph()
 
-    for assertions in graph.source_to_assertions.values():
-        assert len(assertions) == 3
+    for observations in graph.source_to_assertions.values():
+        assert len(observations) == 3
 
 
 def test_conflicts():

@@ -122,31 +122,26 @@ def test_agents():
     )
 
     assert all(
-        len(result.assertions) == 3
-        for result in results
-    )
-
-    assert all(
-        len(result.evidence) == 3
+        len(result.observations) == 3
         for result in results
     )
 
     assert all(
         item.retrievals[0].retrieved_at == NOW
         for result in results
-        for item in result.evidence
+        for item in result.observations
     )
 
     assert all(
         item.observed_at == NOW
         for result in results
-        for item in result.evidence
+        for item in result.observations
     )
 
     assert all(
         item.source_modified_at is not None
         for result in results
-        for item in result.evidence
+        for item in result.observations
     )
 
 

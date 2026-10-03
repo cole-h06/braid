@@ -2,32 +2,6 @@ from dataclasses import dataclass, field
 from math import isfinite
 
 
-GRAPH_ATTRIBUTES = {
-
-    "ram_gb",
-    "storage_gb",
-
-    "cpu_model",
-    "cpu_cores",
-
-    "gpu_model",
-
-    "wifi_standard",
-    "bluetooth_version",
-
-    "display_resolution",
-    "screen_size",
-
-    "battery_life_hr",
-
-    "weight_lb",
-
-    "operating_system",
-
-    "touchscreen",
-}
-
-
 @dataclass
 class BipartiteGraph:
 

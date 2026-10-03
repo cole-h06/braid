@@ -2,8 +2,6 @@ import math
 
 import pytest
 
-from braid.engine import evaluate
-
 from agent_dataset.run import run_experiment
 
 
@@ -85,31 +83,39 @@ def test_singletons():
 
 def test_discount():
 
+    from braid.engine import compute_degrees, score_claims
+
     experiment = run_experiment(debug=True)
     graph = experiment["graph"]
+    result = experiment["evaluation"]
+    degrees = compute_degrees(graph.source_to_claims)
 
-    hybrid_support = experiment["evaluation"]["claim_support"]
+    # Compare forward support at fixed reliability. Converged scores can
+    # increase after feedback and normalization, even with discounts.
+    def support(independence):
+        return score_claims(
+            result["reliability"],
+            graph.claim_to_sources,
+            graph.agreement_weights,
+            independence,
+            degrees,
+        )
 
-    source_ids = graph.source_to_claims.keys()
+    discounted = support(result["independence"])
+    independent = support({
+        claim: {source: 1.0 for source in sources}
+        for claim, sources in graph.claim_to_sources.items()
+    })
 
-    graph.dependency_matrix = {
-        source_id: {
-            other_id: 0.0
-            for other_id in source_ids
-        }
-        for source_id in source_ids
-    }
-
-    independent_support = evaluate(graph)["claim_support"]
-
-    shared_claims = (
+    for claim in (
         ("refund_policy", "window_days", "30"),
         ("warranty", "length_years", "2"),
-        ("shipping", "cost", "free"),
-    )
+    ):
+        assert discounted[claim] < independent[claim]
 
-    for claim_id in shared_claims:
-        assert hybrid_support[claim_id] < independent_support[claim_id]
+    shipping = ("shipping", "cost", "free")
+    assert discounted[shipping] == independent[shipping]
+
 
 def test_dependent_group():
 

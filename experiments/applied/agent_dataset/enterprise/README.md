@@ -2,9 +2,9 @@
 
 This experiment displays how BRAID can fit into an enterprise agentic retrieval workflow.
 
-Return-policy information is collected from two internal documents, an operational SQL database, and a captured vendor API response in this workflow. A research step then derives additional assertions from the document and vendor results.
+Return-policy information is collected from two internal documents, an operational SQL database, and a captured vendor API response in this workflow. A research step then derives additional observations from the document and vendor results.
 
-Its goal is to show how assertions and their source relationship metadata are collected from an enterprise agentic workflow before source dependencies and reliability are evaluated. The workflow is coordinated by LangGraph before BRAID's reliability propagation algorithm receives the assertions.
+Its goal is to show how observations and their source relationship metadata are collected from an enterprise agentic workflow before source dependencies and reliability are evaluated. The workflow is coordinated by LangGraph before BRAID's reliability propagation algorithm receives the observations.
 
 The simulated relationship labels are used only to evaluate the experiment. Retrieval and evaluation do not use them.
 

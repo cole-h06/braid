@@ -5,7 +5,7 @@ from braid.graph import BipartiteGraph, prepare_graph
 
 def build_graph(
     sources,
-    assertions,
+    observations,
 ):
 
     source_to_claims = defaultdict(set)
@@ -24,19 +24,19 @@ def build_graph(
     agreement_weights = {}
     seen = set()
 
-    for assertion in assertions:
+    for observation in observations:
 
-        source_id = assertion.source_id
+        source_id = observation.source_id
 
         property_key = (
-            assertion.entity,
-            assertion.attribute,
+            observation.entity,
+            observation.attribute,
         )
 
         claim_id = (
-            assertion.entity,
-            assertion.attribute,
-            assertion.value,
+            observation.entity,
+            observation.attribute,
+            observation.value,
         )
         if (source_id, property_key) in seen:
             raise ValueError("source has multiple claims for an attribute")
@@ -46,7 +46,7 @@ def build_graph(
 
         claim_to_sources[claim_id].add(source_id)
 
-        source_to_assertions[source_id][property_key] = assertion.value
+        source_to_assertions[source_id][property_key] = observation.value
 
         claim_lookup[claim_id] = property_key
 

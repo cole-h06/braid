@@ -17,18 +17,17 @@ from agent_dataset.workflow.hybrid_dependency import (
 
 def load_hybrid():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     graph = build_graph(
         sources,
-        assertions,
+        observations,
     )
 
     hybrid = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         DEPENDENCY_WEIGHTS,
     )
 
@@ -181,9 +180,9 @@ def test_observability():
 
 def test_missing_metadata():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
-    evidence[0] = evidence[0].model_copy(update={
+    observations[0] = observations[0].model_copy(update={
         "upstream_source_ids": None,
         "cited_source_ids": None,
         "parent_assertion_ids": None,
@@ -191,14 +190,13 @@ def test_missing_metadata():
 
     graph = build_graph(
         sources,
-        assertions,
+        observations,
     )
 
     hybrid = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         DEPENDENCY_WEIGHTS,
     )
 
@@ -305,11 +303,11 @@ def test_bad_weights():
 
 def test_window():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     graph = build_graph(
         sources,
-        assertions,
+        observations,
     )
 
     for window in (
@@ -322,8 +320,7 @@ def test_window():
             compute_hybrid_dependency(
                 graph,
                 sources,
-                assertions,
-                evidence,
+                observations,
                 DEPENDENCY_WEIGHTS,
                 temporal_window=window,
             )
@@ -331,11 +328,11 @@ def test_window():
 
 def test_alphas():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     graph = build_graph(
         sources,
-        assertions,
+        observations,
     )
 
     source_values = [
@@ -343,21 +340,15 @@ def test_alphas():
         for source in sources
     ]
 
-    assertion_values = [
-        assertion.model_dump()
-        for assertion in assertions
-    ]
-
-    evidence_values = [
-        item.model_dump()
-        for item in evidence
+    observation_values = [
+        observation.model_dump()
+        for observation in observations
     ]
 
     hybrid = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         DEPENDENCY_WEIGHTS,
     )
 
@@ -369,8 +360,7 @@ def test_alphas():
     alternative = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         citation_only,
     )
 
@@ -384,22 +374,17 @@ def test_alphas():
         for source in sources
     ]
 
-    assert assertion_values == [
-        assertion.model_dump()
-        for assertion in assertions
-    ]
-
-    assert evidence_values == [
-        item.model_dump()
-        for item in evidence
+    assert observation_values == [
+        observation.model_dump()
+        for observation in observations
     ]
 
 
 def test_alpha_confidence():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
-    evidence[0] = evidence[0].model_copy(update={
+    observations[0] = observations[0].model_copy(update={
         "upstream_source_ids": None,
         "cited_source_ids": None,
         "parent_assertion_ids": None,
@@ -407,7 +392,7 @@ def test_alpha_confidence():
 
     graph = build_graph(
         sources,
-        assertions,
+        observations,
     )
 
     source_values = [
@@ -415,21 +400,15 @@ def test_alpha_confidence():
         for source in sources
     ]
 
-    assertion_values = [
-        assertion.model_dump()
-        for assertion in assertions
-    ]
-
-    evidence_values = [
-        item.model_dump()
-        for item in evidence
+    observation_values = [
+        observation.model_dump()
+        for observation in observations
     ]
 
     baseline = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         DEPENDENCY_WEIGHTS,
     )
 
@@ -441,8 +420,7 @@ def test_alpha_confidence():
     alternative = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         ownership_only,
     )
 
@@ -461,31 +439,25 @@ def test_alpha_confidence():
         for source in sources
     ]
 
-    assert assertion_values == [
-        assertion.model_dump()
-        for assertion in assertions
-    ]
-
-    assert evidence_values == [
-        item.model_dump()
-        for item in evidence
+    assert observation_values == [
+        observation.model_dump()
+        for observation in observations
     ]
 
 
 def test_telemetry():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     graph = build_graph(
         sources,
-        assertions,
+        observations,
     )
 
     hybrid = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         DEPENDENCY_WEIGHTS,
     )
 
@@ -558,18 +530,17 @@ def test_telemetry():
 
 def test_clusters():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     graph = build_graph(
         sources,
-        assertions,
+        observations,
     )
 
     hybrid = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         DEPENDENCY_WEIGHTS,
     )
 
@@ -655,18 +626,17 @@ def test_clusters():
 
 def test_bad_threshold():
 
-    sources, assertions, evidence = load_dataset()
+    sources, observations = load_dataset()
 
     graph = build_graph(
         sources,
-        assertions,
+        observations,
     )
 
     hybrid = compute_hybrid_dependency(
         graph,
         sources,
-        assertions,
-        evidence,
+        observations,
         DEPENDENCY_WEIGHTS,
     )
 

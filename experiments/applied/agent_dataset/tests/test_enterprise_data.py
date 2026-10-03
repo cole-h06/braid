@@ -14,17 +14,15 @@ def test_counts():
     result = run_enterprise()
 
     assert len(result["sources"]) == 5
-    assert len(result["assertions"]) == 15
-    assert len(result["evidence"]) == 15
+    assert len(result["observations"]) == 15
     assert all(
         len(item.retrievals) == 1
-        for item in result["evidence"]
+        for item in result["observations"]
     )
 
     validate_dataset(
         result["sources"],
-        result["assertions"],
-        result["evidence"],
+        result["observations"],
     )
 
 
@@ -38,15 +36,15 @@ def test_order():
     ) == ORDER
 
     assert tuple(
-        assertion.source_id
-        for assertion in result["assertions"][::3]
+        observation.source_id
+        for observation in result["observations"][::3]
     ) == ORDER
 
 
 def test_lineage():
 
     result = run_enterprise()
-    research = result["evidence"][-3:]
+    research = result["observations"][-3:]
 
     assert [item.upstream_source_ids for item in research] == [
         ("handbook",),
@@ -75,23 +73,23 @@ def test_times():
 
     assert [
         item.observed_at
-        for item in first["evidence"]
+        for item in first["observations"]
     ] != [
         item.observed_at
-        for item in second["evidence"]
+        for item in second["observations"]
     ]
 
     assert all(
         item.observed_at == later
-        for item in second["evidence"]
+        for item in second["observations"]
     )
 
     assert [
         item.source_modified_at
-        for item in first["evidence"]
+        for item in first["observations"]
     ] == [
         item.source_modified_at
-        for item in second["evidence"]
+        for item in second["observations"]
     ]
 
     assert first["hybrid"] == second["hybrid"]
@@ -108,7 +106,7 @@ def test_times():
 
     assert all(
         retrieval.retrieved_at == later
-        for item in second["evidence"]
+        for item in second["observations"]
         for retrieval in item.retrievals
     )
 
@@ -123,12 +121,12 @@ def test_labels():
     )
 
     assert set(relationships.values()).isdisjoint({
-        assertion.value
-        for assertion in result["assertions"]
+        observation.value
+        for observation in result["observations"]
     })
 
     assert "SQL seeded from handbook" not in content
-    assert not hasattr(result["graph"], "evidence")
+    assert not hasattr(result["graph"], "observations")
     assert not hasattr(result["graph"], "retrievals")
 
 
@@ -147,7 +145,7 @@ def test_label_isolation(monkeypatch):
 
     result = run_enterprise()
 
-    assert len(result["assertions"]) == 15
+    assert len(result["observations"]) == 15
 
 
 def test_owners():

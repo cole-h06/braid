@@ -57,26 +57,24 @@ AGENTS = (
 
 def load_dataset():
 
-    assertions = []
-    evidence = []
+    observations = []
 
     for agent in AGENTS:
 
         result = agent()
 
-        assertions.extend(result.assertions)
-        evidence.extend(result.evidence)
+        observations.extend(result.observations)
 
     validate_dataset(
         SOURCES,
-        assertions,
-        evidence,
+        observations,
     )
 
-    return SOURCES, assertions, evidence
+    return SOURCES, observations
 
 
-def validate_dataset(sources, assertions, evidence):
+def validate_dataset(sources, observations):
     from braid.dependency import validate_records
 
-    validate_records(sources, assertions, evidence)
+    # The core API accepts claim and provenance slots; both use one record.
+    validate_records(sources, observations, observations)

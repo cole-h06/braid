@@ -45,8 +45,7 @@ def test_collection():
 
     assert set(state["results"]) == set(AGENT_ORDER)
     assert len(state["sources"]) == 5
-    assert len(state["assertions"]) == 15
-    assert len(state["evidence"]) == 15
+    assert len(state["observations"]) == 15
 
     source_order = tuple(
         source.source_id
@@ -54,24 +53,19 @@ def test_collection():
     )
 
     source_ids = tuple(
-        assertion.source_id
-        for assertion in state["assertions"][::3]
-    )
-
-    evidence_ids = tuple(
-        item.assertion_id
-        for item in state["evidence"]
+        observation.source_id
+        for observation in state["observations"][::3]
     )
 
     assertion_ids = tuple(
-        assertion.assertion_id
-        for assertion in state["assertions"]
+        observation.assertion_id
+        for observation in state["observations"]
     )
 
     assert source_order == AGENT_ORDER
     assert source_ids == AGENT_ORDER
-    assert evidence_ids == assertion_ids
-    assert not hasattr(state["graph"], "evidence")
+    assert len(set(assertion_ids)) == 15
+    assert not hasattr(state["graph"], "observations")
 
 
 def test_repeatability():
@@ -88,8 +82,7 @@ def test_equivalence():
     workflow = run_workflow(debug=True)
 
     assert workflow["sources"] == sequential["sources"]
-    assert workflow["assertions"] == sequential["assertions"]
-    assert workflow["evidence"] == sequential["evidence"]
+    assert workflow["observations"] == sequential["observations"]
 
     workflow_graph = workflow["graph"]
     sequential_graph = sequential["graph"]
