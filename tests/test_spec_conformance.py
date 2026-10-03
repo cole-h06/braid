@@ -5,10 +5,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from braid.dependency import (
-    SIGNAL_NAMES, claim_telemetry, cluster_members, combine_signals,
-    compute_hybrid_dependency, normalize_weights,
-)
+from braid.dependency import SIGNAL_NAMES, claim_telemetry, cluster_members, combine_signals, compute_hybrid_dependency, normalize_weights
 from braid.engine import ALGORITHM_VERSION, InferenceError, evaluate, normalize, update_sources
 from braid.graph import from_assertions
 
