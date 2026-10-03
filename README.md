@@ -101,7 +101,7 @@ pip install -r requirements.txt
 Run the included multi-agent example:
 
 ```bash
-python3 -m agent_dataset.run
+PYTHONPATH=src:experiments/applied python3 -m agent_dataset.run
 ```
 
 The example runs a controlled workflow in which five specialized agents
