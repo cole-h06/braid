@@ -1,18 +1,23 @@
 # BRAID
 
+*Bipartite Reliability Analysis for Interdependent Data-Sources*
+
+[![Python](https://img.shields.io/badge/python-%3E%3D3.10-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
 BRAID is an algorithm for measuring the reliability of AI context.
 
-It assigns a numerical reliability score to each source in a set of sources and a support score for each piece of information, such as context assembled for AI systems, with the purpose of estimating how much reliable, independent support that context contains.
+It assigns a numerical reliability score to each source in a set of sources and a support score for each claim, with the purpose of estimating how much reliable, independent support that context contains.
 
 ![BRAID example](research/figures/braid-example.png)
 
-*A simplified illustration of the BRAID algorithm, showing sources (red) and claims (blue). Node size represents perceived reliability or support. Directed edges represent source–claim relationships and bidirectional edges represent dependencies between sources.*
+*A simplified illustration of the BRAID algorithm, showing sources (red) and claims (blue). Node size represents perceived reliability or support. Directed edges represent assertions between sources and claims and bidirectional edges represent dependencies between sources.*
 
 ## How BRAID Works
 
-BRAID evaluates context by recursively relating the reliability of sources to the support of the information they provide. The underlying assumption is that more reliable sources are likely to provide strongly supported information.
+BRAID evaluates context by recursively relating source reliability to claim support. The underlying assumption is that reliable sources are more likely to support well-supported claims.
 
-A source is considered more reliable when it contributes information that is itself well supported by reliable sources. Likewise, information in the context receives greater support when it is supported by reliable sources. The amount of support attributed is adjusted based on how independent its sources are.
+A source is considered more reliable when it contributes claims that are themselves well supported by reliable sources. Likewise, claims in the context receive greater support when they are supported by reliable sources. The amount of support attributed is adjusted based on how independent its sources are.
 
 These relationships are recursive: source reliability influences the support assigned to information in the context, while that support in turn influences source reliability. BRAID repeatedly propagates these scores through the context graph while accounting for dependencies among sources, until the scores converge.
 
@@ -98,16 +103,27 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-Run the included multi-agent example:
+Run the test suite:
 
 ```bash
-PYTHONPATH=src:experiments/applied python3 -m agent_dataset.run
+python -m pytest
 ```
 
-The example runs a controlled workflow in which five specialized agents
-produce fifteen assertions.
+BRAID includes generic synthetic fixtures that exercise the algorithm without tying it to a specific application domain.
 
-For the full experiment, see [`agent_dataset/`](agent_dataset/README.md).
+For an applied example, see [`experiments/applied/agent_dataset/`](experiments/applied/agent_dataset/README.md). It evaluates BRAID on a controlled multi-agent workflow in which five specialized agents produce fifteen assertions.
+
+## Repository Structure
+
+- [`src/braid/`](src/braid/) — BRAID implementation.
+- [`spec/`](spec/) — mathematical specification.
+- [`tests/fixtures/`](tests/fixtures/README.md) — development and conformance data.
+- [`experiments/algorithm/`](experiments/algorithm/README.md) — direct BRAID experiments.
+- [`experiments/applied/`](experiments/applied/) — applied AI-context experiments.
+
+## Citation
+
+If you use BRAID in your research, please cite it using [`CITATION.cff`](CITATION.cff).
 
 ## License
 
