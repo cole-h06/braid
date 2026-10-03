@@ -46,21 +46,23 @@ def print_matrix(
     matrix,
 ):
 
-    print(f'{"":20}', end="")
-
+    rows = [["", *source_ids]]
     for source_id in source_ids:
-        print(f"{source_id:20}", end="")
+        rows.append([
+            source_id,
+            *[f"{matrix[source_id][other_id]:.6f}" for other_id in source_ids],
+        ])
 
-    print()
+    column_widths = [
+        max(len(cell) for cell in column)
+        for column in zip(*rows)
+    ]
 
-    for source_id in source_ids:
-
-        print(f"{source_id:20}", end="")
-
-        for other_id in source_ids:
-            print(f"{matrix[source_id][other_id]:<20.6f}", end="")
-
-        print()
+    for row in rows:
+        print("  ".join(
+            cell.ljust(width)
+            for cell, width in zip(row, column_widths)
+        ).rstrip())
 
 
 def main():
