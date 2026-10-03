@@ -4,7 +4,7 @@ BRAID is an algorithm for measuring the reliability of AI context.
 
 It assigns a numerical reliability score to each source in a set of sources and a support score for each piece of information, such as context assembled for AI systems, with the purpose of estimating how much reliable, independent support that context contains.
 
-![BRAID example](research/figures/braid-example.svg)
+![BRAID example](research/figures/braid-example.png)
 
 *A simplified illustration of the BRAID algorithm, showing sources (red) and claims (blue). Node size represents perceived reliability or support. Directed edges represent source–claim relationships and bidirectional edges represent dependencies between sources.*
 
