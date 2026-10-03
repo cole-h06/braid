@@ -14,7 +14,7 @@ In this dataset, there are examples of:
 - structural assertion overlap;
 - independent conflicting information.
 
-BRAID 1.0.0 uses the [normative estimator](../../../spec/source_dependency_estimation.md).
+BRAID 1.0.0 uses the [normative estimator](../../../spec/braid.md).
 Structural overlap is not active provenance. Modification-time proximity is
 unavailable in this mocked dataset; observation times do not substitute for it.
 Direct relationships use a maximum; contextual evidence uses a weighted sum.

@@ -1,76 +1,87 @@
-# BRAID: Bipartite Reliability Analysis for Interdependent Data-Sources
+# BRAID
 
-## A Structural Approach for Information Reliability Estimation
+BRAID is an algorithm for measuring the reliability of AI context.
 
-BRAID is a structural algorithm for estimating the reliability of retrieved information from multiple data sources. It models sources and claims as a bipartite graph to jointly estimate source reliability and claim support, while accounting for dependencies between sources.
+It assigns a numerical reliability score to each source in a set of sources and a support score for each piece of information, such as context assembled for AI systems, with the purpose of estimating how much reliable, independent support that context contains.
 
-## Problem
+![BRAID example](research/figures/braid-example.svg)
 
-As agentic systems, from foundational large language models (LLMs) to fully autonomous multi-agent workflows, reason and execute complex tasks across digital environments, estimating the reliability of the information they retrieve becomes highly important.
+*A simplified illustration of the BRAID algorithm, showing sources (red) and claims (blue). Node size represents perceived reliability or support. Directed edges represent source–claim relationships and bidirectional edges represent dependencies between sources.*
 
-We typically rely on agreement between sources as a signal of reliability. But agreement does not necessarily mean independent confirmation. Source B may simply repeat information originating from Source A.
+## How BRAID Works
 
-## Research Challenge
+BRAID evaluates context by recursively relating the reliability of sources to the support of the information they provide. The underlying assumption is that more reliable sources are likely to provide strongly supported information.
 
-Source reliability and claim support are recursively dependent on each other.
+A source is considered more reliable when it contributes information that is itself well supported by reliable sources. Likewise, information in the context receives greater support when it is supported by reliable sources. The amount of support attributed is adjusted based on how independent its sources are.
 
-A source becomes more reliable when it asserts claims that receive stronger support across the network.
-A claim gains support when it is asserted by more reliable sources.
+These relationships are recursive: source reliability influences the support assigned to information in the context, while that support in turn influences source reliability. BRAID repeatedly propagates these scores through the context graph while accounting for dependencies among sources, until the scores converge.
 
-Ultimately, estimating either quantity requires estimating the other.
+### Context as a Graph
 
-## Approach
+BRAID represents AI context as a bipartite graph where sources and claims are nodes, and edges represent assertions. Each source is connected to the claims it supports through an assertion, while relationships between sources capture potential dependencies in how the sources derived their information.
 
-Sources and claims form a bipartite graph. Each edge represents a source asserting a claim. BRAID models information as an interconnected network instead of a collection of independent observations.
-<p align="center">
-  <img src="research/figures/reliability_propagation_animation.gif" width="520">
-</p>
+The graph is defined as:
 
-<p align="center">
-  <em>An animation of reliability propagation running on a small network of sources and claims. Node size represents estimated reliability, while edges represent assertions.</em>
-</p>
+$$
+G = (S, C, E)
+$$
 
-Reliability is computed iteratively across the graph. At each iteration, every source distributes its reliability across all claims it asserts. In turn, every claim redistributes the support it has accumulated back to its asserting sources. Iterations repeat until the reliability vector reaches a fixed point. Agreement weighting and dependency adjustment influence how much support each assertion contributes.
+where:
 
-## Domain-Agnostic Design
+- $S$ is the set of sources.
+- $C$ is the set of claims.
+- $E$ is the set of assertions connecting sources to claims.
 
-BRAID does not interpret a claim's meaning. Frozen structural fixtures in `tests/fixtures/` are the canonical conformance and development data. Synthetic algorithm experiments and applied agent environments provide additional research inputs. The same graph structure can represent information from any domain.
+## Algorithm
 
-The algorithm receives unique source and claim identifiers, where assertion edges connect the nodes. Before evaluation, the submitted assertions are canonicalized and converted into a bipartite graph.
+BRAID outputs a normalized score vector used to represent the relative reliability of sources within a given context. Each source is assigned a numerical reliability score, with the scores collectively normalized to sum to 1.
 
-BRAID estimates source dependencies from recorded provenance and contextual
-metadata. Automatic structural-overlap estimation is disabled in BRAID 1.0.0;
-agreement alone does not establish copying.
+For example, if five sources are initialized with equal reliability, each source receives a score of 0.2. BRAID then repeatedly updates these scores based on the claims supported by each source and the estimated independence of the sources supporting those claims.
 
-## Algorithm Authority
+BRAID also assigns a support score to each claim. A claim receives greater support when it is supported by sources with higher reliability and when those sources are estimated to be independent of one another.
 
-[BRAID 1.0.0](spec/README.md) defines the current mathematical contract,
-reference implementation and BRAID-owned frozen conformance fixtures. Omneum
-is a downstream implementation, not an algorithmic authority. See the
-[synchronization record](spec/synchronization.md) for migration evidence,
-limitations and the protected research-test conflict.
+The algorithm requires several passes, called iterations, through the
+context graph. During each iteration, source reliability is propagated to the claims those sources support, and claim support is propagated back to the sources that support those claims. The process continues until the scores converge.
 
-Run independent conformance with:
+BRAID therefore works on the assumption that a claim supported by reliable and independent sources should receive greater support, while a source that consistently supports well-supported claims should receive greater reliability.
 
-```bash
-python -m pytest tests/test_spec_conformance.py
-```
+### Simplified Algorithm
 
-## Repository
+Consider a context containing three sources supporting the same claim:
 
-- `src/braid/` - BRAID reference implementation (Python imports remain `braid`)
-- `spec/` - Normative specification, algorithm manifest and synchronization history
-- `tests/` - Repository conformance tests and canonical frozen fixtures
-- `experiments/algorithm/` - Direct synthetic BRAID experiments
-- `experiments/applied/agent_dataset/` - Agent and enterprise retrieval experiments
-- `research/analysis/` - Reusable historical research diagnostics
-- `research/figures/` - Research figures and animation
-- `scripts/` - Development utilities
+- Source A
+- Source B
+- Source C
 
-The old product-spec CSV benchmark and PostgreSQL execution pathway are retired.
-The [reorganization record](research/reorganization.md) lists all moves and deletions.
+BRAID initially assigns each source an equal reliability score:
 
-## Getting Started
+$$
+s_A = s_B = s_C = \frac{1}{3}
+$$
+
+Suppose Source B and Source C are partially dependent because they obtained their information from the same upstream source. Source A is independent of both.
+
+BRAID first propagates each source's reliability to the claim. Because B and C are partially dependent, their contributions are discounted relative to the independent contribution from A.
+
+The resulting claim support is then propagated back to the sources. A source whose contribution helps establish a well-supported claim receives greater reliability in the next iteration.
+
+This process is repeated:
+
+$$
+\text{source reliability}
+\rightarrow
+\text{claim support}
+\rightarrow
+\text{source reliability}
+\rightarrow \cdots
+$$
+
+until the scores converge.
+
+This is a simplified illustration of BRAID's recursive propagation process. For the complete mathematical specification of BRAID, see the
+[BRAID specification](spec/braid.md).
+
+## Quick Start
 
 Clone the repository:
 
@@ -85,49 +96,19 @@ Create a virtual environment and install the dependencies:
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-pip install -e .
 ```
 
-Then explore one of the included experiments:
-
-- [Algorithm experiments](experiments/algorithm/README.md)
-- [Agent retrieval workflow](experiments/applied/agent_dataset/README.md)
-
-From the repository root, expose the applied experiment package when running its commands:
+Run the included multi-agent example:
 
 ```bash
-PYTHONPATH=experiments/applied python -m agent_dataset.run
-python -m pytest
+python3 -m agent_dataset.run
 ```
 
-Pytest configures `src/` and `experiments/applied/` automatically. For development
-without installing the package, use `PYTHONPATH=src:experiments/applied` for Python commands.
+The example runs a controlled workflow in which five specialized agents
+produce fifteen assertions.
 
-Known failures are preserved: `test_discount` fails its strict-decrease assertion,
-and all nine direct algorithm scripts fail because their graph stubs lack explicit
-attribute identities. These remain visible; no xfails or skips were added.
+For the full experiment, see [`agent_dataset/`](agent_dataset/README.md).
 
-## Current Status
+## License
 
-BRAID is an active research project focused on developing a method for estimating information reliability through structural analysis of bipartite information networks. The algorithm has been tested with a [controlled multi-agent dataset](experiments/applied/agent_dataset/README.md) and a [simulated enterprise retrieval workflow](experiments/applied/agent_dataset/enterprise/README.md).
-
-## MCP Server
-
-The BRAID algorithm will be exposed through an open-source [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server for agentic systems.
-
-This repository contains the research and reference implementation of BRAID.
-
-## Vision
-
-Autonomous agents are capable of retrieving enormous amounts of information from multiple data sources at scale, but most applications still lack a native mechanism for estimating the reliability of this information. Current methods mainly analyze the semantic content of retrieved information. While modern LLMs are effective at reasoning about text and supporting context, their ability to reason about how information is structurally related across sources is limited.
-
-BRAID takes a complementary approach to semantic reasoning by evaluating the structure of an information network. It shifts part of the evaluation process from reasoning about what was said to reasoning about how information is connected across sources.
-
-## Contact
-
-Feel free to connect with me whether you have any ideas, questions, feedback, or if you just want to chat about interesting topics!
-
-Email: colehoke1@gmail.com
-
-LinkedIn:
-https://www.linkedin.com/in/cole-hoke-8537002a2/
+BRAID is licensed under the [MIT License](LICENSE).
