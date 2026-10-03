@@ -1,4 +1,5 @@
-"""Historical research diagnostic; not a normative BRAID estimator."""
+"""Historical research diagnostic; not used by the current BRAID estimator."""
+
 
 WINDOW_HOURS = 24 * 7
 

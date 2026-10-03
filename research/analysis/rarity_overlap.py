@@ -1,5 +1,4 @@
-"""Historical research diagnostic; not a normative BRAID estimator."""
-
+"""Historical research diagnostic; not used by the current BRAID estimator."""
 
 
 def rarity_scores(
