@@ -1,5 +1,4 @@
 from math import isfinite
-
 from .graph import prepare_graph
 
 

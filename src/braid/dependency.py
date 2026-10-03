@@ -8,6 +8,7 @@ SIGNAL_NAMES = (
     "upstream", "citation", "assertion_lineage",
     "ownership", "temporal", "graph", "retrieval",
 )
+
 DIRECT_SIGNALS = ("upstream", "citation", "assertion_lineage")
 
 
