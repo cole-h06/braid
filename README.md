@@ -9,7 +9,7 @@ BRAID is an algorithm for measuring the reliability of AI context.
 
 It assigns a numerical reliability score to each source in a set of sources and a support score for each claim, with the purpose of estimating how much reliable, independent support that context contains.
 
-![BRAID example](research/figures/braid-example.png)
+<img src="research/figures/braid-example.png" alt="BRAID example" width="700">
 
 *A simplified illustration of the BRAID algorithm, showing sources (red) and claims (blue). Node size represents perceived reliability or support. Directed edges represent assertions between sources and claims and bidirectional edges represent dependencies between sources.*
 
@@ -23,9 +23,7 @@ These relationships are recursive: source reliability influences the support ass
 
 ### Context as a Graph
 
-BRAID represents AI context as a bipartite graph where sources and claims are nodes, and edges represent assertions. Each source is connected to the claims it supports through an assertion, while relationships between sources capture potential dependencies in how the sources derived their information.
-
-The graph is defined as:
+BRAID represents AI context as a finite bipartite graph
 
 $$
 G = (S, C, E)
@@ -33,9 +31,41 @@ $$
 
 where:
 
-- $S$ is the set of sources.
-- $C$ is the set of claims.
-- $E$ is the set of assertions connecting sources to claims.
+- $S$ is the finite set of sources.
+- $C$ is the finite set of claims.
+- $E \subseteq S \times C$ is the set of assertions connecting sources to claims.
+
+For a claim $j \in C$, let
+
+$$
+A(j) = \{i \in S : (i,j) \in E\}
+$$
+
+denote the set of sources asserting that claim.
+
+For a source $i \in S$, let
+
+$$
+C(i) = \{j \in C : (i,j) \in E\}
+$$
+
+denote the set of claims asserted by that source.
+
+For an attribute $a$, let
+
+$$
+C_a = \{j \in C : h(j) = a\}
+$$
+
+denote the set of claims associated with that attribute. This allows BRAID to distinguish competing claims about the same attribute.
+
+BRAID assigns a reliability score $s_i$ to each source and a support score $c_j$ to each claim. Source scores are normalized across the context so that
+
+$$
+\sum_{i \in S} s_i = 1.
+$$
+
+Claim support is determined from the reliability of its supporting sources and adjusted according to their estimated independence.
 
 ## Algorithm
 
