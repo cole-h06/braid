@@ -2,10 +2,10 @@ from math import isfinite
 from .graph import prepare_graph
 
 
-ALGORITHM_VERSION = "braid-1.0.0"
+ALGORITHM_VERSION = "braid-1.1.0"
 CONVERGENCE_TOLERANCE = 1e-8
 MAX_ITERATIONS = 1000
-
+PROPAGATION_WEIGHT = 0.70
 
 class InferenceError(RuntimeError):
     pass
@@ -188,6 +188,21 @@ def normalize(
         in reliability_vector.items()
     }
 
+def apply_prior(
+    reliability_vector,
+    prior,
+    propagation_weight=PROPAGATION_WEIGHT,
+):
+    prior_weight = 1.0 - propagation_weight
+
+    return {
+        source_id: finite(
+            propagation_weight * reliability_vector[source_id]
+            + prior_weight * prior[source_id]
+        )
+        for source_id in reliability_vector
+    }
+
 
 # repeatedly pass reliability through the graph until the scores stop changing
 def run_until_convergence(
@@ -198,6 +213,7 @@ def run_until_convergence(
     dependency_matrix,
     tolerance=CONVERGENCE_TOLERANCE,
     max_iterations=MAX_ITERATIONS,
+    propagation_weight=PROPAGATION_WEIGHT,
     *,
     claim_lookup,
 ):
@@ -205,6 +221,8 @@ def run_until_convergence(
     iteration = 0
 
     history = []
+
+    prior = normalize(reliability_vector.copy())
 
     independence = compute_independence(
         claim_to_sources,
@@ -237,6 +255,12 @@ def run_until_convergence(
 
         reliability_vector = normalize(
             reliability_vector
+        )
+
+        reliability_vector = apply_prior(
+            reliability_vector,
+            prior,
+            propagation_weight,
         )
 
         history.append({
@@ -289,6 +313,7 @@ def run_until_convergence(
 def evaluate(
     graph,
     debug=False,
+    propagation_weight=PROPAGATION_WEIGHT,
 ):
 
     graph = prepare_graph(graph)
@@ -313,6 +338,7 @@ def evaluate(
         reliability_vector,
         graph.agreement_weights,
         graph.dependency_matrix,
+        propagation_weight=propagation_weight,
         claim_lookup=graph.claim_lookup,
     )
 

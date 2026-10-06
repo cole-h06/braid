@@ -1,5 +1,5 @@
 {
-  "algorithm_version": "braid-1.0.0",
+  "algorithm_version": "braid-1.1.0",
   "fixture_revision": 1,
   "relative_tolerance": 1e-12,
   "absolute_tolerance": 1e-14,
@@ -17,23 +17,23 @@
       "coverage": {},
       "expected": {
         "reliability": {
-          "a": 1
+          "a": 1.0
         },
         "iterations": 1,
-        "delta": 0,
+        "delta": 0.0,
         "claims": {
           "x1": {
-            "support": 1,
-            "agreement": 1,
+            "support": 1.0,
+            "agreement": 1.0,
             "independence": {
-              "a": 1
+              "a": 1.0
             },
             "contributions": {
-              "a": 1
+              "a": 1.0
             },
             "is_maximum": true,
             "conflicts": [],
-            "effective_count": 1,
+            "effective_count": 1.0,
             "coverage": null
           }
         }
@@ -62,40 +62,40 @@
       "coverage": {},
       "expected": {
         "reliability": {
-          "a": 0.3333333333333333,
-          "b": 0.6666666666666666
+          "a": 0.3833333333333333,
+          "b": 0.6166666666666667
         },
         "iterations": 2,
-        "delta": 0,
+        "delta": 0.0,
         "claims": {
           "x1": {
-            "support": 0.6666666666666666,
-            "agreement": 1,
+            "support": 0.6916666666666667,
+            "agreement": 1.0,
             "independence": {
-              "a": 1,
-              "b": 1
+              "a": 1.0,
+              "b": 1.0
             },
             "contributions": {
-              "a": 0.3333333333333333,
-              "b": 0.3333333333333333
+              "a": 0.3833333333333333,
+              "b": 0.30833333333333335
             },
             "is_maximum": true,
             "conflicts": [],
-            "effective_count": 2,
-            "coverage": 0
+            "effective_count": 2.0,
+            "coverage": 0.0
           },
           "y1": {
-            "support": 0.3333333333333333,
-            "agreement": 1,
+            "support": 0.30833333333333335,
+            "agreement": 1.0,
             "independence": {
-              "b": 1
+              "b": 1.0
             },
             "contributions": {
-              "b": 0.3333333333333333
+              "b": 0.30833333333333335
             },
             "is_maximum": true,
             "conflicts": [],
-            "effective_count": 1,
+            "effective_count": 1.0,
             "coverage": null
           }
         }
@@ -123,13 +123,13 @@
           "b": 0.5
         },
         "iterations": 1,
-        "delta": 0,
+        "delta": 0.0,
         "claims": {
           "x1": {
             "support": 0.25,
             "agreement": 0.5,
             "independence": {
-              "a": 1
+              "a": 1.0
             },
             "contributions": {
               "a": 0.25
@@ -138,14 +138,14 @@
             "conflicts": [
               "x2"
             ],
-            "effective_count": 1,
+            "effective_count": 1.0,
             "coverage": null
           },
           "x2": {
             "support": 0.25,
             "agreement": 0.5,
             "independence": {
-              "b": 1
+              "b": 1.0
             },
             "contributions": {
               "b": 0.25
@@ -154,7 +154,7 @@
             "conflicts": [
               "x1"
             ],
-            "effective_count": 1,
+            "effective_count": 1.0,
             "coverage": null
           }
         }
@@ -188,14 +188,14 @@
           "c": 0.3333333333333333
         },
         "iterations": 1,
-        "delta": 0,
+        "delta": 0.0,
         "claims": {
           "x1": {
             "support": 0.6666666666666666,
-            "agreement": 1,
+            "agreement": 1.0,
             "independence": {
-              "a": 1,
-              "b": 1
+              "a": 1.0,
+              "b": 1.0
             },
             "contributions": {
               "a": 0.3333333333333333,
@@ -203,21 +203,21 @@
             },
             "is_maximum": true,
             "conflicts": [],
-            "effective_count": 2,
-            "coverage": 0
+            "effective_count": 2.0,
+            "coverage": 0.0
           },
           "y1": {
             "support": 0.3333333333333333,
-            "agreement": 1,
+            "agreement": 1.0,
             "independence": {
-              "c": 1
+              "c": 1.0
             },
             "contributions": {
               "c": 0.3333333333333333
             },
             "is_maximum": true,
             "conflicts": [],
-            "effective_count": 1,
+            "effective_count": 1.0,
             "coverage": null
           }
         }
@@ -263,11 +263,11 @@
           "b": 0.5
         },
         "iterations": 1,
-        "delta": 0,
+        "delta": 0.0,
         "claims": {
           "x1": {
             "support": 0.6666666666666666,
-            "agreement": 1,
+            "agreement": 1.0,
             "independence": {
               "a": 0.6666666666666666,
               "b": 0.6666666666666666
@@ -306,7 +306,60 @@
       "dependency": {},
       "coverage": {},
       "expected": {
-        "error": "nonconvergence"
+        "reliability": {
+          "a": 0.3194933504019696,
+          "b": 0.6805066495980304
+        },
+        "iterations": 19,
+        "delta": 6.618901315924575e-09,
+        "claims": {
+          "x1": {
+            "support": 0.1597466752009848,
+            "agreement": 0.5,
+            "independence": {
+              "a": 1.0
+            },
+            "contributions": {
+              "a": 0.1597466752009848
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "x2"
+            ],
+            "effective_count": 1.0,
+            "coverage": null
+          },
+          "x2": {
+            "support": 0.1701266623995076,
+            "agreement": 0.5,
+            "independence": {
+              "b": 1.0
+            },
+            "contributions": {
+              "b": 0.1701266623995076
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "x1"
+            ],
+            "effective_count": 1.0,
+            "coverage": null
+          },
+          "y1": {
+            "support": 0.3402533247990152,
+            "agreement": 1.0,
+            "independence": {
+              "b": 1.0
+            },
+            "contributions": {
+              "b": 0.3402533247990152
+            },
+            "is_maximum": true,
+            "conflicts": [],
+            "effective_count": 1.0,
+            "coverage": null
+          }
+        }
       }
     },
     {
@@ -464,43 +517,59 @@
       },
       "expected": {
         "reliability": {
-          "api_agent": 6.364691457144884e-10,
-          "document_agent": 0.2499999998408827,
-          "research_agent": 0.2499999999469609,
-          "search_agent": 0.2499999996287263,
-          "sql_agent": 0.2499999999469609
+          "api_agent": 0.06826677877280542,
+          "document_agent": 0.23296676880553374,
+          "research_agent": 0.23428320623939158,
+          "search_agent": 0.2302000399428777,
+          "sql_agent": 0.23428320623939158
         },
-        "iterations": 11,
-        "delta": 3.1823457174999e-9,
+        "iterations": 9,
+        "delta": 8.66678438737889e-09,
         "claims": {
           "c000": {
-            "support": 0.08333333331565365,
-            "agreement": 1,
+            "support": 0.07809440207979719,
+            "agreement": 1.0,
             "independence": {
-              "sql_agent": 1
+              "sql_agent": 1.0
             },
             "contributions": {
-              "sql_agent": 0.08333333331565365
+              "sql_agent": 0.07809440207979719
             },
             "is_maximum": true,
             "conflicts": [],
-            "effective_count": 1,
+            "effective_count": 1.0,
+            "coverage": null
+          },
+          "c001": {
+            "support": 0.004551118584853695,
+            "agreement": 0.2,
+            "independence": {
+              "api_agent": 1.0
+            },
+            "contributions": {
+              "api_agent": 0.004551118584853695
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "c002"
+            ],
+            "effective_count": 1.0,
             "coverage": null
           },
           "c002": {
-            "support": 0.19999999988684997,
+            "support": 0.18653109283628266,
             "agreement": 0.8,
             "independence": {
-              "sql_agent": 1,
-              "document_agent": 1,
+              "document_agent": 1.0,
               "research_agent": 0.5,
-              "search_agent": 0.5
+              "search_agent": 0.5,
+              "sql_agent": 1.0
             },
             "contributions": {
-              "sql_agent": 0.06666666665252292,
-              "document_agent": 0.0666666666242354,
-              "research_agent": 0.03333333332626146,
-              "search_agent": 0.03333333328383018
+              "document_agent": 0.06212447168147567,
+              "research_agent": 0.03123776083191888,
+              "search_agent": 0.03069333865905036,
+              "sql_agent": 0.06247552166383776
             },
             "is_maximum": true,
             "conflicts": [
@@ -509,96 +578,96 @@
             "effective_count": 2.6666666666666665,
             "coverage": 0.75
           },
-          "c001": {
-            "support": 4.2431276380965885e-11,
-            "agreement": 0.2,
-            "independence": {
-              "api_agent": 1
-            },
-            "contributions": {
-              "api_agent": 4.2431276380965885e-11
-            },
-            "is_maximum": false,
-            "conflicts": [
-              "c002"
-            ],
-            "effective_count": 1,
-            "coverage": null
-          },
           "c003": {
-            "support": 0.08333333331565365,
-            "agreement": 1,
+            "support": 0.07809440207979719,
+            "agreement": 1.0,
             "independence": {
-              "research_agent": 1
+              "research_agent": 1.0
             },
             "contributions": {
-              "research_agent": 0.08333333331565365
+              "research_agent": 0.07809440207979719
             },
             "is_maximum": true,
             "conflicts": [],
-            "effective_count": 1,
+            "effective_count": 1.0,
             "coverage": null
           },
-          "c005": {
-            "support": 0.11111111099324646,
-            "agreement": 0.6666666666666666,
-            "independence": {
-              "document_agent": 1,
-              "search_agent": 1
-            },
-            "contributions": {
-              "document_agent": 0.05555555552019616,
-              "search_agent": 0.05555555547305029
-            },
-            "is_maximum": true,
-            "conflicts": [
-              "c004"
-            ],
-            "effective_count": 2,
-            "coverage": 0.75
-          },
           "c004": {
-            "support": 7.071879396827648e-11,
+            "support": 0.007585197641422824,
             "agreement": 0.3333333333333333,
             "independence": {
-              "api_agent": 1
+              "api_agent": 1.0
             },
             "contributions": {
-              "api_agent": 7.071879396827648e-11
+              "api_agent": 0.007585197641422824
             },
             "is_maximum": false,
             "conflicts": [
               "c005"
             ],
-            "effective_count": 1,
+            "effective_count": 1.0,
             "coverage": null
           },
-          "c006": {
-            "support": 0.08333333328029424,
-            "agreement": 1,
+          "c005": {
+            "support": 0.10292595749964698,
+            "agreement": 0.6666666666666666,
             "independence": {
-              "document_agent": 1
+              "document_agent": 1.0,
+              "search_agent": 1.0
             },
             "contributions": {
-              "document_agent": 0.08333333328029424
+              "document_agent": 0.05177039306789638,
+              "search_agent": 0.051155564431750594
+            },
+            "is_maximum": true,
+            "conflicts": [
+              "c004"
+            ],
+            "effective_count": 2.0,
+            "coverage": 0.75
+          },
+          "c006": {
+            "support": 0.07765558960184459,
+            "agreement": 1.0,
+            "independence": {
+              "document_agent": 1.0
+            },
+            "contributions": {
+              "document_agent": 0.07765558960184459
             },
             "is_maximum": true,
             "conflicts": [],
-            "effective_count": 1,
+            "effective_count": 1.0,
+            "coverage": null
+          },
+          "c007": {
+            "support": 0.005688898231067118,
+            "agreement": 0.25,
+            "independence": {
+              "api_agent": 1.0
+            },
+            "contributions": {
+              "api_agent": 0.005688898231067118
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "c008"
+            ],
+            "effective_count": 1.0,
             "coverage": null
           },
           "c008": {
-            "support": 0.12499999993370114,
+            "support": 0.11663120733263156,
             "agreement": 0.75,
             "independence": {
-              "sql_agent": 1,
               "research_agent": 0.5,
-              "search_agent": 0.5
+              "search_agent": 0.5,
+              "sql_agent": 1.0
             },
             "contributions": {
-              "sql_agent": 0.06249999998674024,
-              "research_agent": 0.03124999999337012,
-              "search_agent": 0.03124999995359079
+              "research_agent": 0.029285400779923948,
+              "search_agent": 0.028775004992859714,
+              "sql_agent": 0.058570801559847896
             },
             "is_maximum": true,
             "conflicts": [
@@ -606,22 +675,6 @@
             ],
             "effective_count": 1.8,
             "coverage": 0.75
-          },
-          "c007": {
-            "support": 5.303909547620736e-11,
-            "agreement": 0.25,
-            "independence": {
-              "api_agent": 1
-            },
-            "contributions": {
-              "api_agent": 5.303909547620736e-11
-            },
-            "is_maximum": false,
-            "conflicts": [
-              "c008"
-            ],
-            "effective_count": 1,
-            "coverage": null
           }
         }
       }
@@ -781,65 +834,83 @@
       },
       "expected": {
         "reliability": {
-          "faq": 0.2643542279470778,
-          "handbook": 0.2643542279470778,
-          "research": 0.1945334884793187,
-          "sql": 0.2643542279470778,
-          "vendor": 0.012403827679447893
+          "faq": 0.2418835096031604,
+          "handbook": 0.2418835096031604,
+          "research": 0.19784736765203148,
+          "sql": 0.2418835096031604,
+          "vendor": 0.07650210353848735
         },
-        "iterations": 11,
-        "delta": 5.650894745190538e-9,
+        "iterations": 10,
+        "delta": 2.394566614438709e-09,
         "claims": {
+          "c000": {
+            "support": 0.005100140235899157,
+            "agreement": 0.2,
+            "independence": {
+              "vendor": 1.0
+            },
+            "contributions": {
+              "vendor": 0.005100140235899157
+            },
+            "is_maximum": false,
+            "conflicts": [
+              "c001"
+            ],
+            "effective_count": 1.0,
+            "coverage": null
+          },
           "c001": {
-            "support": 0.12761604132022658,
+            "support": 0.11853279928159077,
             "agreement": 0.8,
             "independence": {
               "faq": 0.9090909090909091,
-              "sql": 0.3333333333333333,
               "handbook": 0.3225806451612903,
-              "research": 0.3333333333333333
+              "research": 0.3333333333333333,
+              "sql": 0.3333333333333333
             },
             "contributions": {
-              "faq": 0.06408587344171583,
-              "sql": 0.023498153595295806,
-              "handbook": 0.022740148640608845,
-              "research": 0.017291865642606107
+              "faq": 0.058638426570463136,
+              "handbook": 0.02080718362177724,
+              "research": 0.017586432680180574,
+              "sql": 0.021500756409169815
             },
             "is_maximum": true,
             "conflicts": [
               "c000"
             ],
             "effective_count": 1.5686274509803924,
-            "coverage": 0.85
+            "coverage": 0.8500000000000001
           },
-          "c000": {
-            "support": 0.0008269218452965262,
-            "agreement": 0.2,
+          "c002": {
+            "support": 0.018289964746034587,
+            "agreement": 0.4,
             "independence": {
-              "vendor": 1
+              "research": 0.5,
+              "vendor": 0.5
             },
             "contributions": {
-              "vendor": 0.0008269218452965262
+              "research": 0.013189824510135431,
+              "vendor": 0.005100140235899157
             },
             "is_maximum": false,
             "conflicts": [
-              "c001"
+              "c003"
             ],
-            "effective_count": 1,
-            "coverage": null
+            "effective_count": 1.0,
+            "coverage": 0.8500000000000001
           },
           "c003": {
-            "support": 0.09967642101381159,
+            "support": 0.09120369561227391,
             "agreement": 0.6,
             "independence": {
               "faq": 0.9090909090909091,
-              "sql": 0.5,
-              "handbook": 0.47619047619047616
+              "handbook": 0.47619047619047616,
+              "sql": 0.5
             },
             "contributions": {
-              "faq": 0.04806440508128687,
-              "sql": 0.026435422794707782,
-              "handbook": 0.025176593137816932
+              "faq": 0.04397881992784735,
+              "handbook": 0.023036524724110514,
+              "sql": 0.024188350960316043
             },
             "is_maximum": true,
             "conflicts": [
@@ -848,61 +919,43 @@
             "effective_count": 1.7307692307692306,
             "coverage": 0.8500000000000001
           },
-          "c002": {
-            "support": 0.013795821077251108,
-            "agreement": 0.4,
+          "c004": {
+            "support": 0.005100140235899157,
+            "agreement": 0.2,
             "independence": {
-              "research": 0.5,
-              "vendor": 0.5
+              "vendor": 1.0
             },
             "contributions": {
-              "research": 0.012968899231954581,
-              "vendor": 0.0008269218452965262
+              "vendor": 0.005100140235899157
             },
             "is_maximum": false,
             "conflicts": [
-              "c003"
+              "c005"
             ],
-            "effective_count": 1,
-            "coverage": 0.8500000000000001
+            "effective_count": 1.0,
+            "coverage": null
           },
           "c005": {
-            "support": 0.12761604132022658,
+            "support": 0.11853279928159077,
             "agreement": 0.8,
             "independence": {
               "faq": 0.9090909090909091,
-              "sql": 0.3333333333333333,
               "handbook": 0.3225806451612903,
-              "research": 0.3333333333333333
+              "research": 0.3333333333333333,
+              "sql": 0.3333333333333333
             },
             "contributions": {
-              "faq": 0.06408587344171583,
-              "sql": 0.023498153595295806,
-              "handbook": 0.022740148640608845,
-              "research": 0.017291865642606107
+              "faq": 0.058638426570463136,
+              "handbook": 0.02080718362177724,
+              "research": 0.017586432680180574,
+              "sql": 0.021500756409169815
             },
             "is_maximum": true,
             "conflicts": [
               "c004"
             ],
             "effective_count": 1.5686274509803924,
-            "coverage": 0.85
-          },
-          "c004": {
-            "support": 0.0008269218452965262,
-            "agreement": 0.2,
-            "independence": {
-              "vendor": 1
-            },
-            "contributions": {
-              "vendor": 0.0008269218452965262
-            },
-            "is_maximum": false,
-            "conflicts": [
-              "c005"
-            ],
-            "effective_count": 1,
-            "coverage": null
+            "coverage": 0.8500000000000001
           }
         }
       }
